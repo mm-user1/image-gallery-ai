@@ -233,6 +233,15 @@
       object-fit: cover;
     }
 
+    .batch input[type="text"] {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
     textarea {
       width: 100%;
       min-height: 120px;
@@ -402,6 +411,7 @@
   <template id="batch-template">
     <section class="batch">
       <div class="thumbnail-row" data-thumbnails></div>
+      <input type="text" placeholder="Add a title..." data-title>
       <textarea placeholder="Write prompt or notes..." data-textarea></textarea>
       <div class="batch-actions">
         <button class="text-btn" data-copy>Copy Prompt</button>
@@ -845,6 +855,7 @@
       const tabName = state.currentTab.name;
       const batch = {
         images: imageNames,
+        title: '',
         description: '',
         timestamp: new Date().toISOString()
       };
@@ -867,10 +878,14 @@
         const batchEl = section.querySelector('.batch');
         batchEl.dataset.timestamp = batch.timestamp;
         const thumbnails = section.querySelector('[data-thumbnails]');
+        const titleInput = section.querySelector('[data-title]');
         const textarea = section.querySelector('[data-textarea]');
         const copyBtn = section.querySelector('[data-copy]');
+        if (titleInput) {
+          titleInput.value = typeof batch.title === 'string' ? batch.title : '';
+        }
         textarea.value = batch.description || '';
-        setupAutoSave(textarea, tab, batch);
+        setupBatchAutoSave(textarea, titleInput, batch);
         copyBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(textarea.value || '').then(() => {
             showStatus('Prompt copied to clipboard.', 2000);
@@ -885,18 +900,24 @@
       dom.tabBody.appendChild(createDropZone());
     }
 
-    function setupAutoSave(textarea, tab, batch) {
+    function setupBatchAutoSave(textarea, titleInput, batch) {
       const handler = () => {
         const timer = state.batchesSaveTimers.get(batch);
         if (timer) clearTimeout(timer);
         const newTimer = setTimeout(async () => {
+          if (titleInput) {
+            batch.title = titleInput.value;
+          }
           batch.description = textarea.value;
           batch.timestamp = new Date().toISOString();
           await saveMetadata();
-          showStatus('Description saved.', 1800);
+          showStatus('Details saved.', 1800);
         }, 1500);
         state.batchesSaveTimers.set(batch, newTimer);
       };
+      if (titleInput) {
+        titleInput.addEventListener('input', handler);
+      }
       textarea.addEventListener('input', handler);
     }
 
