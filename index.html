@@ -114,6 +114,35 @@
       align-items: center;
       gap: 8px;
       flex: 0 0 auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .selection-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: rgba(76, 110, 245, 0.08);
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+
+    .selection-actions.show {
+      display: inline-flex;
+    }
+
+    .selection-actions select {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 0.95rem;
+      background: #fff;
+      min-width: 160px;
+    }
+
+    .selection-summary {
+      font-weight: 600;
+      color: var(--accent);
     }
 
     .tab {
@@ -287,12 +316,11 @@
 
     .thumbnail-row {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
     }
 
     .thumbnail {
-      height: 200px;
       border-radius: 12px;
       overflow: hidden;
       background: #e2e8f0;
@@ -300,6 +328,11 @@
       cursor: pointer;
       box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      aspect-ratio: 4 / 3;
+      max-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .thumbnail:hover {
@@ -310,7 +343,31 @@
     .thumbnail img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      display: none;
+    }
+
+    .thumbnail[data-loaded="true"] img {
+      display: block;
+    }
+
+    .thumbnail .placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 1.4rem;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .thumbnail[data-loaded="true"] .placeholder {
+      opacity: 0;
     }
 
     .thumbnail-remove {
@@ -332,6 +389,45 @@
 
     body.edit-mode .thumbnail-remove {
       display: inline-flex;
+    }
+
+    .thumbnail-select {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--border);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    body.selection-mode .thumbnail-select {
+      display: inline-flex;
+    }
+
+    .thumbnail-select input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    body.selection-mode .thumbnail {
+      cursor: default;
+    }
+
+    body.selection-mode .thumbnail:hover {
+      transform: none;
+      box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .thumbnail.selected {
+      outline: 3px solid rgba(76, 110, 245, 0.6);
+      outline-offset: 2px;
     }
 
     .batch {
@@ -416,6 +512,22 @@
       color: #fff;
     }
 
+    .text-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .text-btn.danger {
+      border-color: rgba(201, 42, 42, 0.5);
+      color: #c92a2a;
+    }
+
+    .text-btn.danger:hover {
+      background: #c92a2a;
+      color: #fff;
+      border-color: #c92a2a;
+    }
+
     .status-bar {
       display: none;
       position: fixed;
@@ -435,6 +547,76 @@
       display: inline-flex;
       align-items: center;
       gap: 12px;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.25);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2500;
+      backdrop-filter: blur(2px);
+    }
+
+    .loading-overlay.show {
+      display: flex;
+    }
+
+    .loading-dialog {
+      background: var(--surface);
+      padding: 28px 32px;
+      border-radius: 16px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      min-width: 260px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 4px solid rgba(76, 110, 245, 0.2);
+      border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-message {
+      font-weight: 600;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .loading-progress {
+      width: 100%;
+      height: 8px;
+      background: rgba(76, 110, 245, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .loading-progress[hidden] {
+      display: none;
+    }
+
+    .loading-progress-bar {
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .viewer {
@@ -503,13 +685,13 @@
 
     @media (max-width: 1024px) {
       .thumbnail-row {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       }
     }
 
     @media (max-width: 640px) {
       .thumbnail-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       }
     }
 
@@ -550,6 +732,14 @@
         <div class="tab-controls">
           <button id="new-tab" class="new-tab-btn">＋ New Tab</button>
           <button id="toggle-edit" class="icon-btn edit-toggle" title="Toggle edit mode" aria-pressed="false">✎</button>
+          <button id="toggle-selection" class="text-btn" title="Toggle selection mode" disabled>Select</button>
+          <button id="repair-library" class="text-btn" title="Repair library">Repair</button>
+          <div id="selection-actions" class="selection-actions" aria-live="polite">
+            <span id="selection-summary" class="selection-summary">0 selected</span>
+            <select id="selection-target" aria-label="Move selected images" disabled></select>
+            <button id="move-selected" class="text-btn" disabled>Move</button>
+            <button id="delete-selected" class="text-btn danger" disabled>Delete</button>
+          </div>
         </div>
       </div>
       <div id="tab-body" class="surface-card"></div>
@@ -557,6 +747,16 @@
   </div>
 
   <div id="status" class="status-bar" role="status"></div>
+
+  <div id="loading-overlay" class="loading-overlay" role="alert" aria-live="assertive" hidden>
+    <div class="loading-dialog">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <div id="loading-message" class="loading-message">Working...</div>
+      <div id="loading-progress" class="loading-progress" hidden>
+        <div id="loading-progress-bar" class="loading-progress-bar"></div>
+      </div>
+    </div>
+  </div>
 
   <div id="viewer" class="viewer" aria-hidden="true">
     <button class="viewer-close" title="Close (Esc)">✕</button>
@@ -602,6 +802,14 @@
       currentTab: null,
       batchesSaveTimers: new WeakMap(),
       editMode: false,
+      selection: {
+        active: false,
+        items: new Map()
+      },
+      thumbnailObserver: null,
+      thumbnailTargets: new WeakMap(),
+      thumbnailUrlMap: new WeakMap(),
+      batchUrlRegistry: new WeakMap(),
       viewer: {
         open: false,
         images: [],
@@ -615,8 +823,19 @@
       tabList: document.getElementById('tab-list'),
       newTab: document.getElementById('new-tab'),
       editToggle: document.getElementById('toggle-edit'),
+      selectionToggle: document.getElementById('toggle-selection'),
+      repairButton: document.getElementById('repair-library'),
       tabBody: document.getElementById('tab-body'),
       status: document.getElementById('status'),
+      selectionActions: document.getElementById('selection-actions'),
+      selectionSummary: document.getElementById('selection-summary'),
+      selectionTarget: document.getElementById('selection-target'),
+      moveSelected: document.getElementById('move-selected'),
+      deleteSelected: document.getElementById('delete-selected'),
+      loadingOverlay: document.getElementById('loading-overlay'),
+      loadingMessage: document.getElementById('loading-message'),
+      loadingProgress: document.getElementById('loading-progress'),
+      loadingProgressBar: document.getElementById('loading-progress-bar'),
       appContent: document.getElementById('app-content'),
       noRoot: document.getElementById('no-root'),
       viewer: document.getElementById('viewer'),
@@ -628,13 +847,18 @@
       dropzoneTemplate: document.getElementById('dropzone-template')
     };
 
+    const MAX_IMAGE_SIZE = 50 * 1024 * 1024;
+    const THUMBNAIL_ROOT_MARGIN = '50px';
+
     async function init() {
       await ensureDb();
+      ensureThumbnailObserver();
       document.body.classList.toggle('edit-mode', state.editMode);
       if (dom.editToggle) {
         dom.editToggle.setAttribute('aria-pressed', state.editMode ? 'true' : 'false');
         dom.editToggle.classList.toggle('active', state.editMode);
       }
+      updateSelectionControls();
       const handle = await loadStoredHandle();
       if (handle) {
         try {
@@ -666,6 +890,384 @@
     function showNoRoot() {
       dom.noRoot.style.display = '';
       dom.appContent.style.display = 'none';
+    }
+
+    function ensureThumbnailObserver() {
+      if (!state.thumbnailObserver) {
+        state.thumbnailObserver = new IntersectionObserver(handleThumbnailIntersections, {
+          root: null,
+          rootMargin: THUMBNAIL_ROOT_MARGIN,
+          threshold: 0.1
+        });
+      }
+      return state.thumbnailObserver;
+    }
+
+    /**
+     * Handles intersection observer events by triggering lazy loading when thumbnails enter view.
+     * @param {IntersectionObserverEntry[]} entries Entries describing visibility changes.
+     * @returns {void}
+     */
+    function handleThumbnailIntersections(entries) {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          if (state.thumbnailObserver) {
+            state.thumbnailObserver.unobserve(entry.target);
+          }
+          loadThumbnail(entry.target).catch(err => {
+            console.error('Thumbnail load failed', err);
+          });
+        }
+      }
+    }
+
+    /**
+     * Registers a thumbnail element for observation and associates metadata for lazy loading.
+     * @param {HTMLElement} target Thumbnail wrapper element.
+     * @param {{ tab: TabRecord, batch: BatchRecord, name: string }} meta Related metadata for lookup.
+     * @returns {void}
+     */
+    function registerThumbnail(target, meta) {
+      state.thumbnailTargets.set(target, meta);
+      ensureThumbnailObserver().observe(target);
+    }
+
+    /**
+     * Stops observing a thumbnail and removes its metadata from tracking collections.
+     * @param {HTMLElement} target Thumbnail element to stop observing.
+     * @returns {void}
+     */
+    function unobserveThumbnail(target) {
+      if (state.thumbnailObserver) {
+        state.thumbnailObserver.unobserve(target);
+      }
+      state.thumbnailTargets.delete(target);
+    }
+
+    /**
+     * Lazily loads the thumbnail image when it enters the viewport.
+     * @param {HTMLElement} element Thumbnail container element.
+     * @returns {Promise<void>}
+     */
+    async function loadThumbnail(element) {
+      const meta = state.thumbnailTargets.get(element);
+      if (!meta || element.dataset.loaded === 'true' || element.dataset.loading === 'true') {
+        return;
+      }
+      element.dataset.loading = 'true';
+      const placeholder = element.querySelector('.placeholder');
+      if (placeholder) {
+        placeholder.dataset.state = 'loading';
+        placeholder.querySelector('.placeholder-text')?.remove();
+        const text = document.createElement('small');
+        text.className = 'placeholder-text';
+        text.textContent = 'Loading...';
+        placeholder.appendChild(text);
+      }
+      try {
+        const fileHandle = await meta.tab.handle.getFileHandle(meta.name);
+        const file = await fileHandle.getFile();
+        const url = URL.createObjectURL(file);
+        trackObjectUrl(meta.batch, element, url);
+        const img = element.querySelector('img');
+        if (img) {
+          img.src = url;
+          img.alt = meta.name;
+          img.addEventListener('load', () => releaseObjectUrl(element), { once: true });
+          img.addEventListener('error', () => releaseObjectUrl(element), { once: true });
+        }
+        element.dataset.loaded = 'true';
+        element.removeAttribute('data-error');
+      } catch (err) {
+        markThumbnailMissing(element, 'Missing file');
+        cleanupSelectionForImage(meta.batch, meta.name);
+        console.warn('Image missing', meta.name, err);
+      } finally {
+        delete element.dataset.loading;
+      }
+    }
+
+    function trackObjectUrl(batch, element, url) {
+      state.thumbnailUrlMap.set(element, url);
+      let urls = state.batchUrlRegistry.get(batch);
+      if (!urls) {
+        urls = new Set();
+        state.batchUrlRegistry.set(batch, urls);
+      }
+      urls.add(url);
+    }
+
+    function releaseObjectUrl(element) {
+      const url = state.thumbnailUrlMap.get(element);
+      if (url) {
+        URL.revokeObjectURL(url);
+        state.thumbnailUrlMap.delete(element);
+        const meta = state.thumbnailTargets.get(element);
+        if (meta) {
+          const urls = state.batchUrlRegistry.get(meta.batch);
+          if (urls) {
+            urls.delete(url);
+            if (!urls.size) {
+              state.batchUrlRegistry.delete(meta.batch);
+            }
+          }
+        }
+      }
+    }
+
+    function cleanupBatchResources(batch) {
+      const urls = state.batchUrlRegistry.get(batch);
+      if (!urls) return;
+      for (const url of urls) {
+        URL.revokeObjectURL(url);
+      }
+      urls.clear();
+      state.batchUrlRegistry.delete(batch);
+    }
+
+    function cleanupTabResources(tabName) {
+      const batches = state.metadata[tabName] || [];
+      for (const batch of batches) {
+        cleanupBatchResources(batch);
+      }
+    }
+
+    function markThumbnailMissing(element, message) {
+      element.dataset.error = 'true';
+      const placeholder = element.querySelector('.placeholder');
+      if (placeholder) {
+        placeholder.innerHTML = '';
+        const icon = document.createElement('span');
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = '⚠️';
+        const text = document.createElement('small');
+        text.textContent = message;
+        placeholder.append(icon, text);
+      }
+      const img = element.querySelector('img');
+      if (img) {
+        img.removeAttribute('src');
+      }
+      element.removeAttribute('data-loaded');
+    }
+
+    function showLoadingOverlay(message, options = {}) {
+      if (!dom.loadingOverlay) return;
+      dom.loadingOverlay.hidden = false;
+      dom.loadingOverlay.classList.add('show');
+      if (dom.loadingMessage) {
+        dom.loadingMessage.textContent = message;
+      }
+      if (options.total && dom.loadingProgress && dom.loadingProgressBar) {
+        dom.loadingProgress.hidden = false;
+        dom.loadingProgressBar.style.width = '0%';
+      } else if (dom.loadingProgress) {
+        dom.loadingProgress.hidden = true;
+      }
+    }
+
+    function hideLoadingOverlay() {
+      if (!dom.loadingOverlay) return;
+      dom.loadingOverlay.classList.remove('show');
+      dom.loadingOverlay.hidden = true;
+      if (dom.loadingMessage) {
+        dom.loadingMessage.textContent = 'Working...';
+      }
+      if (dom.loadingProgress && dom.loadingProgressBar) {
+        dom.loadingProgress.hidden = true;
+        dom.loadingProgressBar.style.width = '0%';
+      }
+    }
+
+    function updateLoadingProgress(current, total, message) {
+      if (!dom.loadingProgress || !dom.loadingProgressBar) return;
+      if (typeof total === 'number' && total > 0) {
+        const percent = Math.min(100, Math.round((current / total) * 100));
+        dom.loadingProgressBar.style.width = `${percent}%`;
+      }
+      if (message && dom.loadingMessage) {
+        dom.loadingMessage.textContent = message;
+      }
+    }
+
+    function getSelectionKey(batch, imageName) {
+      return `${batch.timestamp || 'batch'}::${imageName}`;
+    }
+
+    function findBatch(tabName, timestamp) {
+      const batches = state.metadata[tabName] || [];
+      return batches.find(entry => entry.timestamp === timestamp) || null;
+    }
+
+    function pruneSelection() {
+      let changed = false;
+      for (const [key, meta] of Array.from(state.selection.items.entries())) {
+        const batch = findBatch(meta.tabName, meta.batchTimestamp);
+        if (!batch || !Array.isArray(batch.images) || !batch.images.includes(meta.name)) {
+          state.selection.items.delete(key);
+          changed = true;
+        }
+      }
+      return changed;
+    }
+
+    function clearSelection() {
+      if (state.selection.items.size) {
+        state.selection.items.clear();
+      }
+      updateSelectionUI();
+    }
+
+    function setSelectionMode(active) {
+      if (state.selection.active === active) return;
+      state.selection.active = active;
+      document.body.classList.toggle('selection-mode', active);
+      if (!active) {
+        clearSelection();
+      } else {
+        updateSelectionUI();
+      }
+      if (dom.selectionToggle) {
+        dom.selectionToggle.textContent = active ? 'Done Selecting' : 'Select';
+        dom.selectionToggle.setAttribute('aria-pressed', active ? 'true' : 'false');
+      }
+    }
+
+    function cleanupSelectionForImage(batch, imageName) {
+      const key = getSelectionKey(batch, imageName);
+      if (state.selection.items.delete(key)) {
+        updateSelectionUI();
+      }
+    }
+
+    function cleanupSelectionForBatch(batch) {
+      const prefix = `${batch.timestamp || 'batch'}::`;
+      let changed = false;
+      for (const key of Array.from(state.selection.items.keys())) {
+        if (key.startsWith(prefix)) {
+          state.selection.items.delete(key);
+          changed = true;
+        }
+      }
+      if (changed) {
+        updateSelectionUI();
+      }
+    }
+
+    function cleanupSelectionForTab(tabName) {
+      let changed = false;
+      for (const [key, meta] of Array.from(state.selection.items.entries())) {
+        if (meta.tabName === tabName) {
+          state.selection.items.delete(key);
+          changed = true;
+        }
+      }
+      if (changed) {
+        updateSelectionUI();
+      }
+    }
+
+    function rebuildSelectionTargets() {
+      if (!dom.selectionTarget) return;
+      const tab = state.currentTab;
+      const currentValue = dom.selectionTarget.value;
+      dom.selectionTarget.innerHTML = '';
+      if (!state.selection.active || !tab) {
+        dom.selectionTarget.disabled = true;
+        dom.selectionTarget.value = '';
+        return;
+      }
+      const batches = state.metadata[tab.name] || [];
+      if (batches.length < 2) {
+        dom.selectionTarget.disabled = true;
+        return;
+      }
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Choose batch';
+      placeholder.disabled = true;
+      dom.selectionTarget.appendChild(placeholder);
+      const selectionBatches = new Set(Array.from(state.selection.items.values()).map(item => item.batchTimestamp));
+      let hasEnabled = false;
+      let restored = false;
+      batches.forEach((batch, index) => {
+        if (!batch.timestamp) return;
+        const option = document.createElement('option');
+        option.value = batch.timestamp;
+        const label = batch.title ? `${index + 1}. ${batch.title}` : `Batch ${index + 1}`;
+        option.textContent = label;
+        if (selectionBatches.size === 1 && selectionBatches.has(batch.timestamp)) {
+          option.disabled = true;
+        } else {
+          hasEnabled = true;
+        }
+        if (option.value === currentValue && !option.disabled) {
+          option.selected = true;
+          restored = true;
+        }
+        dom.selectionTarget.appendChild(option);
+      });
+      dom.selectionTarget.disabled = !hasEnabled;
+      if (!restored) {
+        dom.selectionTarget.value = '';
+        placeholder.selected = true;
+      } else {
+        placeholder.selected = false;
+      }
+    }
+
+    function updateSelectionUI() {
+      pruneSelection();
+      const count = state.selection.items.size;
+      if (dom.selectionSummary) {
+        dom.selectionSummary.textContent = `${count} selected`;
+      }
+      if (dom.selectionActions) {
+        dom.selectionActions.classList.toggle('show', state.selection.active && count > 0);
+      }
+      rebuildSelectionTargets();
+      if (dom.moveSelected) {
+        const targetReady = dom.selectionTarget && !dom.selectionTarget.disabled && !!dom.selectionTarget.value;
+        dom.moveSelected.disabled = !state.selection.active || count === 0 || !targetReady;
+      }
+      if (dom.deleteSelected) {
+        dom.deleteSelected.disabled = !state.selection.active || count === 0;
+      }
+      const thumbnails = dom.tabBody ? dom.tabBody.querySelectorAll('.thumbnail') : [];
+      thumbnails.forEach(thumb => {
+        const key = thumb.dataset.selectionKey;
+        const selected = state.selection.items.has(key);
+        thumb.classList.toggle('selected', selected);
+        const checkbox = thumb.querySelector('.thumbnail-select input');
+        if (checkbox) {
+          checkbox.checked = selected;
+        }
+      });
+    }
+
+    function toggleImageSelection(meta, selected) {
+      const key = getSelectionKey(meta.batch, meta.name);
+      const next = typeof selected === 'boolean' ? selected : !state.selection.items.has(key);
+      if (next) {
+        state.selection.items.set(key, {
+          tabName: meta.tab.name,
+          batchTimestamp: meta.batch.timestamp,
+          name: meta.name
+        });
+      } else {
+        state.selection.items.delete(key);
+      }
+      updateSelectionUI();
+    }
+
+    function updateSelectionControls() {
+      if (!dom.selectionToggle) return;
+      const hasImages = state.currentTab ? getTabImageCount(state.currentTab.name) > 0 : false;
+      const enabled = state.editMode && hasImages;
+      dom.selectionToggle.disabled = !enabled;
+      if (!enabled && state.selection.active) {
+        setSelectionMode(false);
+      }
     }
 
     async function ensureDb() {
@@ -788,6 +1390,7 @@
           console.error('Failed to read metadata.json', err);
           state.metadata = {};
           showStatus('Could not read metadata.json. A new one will be created on save.', 4000);
+          await saveMetadata();
         }
       }
     }
@@ -808,24 +1411,43 @@
     }
 
     async function loadTabs() {
-      state.tabs = [];
+      const tabs = [];
       for await (const [name, handle] of state.rootHandle.entries()) {
         if (handle.kind === 'directory') {
-          state.tabs.push({ name, handle });
-          if (!Array.isArray(state.metadata[name])) {
-            state.metadata[name] = [];
-          }
+          tabs.push({ name, handle });
         }
       }
-      state.tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-      const metadataKeys = Object.keys(state.metadata);
-      for (const key of metadataKeys) {
-        const exists = state.tabs.some(tab => tab.name === key);
-        if (!exists) {
+      tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+      state.tabs = tabs;
+      const existingNames = new Set(state.tabs.map(tab => tab.name));
+      const removed = [];
+      for (const key of Object.keys(state.metadata)) {
+        if (!existingNames.has(key)) {
+          removed.push(key);
+          cleanupTabResources(key);
+          for (const [selKey, meta] of Array.from(state.selection.items.entries())) {
+            if (meta.tabName === key) {
+              state.selection.items.delete(selKey);
+            }
+          }
           delete state.metadata[key];
         }
       }
-      await saveMetadata();
+      let metadataChanged = false;
+      for (const tab of state.tabs) {
+        if (!Array.isArray(state.metadata[tab.name])) {
+          state.metadata[tab.name] = [];
+          metadataChanged = true;
+        }
+      }
+      if (metadataChanged || removed.length) {
+        await saveMetadata();
+      }
+      if (removed.length) {
+        showStatus(`Removed metadata for missing directories: ${removed.join(', ')}`, 6000);
+      }
+      updateSelectionUI();
+      updateSelectionControls();
     }
 
     function refreshTabBar() {
@@ -944,22 +1566,33 @@
 
     async function renameDirectory(tab, newName) {
       const oldName = tab.name;
-      if (state.rootHandle.renameEntry) {
-        await state.rootHandle.renameEntry(oldName, newName);
-      } else if (tab.handle.move) {
-        await tab.handle.move(state.rootHandle, newName);
-      } else {
-        throw new Error('Directory renaming is not supported in this browser.');
+      showLoadingOverlay('Renaming tab...');
+      try {
+        if (state.rootHandle.renameEntry) {
+          await state.rootHandle.renameEntry(oldName, newName);
+        } else if (tab.handle.move) {
+          await tab.handle.move(state.rootHandle, newName);
+        } else {
+          throw new Error('Directory renaming is not supported in this browser.');
+        }
+        tab.name = newName;
+        tab.handle = await state.rootHandle.getDirectoryHandle(newName);
+        state.tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+        const batches = state.metadata[oldName] || [];
+        state.metadata[newName] = batches;
+        delete state.metadata[oldName];
+        for (const meta of state.selection.items.values()) {
+          if (meta.tabName === oldName) {
+            meta.tabName = newName;
+          }
+        }
+        await saveMetadata();
+        refreshTabBar();
+        await setActiveTab(newName);
+        updateSelectionControls();
+      } finally {
+        hideLoadingOverlay();
       }
-      tab.name = newName;
-      tab.handle = await state.rootHandle.getDirectoryHandle(newName);
-      state.tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-      const batches = state.metadata[oldName] || [];
-      state.metadata[newName] = batches;
-      delete state.metadata[oldName];
-      await saveMetadata();
-      refreshTabBar();
-      await setActiveTab(newName);
     }
 
     function createDropZone(options = {}) {
@@ -981,7 +1614,7 @@
       if (button) button.textContent = buttonLabel;
       if (compact) dropzone.classList.add('compact');
       const processFiles = async (fileList) => {
-        const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+        const files = Array.from(fileList);
         if (!files.length) return;
         try {
           await onFiles(files);
@@ -1012,6 +1645,51 @@
       return dropzone;
     }
 
+    /**
+     * Validates that selected files are acceptable images and reports skipped ones.
+     * @param {File[]} files
+     * @param {{ batch?: { images?: string[] } }} [options]
+     * @returns {{ valid: File[], skipped: { name: string, reason: string }[] }}
+     */
+    function validateImageFiles(files, options = {}) {
+      const result = { valid: [], skipped: [] };
+      const seen = new Set();
+      const existing = options.batch && Array.isArray(options.batch.images)
+        ? new Set(options.batch.images.map(name => name.toLowerCase()))
+        : new Set();
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) {
+          result.skipped.push({ name: file.name, reason: 'not an image' });
+          continue;
+        }
+        if (file.size > MAX_IMAGE_SIZE) {
+          result.skipped.push({ name: file.name, reason: 'too large' });
+          continue;
+        }
+        const lower = file.name.toLowerCase();
+        if (seen.has(lower)) {
+          result.skipped.push({ name: file.name, reason: 'duplicate in selection' });
+          continue;
+        }
+        if (existing.has(lower)) {
+          result.skipped.push({ name: file.name, reason: 'duplicate in batch' });
+          continue;
+        }
+        seen.add(lower);
+        result.valid.push(file);
+      }
+      return result;
+    }
+
+    function formatSkippedFiles(skipped) {
+      if (!skipped.length) return '';
+      const parts = skipped.slice(0, 5).map(item => `${item.name} (${item.reason})`);
+      if (skipped.length > 5) {
+        parts.push(`...and ${skipped.length - 5} more`);
+      }
+      return `Skipped ${skipped.length} file${skipped.length === 1 ? '' : 's'}: ${parts.join(', ')}`;
+    }
+
     async function handleFilesForNewBatch(files) {
       if (!state.currentTab) {
         showStatus('Select or create a tab before uploading.', 3500);
@@ -1019,9 +1697,20 @@
       }
       if (!files.length) return;
       try {
-        const storedNames = await copyImagesToCurrentTab(files);
-        await addBatchToCurrentTab(storedNames);
-        showStatus('Images added successfully.', 2500);
+        const { stored, skipped } = await copyImagesToCurrentTab(files);
+        if (!stored.length) {
+          const message = skipped.length ? formatSkippedFiles(skipped) : 'No valid images to add.';
+          if (message) {
+            showStatus(message, 4500);
+          }
+          return;
+        }
+        await addBatchToCurrentTab(stored);
+        let message = 'Images added successfully.';
+        if (skipped.length) {
+          message += ` ${formatSkippedFiles(skipped)}`;
+        }
+        showStatus(message, skipped.length ? 6000 : 2500);
       } catch (err) {
         console.error('Upload failed', err);
         showStatus(err.message || 'Failed to add images.', 4000);
@@ -1035,23 +1724,35 @@
       }
       if (!files.length) return;
       try {
-        const storedNames = await copyImagesToCurrentTab(files);
+        const { stored, skipped } = await copyImagesToCurrentTab(files, { batch });
+        if (!stored.length) {
+          const message = skipped.length ? formatSkippedFiles(skipped) : 'No valid images to add.';
+          if (message) {
+            showStatus(message, 4500);
+          }
+          return;
+        }
         if (!Array.isArray(batch.images)) {
           batch.images = [];
         }
-        batch.images.push(...storedNames);
+        const unique = stored.filter(name => !batch.images.includes(name));
+        batch.images.push(...unique);
         batch.timestamp = new Date().toISOString();
         await saveMetadata();
         await renderTab(state.currentTab.name);
         refreshTabBar();
-        showStatus('Images added to block.', 2500);
+        let message = 'Images added to block.';
+        if (skipped.length) {
+          message += ` ${formatSkippedFiles(skipped)}`;
+        }
+        showStatus(message, skipped.length ? 6000 : 2500);
       } catch (err) {
         console.error('Upload failed', err);
         showStatus(err.message || 'Failed to add images.', 4000);
       }
     }
 
-    async function deleteImageFromBatch(tab, batch, imageName) {
+    async function removeImageFile(tab, imageName) {
       if (!tab) return;
       try {
         if (tab.handle.removeEntry) {
@@ -1064,7 +1765,13 @@
           throw err;
         }
       }
+    }
+
+    async function deleteImageFromBatch(tab, batch, imageName) {
+      if (!tab) return;
+      await removeImageFile(tab, imageName);
       batch.images = Array.isArray(batch.images) ? batch.images.filter(name => name !== imageName) : [];
+      cleanupSelectionForImage(batch, imageName);
       batch.timestamp = new Date().toISOString();
       await saveMetadata();
       await renderTab(tab.name);
@@ -1074,34 +1781,161 @@
     async function deleteBatch(tab, batch) {
       if (!tab) return;
       const images = Array.isArray(batch.images) ? [...batch.images] : [];
-      for (const name of images) {
-        try {
-          if (tab.handle.removeEntry) {
-            await tab.handle.removeEntry(name);
-          } else {
-            throw new Error('File deletion is not supported in this browser.');
-          }
-        } catch (err) {
-          if (!err || err.name !== 'NotFoundError') {
-            throw err;
-          }
+      showLoadingOverlay('Deleting block...');
+      try {
+        cleanupBatchResources(batch);
+        for (const name of images) {
+          await removeImageFile(tab, name);
         }
+        const batches = state.metadata[tab.name] || [];
+        const index = batches.indexOf(batch);
+        if (index !== -1) {
+          batches.splice(index, 1);
+        }
+        cleanupSelectionForBatch(batch);
+        await saveMetadata();
+        await renderTab(tab.name);
+        refreshTabBar();
+      } finally {
+        hideLoadingOverlay();
       }
-      const batches = state.metadata[tab.name] || [];
-      const index = batches.indexOf(batch);
-      if (index !== -1) {
-        batches.splice(index, 1);
+    }
+
+    /**
+     * Moves the currently selected images into another batch within the active tab.
+     * Provides user feedback and keeps metadata in sync.
+     */
+    async function moveSelectedImages() {
+      if (!state.currentTab) {
+        showStatus('Select a tab before moving images.', 3500);
+        return;
       }
-      await saveMetadata();
-      await renderTab(tab.name);
-      refreshTabBar();
+      if (!state.selection.items.size) {
+        showStatus('No images selected.', 2500);
+        return;
+      }
+      const targetValue = dom.selectionTarget ? dom.selectionTarget.value : '';
+      if (!targetValue) {
+        showStatus('Choose a destination batch first.', 3500);
+        return;
+      }
+      const targetBatch = findBatch(state.currentTab.name, targetValue);
+      if (!targetBatch) {
+        showStatus('Destination batch is no longer available.', 3500);
+        return;
+      }
+      const items = Array.from(state.selection.items.values()).filter(meta => meta.tabName === state.currentTab.name);
+      if (!items.length) {
+        showStatus('No images selected.', 2500);
+        return;
+      }
+      showLoadingOverlay('Moving images...');
+      let moved = 0;
+      const updatedBatches = new Set();
+      try {
+        for (const meta of items) {
+          const sourceBatch = findBatch(meta.tabName, meta.batchTimestamp);
+          if (!sourceBatch || sourceBatch === targetBatch || !Array.isArray(sourceBatch.images)) continue;
+          const index = sourceBatch.images.indexOf(meta.name);
+          if (index === -1) continue;
+          sourceBatch.images.splice(index, 1);
+          updatedBatches.add(sourceBatch);
+          if (!Array.isArray(targetBatch.images)) {
+            targetBatch.images = [];
+          }
+          if (!targetBatch.images.includes(meta.name)) {
+            targetBatch.images.push(meta.name);
+          }
+          moved += 1;
+        }
+        if (!moved) {
+          showStatus('No images moved.', 2500);
+          return;
+        }
+        const timestamp = new Date().toISOString();
+        for (const batch of updatedBatches) {
+          batch.timestamp = timestamp;
+        }
+        targetBatch.timestamp = new Date().toISOString();
+        await saveMetadata();
+        await renderTab(state.currentTab.name);
+        refreshTabBar();
+        clearSelection();
+        dom.selectionTarget.value = '';
+        showStatus(`Moved ${moved} image${moved === 1 ? '' : 's'}.`, 2500);
+      } catch (err) {
+        console.error('Move failed', err);
+        showStatus(err.message || 'Failed to move selected images.', 4000);
+      } finally {
+        hideLoadingOverlay();
+      }
+    }
+
+    /**
+     * Deletes all currently selected images from disk and metadata in the active tab.
+     */
+    async function deleteSelectedImages() {
+      if (!state.currentTab) {
+        showStatus('Select a tab before deleting images.', 3500);
+        return;
+      }
+      if (!state.selection.items.size) {
+        showStatus('No images selected.', 2500);
+        return;
+      }
+      const confirmed = window.confirm('Delete selected images?');
+      if (!confirmed) return;
+      showLoadingOverlay('Deleting selected images...');
+      let removedCount = 0;
+      try {
+        const grouped = new Map();
+        for (const meta of state.selection.items.values()) {
+          if (meta.tabName !== state.currentTab.name) continue;
+          const batch = findBatch(meta.tabName, meta.batchTimestamp);
+          if (!batch) continue;
+          if (!grouped.has(batch)) {
+            grouped.set(batch, new Set());
+          }
+          grouped.get(batch).add(meta.name);
+        }
+        const timestamp = new Date().toISOString();
+        for (const [batch, names] of grouped.entries()) {
+          cleanupBatchResources(batch);
+          for (const name of names) {
+            await removeImageFile(state.currentTab, name);
+            const index = batch.images.indexOf(name);
+            if (index !== -1) {
+              batch.images.splice(index, 1);
+              removedCount += 1;
+            }
+          }
+          batch.timestamp = timestamp;
+        }
+        if (removedCount) {
+          await saveMetadata();
+          await renderTab(state.currentTab.name);
+          refreshTabBar();
+          clearSelection();
+          showStatus(`Deleted ${removedCount} image${removedCount === 1 ? '' : 's'}.`, 2500);
+        } else {
+          showStatus('No images deleted.', 2500);
+        }
+      } catch (err) {
+        console.error('Bulk delete failed', err);
+        showStatus(err.message || 'Failed to delete selected images.', 4000);
+      } finally {
+        hideLoadingOverlay();
+      }
     }
 
     async function deleteTab(tab) {
       if (!state.rootHandle) {
         throw new Error('Root folder is not available.');
       }
+      showLoadingOverlay('Deleting tab...');
       try {
+        cleanupTabResources(tab.name);
+        cleanupSelectionForTab(tab.name);
         if (state.rootHandle.removeEntry) {
           await state.rootHandle.removeEntry(tab.name, { recursive: true });
         } else if (tab.handle.remove) {
@@ -1109,30 +1943,138 @@
         } else {
           throw new Error('Directory deletion is not supported in this browser.');
         }
+        const index = state.tabs.indexOf(tab);
+        if (index !== -1) {
+          state.tabs.splice(index, 1);
+        }
+        delete state.metadata[tab.name];
+        if (state.currentTab === tab) {
+          state.currentTab = null;
+        }
+        await saveMetadata();
+        refreshTabBar();
+        if (state.tabs.length) {
+          await setActiveTab(state.tabs[0].name);
+        } else {
+          dom.tabBody.innerHTML = '';
+          dom.tabBody.appendChild(createDropZone({
+            title: 'Drop images to create a new block',
+            subtitle: 'or click below to choose files',
+            buttonLabel: 'Browse files'
+          }));
+        }
+        updateSelectionControls();
       } catch (err) {
         if (!err || err.name !== 'NotFoundError') {
           throw err;
         }
+      } finally {
+        hideLoadingOverlay();
       }
-      const index = state.tabs.indexOf(tab);
-      if (index !== -1) {
-        state.tabs.splice(index, 1);
+    }
+
+    /**
+     * Scans the root directory and reconciles it with the stored metadata structure.
+     * Adds missing tabs, removes stale metadata, and prunes missing files.
+     */
+    async function repairLibrary() {
+      if (!state.rootHandle) {
+        showStatus('Select a root folder first.', 3000);
+        return;
       }
-      delete state.metadata[tab.name];
-      if (state.currentTab === tab) {
-        state.currentTab = null;
-      }
-      await saveMetadata();
-      refreshTabBar();
-      if (state.tabs.length) {
-        await setActiveTab(state.tabs[0].name);
-      } else {
-        dom.tabBody.innerHTML = '';
-        dom.tabBody.appendChild(createDropZone({
-          title: 'Drop images to create a new block',
-          subtitle: 'or click below to choose files',
-          buttonLabel: 'Browse files'
-        }));
+      showLoadingOverlay('Repairing library...');
+      const addedTabs = new Set();
+      const removedTabs = new Set();
+      let removedImages = 0;
+      try {
+        const handles = new Map();
+        for await (const [name, handle] of state.rootHandle.entries()) {
+          if (handle.kind === 'directory') {
+            handles.set(name, handle);
+          }
+        }
+        for (const key of Object.keys(state.metadata)) {
+          if (!handles.has(key)) {
+            removedTabs.add(key);
+            for (const [selKey, meta] of Array.from(state.selection.items.entries())) {
+              if (meta.tabName === key) {
+                state.selection.items.delete(selKey);
+              }
+            }
+            delete state.metadata[key];
+          }
+        }
+        for (const [name, handle] of handles.entries()) {
+          if (!Array.isArray(state.metadata[name])) {
+            state.metadata[name] = [];
+            addedTabs.add(name);
+          }
+        }
+        state.tabs = Array.from(handles.entries()).map(([name, handle]) => ({ name, handle }));
+        state.tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+        for (const tab of state.tabs) {
+          const batches = state.metadata[tab.name] || [];
+          for (const batch of batches) {
+            cleanupBatchResources(batch);
+            if (!Array.isArray(batch.images)) {
+              batch.images = [];
+            }
+            const unique = Array.from(new Set(batch.images.filter(name => typeof name === 'string' && name)));
+            let batchChanged = false;
+            if (unique.length !== batch.images.length) {
+              batch.images = unique;
+              batchChanged = true;
+            }
+            const existing = [];
+            for (const name of batch.images) {
+              const exists = await fileExists(tab.handle, name);
+              if (exists) {
+                existing.push(name);
+              } else {
+                removedImages += 1;
+                batchChanged = true;
+              }
+            }
+            batch.images = existing;
+            if (batchChanged) {
+              batch.timestamp = new Date().toISOString();
+            }
+          }
+        }
+        await saveMetadata();
+        refreshTabBar();
+        const currentName = state.currentTab && handles.has(state.currentTab.name)
+          ? state.currentTab.name
+          : (state.tabs[0] ? state.tabs[0].name : null);
+        if (currentName) {
+          await setActiveTab(currentName);
+        } else {
+          dom.tabBody.innerHTML = '';
+          dom.tabBody.appendChild(createDropZone({
+            title: 'Drop images to create a new block',
+            subtitle: 'or click below to choose files',
+            buttonLabel: 'Browse files'
+          }));
+        }
+        updateSelectionUI();
+        updateSelectionControls();
+        const messages = [];
+        if (addedTabs.size) {
+          messages.push(`Added ${addedTabs.size} missing tab${addedTabs.size === 1 ? '' : 's'}.`);
+        }
+        if (removedTabs.size) {
+          messages.push(`Removed ${removedTabs.size} stale tab${removedTabs.size === 1 ? '' : 's'}.`);
+        }
+        if (removedImages) {
+          messages.push(`Cleaned ${removedImages} missing image${removedImages === 1 ? '' : 's'}.`);
+        }
+        const summary = messages.length ? messages.join(' ') : 'No issues detected.';
+        showStatus(`Repair complete. ${summary}`, 6000);
+      } catch (err) {
+        console.error('Repair failed', err);
+        showStatus(err.message || 'Failed to repair library.', 4000);
+      } finally {
+        hideLoadingOverlay();
       }
     }
 
@@ -1144,25 +2086,43 @@
         dom.editToggle.setAttribute('aria-pressed', active ? 'true' : 'false');
         dom.editToggle.classList.toggle('active', active);
       }
+      updateSelectionControls();
       refreshTabBar();
       if (state.currentTab) {
         await renderTab(state.currentTab.name);
       }
     }
 
-    async function copyImagesToCurrentTab(files) {
+    async function copyImagesToCurrentTab(files, options = {}) {
+      if (!state.currentTab) {
+        throw new Error('Select a tab before copying files.');
+      }
+      const validation = validateImageFiles(files, options);
+      if (!validation.valid.length) {
+        return { stored: [], skipped: validation.skipped };
+      }
       const tab = state.currentTab;
       const folderHandle = tab.handle;
       const stored = [];
-      for (const file of files) {
-        let targetName = await ensureUniqueFileName(folderHandle, file.name);
-        const fileHandle = await folderHandle.getFileHandle(targetName, { create: true });
-        const writable = await fileHandle.createWritable();
-        await writable.write(file);
-        await writable.close();
-        stored.push(targetName);
+      const total = validation.valid.length;
+      showLoadingOverlay(`Copying 0/${total} files...`, { total });
+      updateLoadingProgress(0, total, `Copying 0/${total} files...`);
+      try {
+        let index = 0;
+        for (const file of validation.valid) {
+          index += 1;
+          const targetName = await ensureUniqueFileName(folderHandle, file.name);
+          const fileHandle = await folderHandle.getFileHandle(targetName, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(file);
+          await writable.close();
+          stored.push(targetName);
+          updateLoadingProgress(index, total, `Copying ${index}/${total} files...`);
+        }
+      } finally {
+        hideLoadingOverlay();
       }
-      return stored;
+      return { stored, skipped: validation.skipped };
     }
 
     async function ensureUniqueFileName(dirHandle, name) {
@@ -1207,9 +2167,29 @@
     async function renderTab(tabName) {
       const tab = state.tabs.find(t => t.name === tabName);
       if (!tab) return;
+      cleanupTabResources(tabName);
+      const oldThumbnails = dom.tabBody.querySelectorAll('.thumbnail');
+      oldThumbnails.forEach(unobserveThumbnail);
       dom.tabBody.innerHTML = '';
       const batches = state.metadata[tabName] || [];
+      let metadataUpdated = false;
       for (const batch of batches) {
+        if (!Array.isArray(batch.images)) {
+          batch.images = [];
+          metadataUpdated = true;
+        } else {
+          const normalized = batch.images.filter(name => typeof name === 'string' && name);
+          const unique = Array.from(new Set(normalized));
+          if (unique.length !== batch.images.length) {
+            batch.images = unique;
+            batch.timestamp = new Date().toISOString();
+            metadataUpdated = true;
+          }
+        }
+        if (!batch.timestamp) {
+          batch.timestamp = new Date().toISOString();
+          metadataUpdated = true;
+        }
         const section = dom.batchTemplate.content.cloneNode(true);
         const batchEl = section.querySelector('.batch');
         batchEl.dataset.timestamp = batch.timestamp;
@@ -1273,15 +2253,17 @@
         }
         textarea.value = batch.description || '';
         setupBatchAutoSave(textarea, titleInput, batch);
-        copyBtn.addEventListener('click', () => {
-          navigator.clipboard.writeText(textarea.value || '').then(() => {
-            showStatus('Prompt copied to clipboard.', 2000);
-          }).catch(err => {
-            console.error('Clipboard error', err);
-            showStatus('Unable to copy to clipboard.', 2500);
+        if (copyBtn) {
+          copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(textarea.value || '').then(() => {
+              showStatus('Prompt copied to clipboard.', 2000);
+            }).catch(err => {
+              console.error('Clipboard error', err);
+              showStatus('Unable to copy to clipboard.', 2500);
+            });
           });
-        });
-        await populateThumbnails(tab, batch, thumbnails);
+        }
+        populateThumbnails(tab, batch, thumbnails);
         dom.tabBody.appendChild(batchEl);
       }
       dom.tabBody.appendChild(createDropZone({
@@ -1289,6 +2271,11 @@
         subtitle: 'or click below to choose files',
         buttonLabel: 'Browse files'
       }));
+      if (metadataUpdated) {
+        await saveMetadata();
+      }
+      updateSelectionUI();
+      updateSelectionControls();
     }
 
     function setupBatchAutoSave(textarea, titleInput, batch) {
@@ -1312,53 +2299,106 @@
       textarea.addEventListener('input', handler);
     }
 
-    async function populateThumbnails(tab, batch, container) {
-      const missing = [];
+    function populateThumbnails(tab, batch, container) {
+      const previousThumbs = container.querySelectorAll('.thumbnail');
+      previousThumbs.forEach(unobserveThumbnail);
+      container.innerHTML = '';
+      cleanupBatchResources(batch);
+      if (!Array.isArray(batch.images) || !batch.images.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = 'No images in this block yet.';
+        container.appendChild(empty);
+        return;
+      }
+      const fragment = document.createDocumentFragment();
       for (const name of batch.images) {
-        try {
-          const fileHandle = await tab.handle.getFileHandle(name);
-          const file = await fileHandle.getFile();
-          const url = URL.createObjectURL(file);
-          const thumb = document.createElement('div');
-          thumb.className = 'thumbnail';
-          const img = document.createElement('img');
-          img.src = url;
-          img.alt = name;
-          img.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
-          thumb.appendChild(img);
-          const removeBtn = document.createElement('button');
-          removeBtn.type = 'button';
-          removeBtn.className = 'icon-btn danger thumbnail-remove';
-          removeBtn.title = 'Delete image';
-          removeBtn.textContent = '✕';
-          removeBtn.addEventListener('click', async (event) => {
-            event.stopPropagation();
-            if (!state.editMode) return;
-            const confirmed = window.confirm('Delete this image?');
-            if (!confirmed) return;
-            try {
-              await deleteImageFromBatch(tab, batch, name);
-              showStatus('Image deleted.', 2000);
-            } catch (err) {
-              console.error('Image delete failed', err);
-              showStatus(err.message || 'Failed to delete image.', 3500);
-            }
-          });
-          thumb.appendChild(removeBtn);
-          thumb.addEventListener('click', () => openViewer(tab, batch.images, name));
-          container.appendChild(thumb);
-        } catch (err) {
-          console.warn('Image missing', name, err);
-          missing.push(name);
+        if (typeof name !== 'string' || !name) {
+          continue;
         }
+        const thumb = document.createElement('div');
+        thumb.className = 'thumbnail';
+        thumb.dataset.selectionKey = getSelectionKey(batch, name);
+        thumb.dataset.imageName = name;
+        const placeholder = document.createElement('div');
+        placeholder.className = 'placeholder';
+        const icon = document.createElement('span');
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = '🖼️';
+        const text = document.createElement('small');
+        text.className = 'placeholder-text';
+        text.textContent = 'Waiting...';
+        placeholder.append(icon, text);
+        thumb.appendChild(placeholder);
+        const img = document.createElement('img');
+        img.alt = name;
+        thumb.appendChild(img);
+        const selectWrapper = document.createElement('div');
+        selectWrapper.className = 'thumbnail-select';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.setAttribute('aria-label', `Select ${name}`);
+        selectWrapper.appendChild(checkbox);
+        thumb.appendChild(selectWrapper);
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'icon-btn danger thumbnail-remove';
+        removeBtn.title = 'Delete image';
+        removeBtn.textContent = '✕';
+        const meta = { tab, batch, name };
+        removeBtn.addEventListener('click', async (event) => {
+          event.stopPropagation();
+          if (!state.editMode) return;
+          const confirmed = window.confirm('Delete this image?');
+          if (!confirmed) return;
+          try {
+            unobserveThumbnail(thumb);
+            await deleteImageFromBatch(tab, batch, name);
+            showStatus('Image deleted.', 2000);
+          } catch (err) {
+            console.error('Image delete failed', err);
+            showStatus(err.message || 'Failed to delete image.', 3500);
+          }
+        });
+        thumb.appendChild(removeBtn);
+        checkbox.addEventListener('click', (event) => {
+          event.stopPropagation();
+        });
+        checkbox.addEventListener('change', () => {
+          if (!state.selection.active) {
+            checkbox.checked = state.selection.items.has(thumb.dataset.selectionKey);
+            return;
+          }
+          toggleImageSelection(meta, checkbox.checked);
+        });
+        thumb.addEventListener('click', () => {
+          if (state.selection.active) {
+            const currentlySelected = state.selection.items.has(thumb.dataset.selectionKey);
+            toggleImageSelection(meta, !currentlySelected);
+            const cb = thumb.querySelector('.thumbnail-select input');
+            if (cb) {
+              cb.checked = !currentlySelected;
+            }
+          } else {
+            openViewer(tab, batch.images, name);
+          }
+        });
+        const key = thumb.dataset.selectionKey;
+        if (state.selection.items.has(key)) {
+          thumb.classList.add('selected');
+          checkbox.checked = true;
+        }
+        fragment.appendChild(thumb);
+        registerThumbnail(thumb, meta);
       }
-      if (missing.length) {
-        const warning = document.createElement('div');
-        warning.textContent = `Missing files: ${missing.join(', ')}`;
-        warning.style.color = '#c92a2a';
-        warning.style.fontWeight = '600';
-        container.appendChild(warning);
+      if (!fragment.children.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = 'No images in this block yet.';
+        container.appendChild(empty);
+        return;
       }
+      container.appendChild(fragment);
     }
 
     function openViewer(tab, images, currentName) {
@@ -1469,6 +2509,7 @@
         showStatus('Select a root folder first.', 3000);
         return;
       }
+      showLoadingOverlay('Creating tab...');
       try {
         const name = await nextTabName();
         const dirHandle = await state.rootHandle.getDirectoryHandle(name, { create: true });
@@ -1481,9 +2522,12 @@
         }
         refreshTabBar();
         await setActiveTab(name);
+        updateSelectionControls();
       } catch (err) {
         console.error('Failed to create tab', err);
         showStatus('Could not create new tab.', 3500);
+      } finally {
+        hideLoadingOverlay();
       }
     });
 
@@ -1495,6 +2539,37 @@
           console.error('Failed to toggle edit mode', err);
           showStatus('Unable to toggle edit mode.', 3000);
         }
+      });
+    }
+
+    if (dom.selectionToggle) {
+      dom.selectionToggle.addEventListener('click', () => {
+        if (!state.editMode) return;
+        setSelectionMode(!state.selection.active);
+      });
+    }
+
+    if (dom.selectionTarget) {
+      dom.selectionTarget.addEventListener('change', () => {
+        updateSelectionUI();
+      });
+    }
+
+    if (dom.moveSelected) {
+      dom.moveSelected.addEventListener('click', async () => {
+        await moveSelectedImages();
+      });
+    }
+
+    if (dom.deleteSelected) {
+      dom.deleteSelected.addEventListener('click', async () => {
+        await deleteSelectedImages();
+      });
+    }
+
+    if (dom.repairButton) {
+      dom.repairButton.addEventListener('click', async () => {
+        await repairLibrary();
       });
     }
 
@@ -1516,6 +2591,10 @@
       const tab = state.tabs.find(t => t.name === name);
       if (!tab) return;
       closeViewer();
+      const previousName = state.currentTab && state.currentTab.name !== name ? state.currentTab.name : null;
+      if (previousName) {
+        cleanupTabResources(previousName);
+      }
       state.currentTab = tab;
       for (const btn of dom.tabList.querySelectorAll('.tab')) {
         btn.classList.toggle('active', btn.dataset.name === name);
