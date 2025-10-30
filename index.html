@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Image Gallery Manager</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f9fc;
+      --surface: #ffffff;
+      --border: #d8dee9;
+      --accent: #4c6ef5;
+      --accent-hover: #3b5bdb;
+      --text: #1b1f3b;
+      --muted: #6c7a89;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f1f5ff 0%, #f7f9fc 100%);
+      color: var(--text);
+    }
+
+    button, input, textarea {
+      font-family: inherit;
+    }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .primary-btn {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-btn:disabled {
+      background: #a5b4fc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .primary-btn:not(:disabled):hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(76, 110, 245, 0.28);
+    }
+
+    .tab-bar {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+
+    .tab-bar::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .tab-bar::-webkit-scrollbar-thumb {
+      background: rgba(27, 31, 59, 0.2);
+      border-radius: 4px;
+    }
+
+    .tab {
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: #eef2ff;
+      padding: 8px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      user-select: none;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .tab .tab-title {
+      outline: none;
+      border-radius: 6px;
+      padding: 2px 4px;
+    }
+
+    .tab .tab-title[contenteditable="true"] {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .new-tab-btn {
+      border: 1px dashed var(--accent);
+      background: transparent;
+      color: var(--accent);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .surface-card {
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.7);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(76, 110, 245, 0.08);
+      color: var(--accent);
+    }
+
+    .drop-zone input[type="file"] {
+      display: none;
+    }
+
+    .drop-zone button {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      background: rgba(76, 110, 245, 0.1);
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .batch {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .batch:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .thumbnail-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .thumbnail {
+      height: 200px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #e2e8f0;
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .thumbnail:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 22px rgba(76, 110, 245, 0.22);
+    }
+
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      font-size: 1rem;
+      resize: vertical;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .batch-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .text-btn {
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .text-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .status-bar {
+      display: none;
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1b1f3b;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 999px;
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.3);
+      font-weight: 600;
+      z-index: 1000;
+    }
+
+    .status-bar.show {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .viewer {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(4px);
+    }
+
+    .viewer.open {
+      display: flex;
+    }
+
+    .viewer img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 16px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .viewer button {
+      position: absolute;
+      border: none;
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border-radius: 999px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .viewer button:hover {
+      background: rgba(76, 110, 245, 0.55);
+    }
+
+    .viewer-close {
+      top: 32px;
+      right: 32px;
+    }
+
+    .viewer-prev {
+      left: 32px;
+    }
+
+    .viewer-next {
+      right: 32px;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 20px;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .viewer-prev {
+        left: 16px;
+      }
+      .viewer-next {
+        right: 16px;
+      }
+      .viewer-close {
+        top: 16px;
+        right: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>AI Image Gallery Manager</h1>
+      <button id="select-root" class="primary-btn">Select Root Folder</button>
+    </header>
+
+    <div id="no-root" class="surface-card" style="display:none;">
+      <div class="empty-state">
+        <p>Select a root folder to begin managing your AI image batches.</p>
+      </div>
+    </div>
+
+    <div id="app-content" style="display:none;">
+      <div class="tab-bar" id="tab-bar">
+        <button id="new-tab" class="new-tab-btn">＋ New Tab</button>
+      </div>
+      <div id="tab-body" class="surface-card"></div>
+    </div>
+  </div>
+
+  <div id="status" class="status-bar" role="status"></div>
+
+  <div id="viewer" class="viewer" aria-hidden="true">
+    <button class="viewer-close" title="Close (Esc)">✕</button>
+    <button class="viewer-prev" title="Previous">◀</button>
+    <img alt="Full size preview" />
+    <button class="viewer-next" title="Next">▶</button>
+  </div>
+
+  <template id="batch-template">
+    <section class="batch">
+      <div class="thumbnail-row" data-thumbnails></div>
+      <textarea placeholder="Write prompt or notes..." data-textarea></textarea>
+      <div class="batch-actions">
+        <button class="text-btn" data-copy>Copy Prompt</button>
+      </div>
+    </section>
+  </template>
+
+  <template id="dropzone-template">
+    <label class="drop-zone" data-dropzone>
+      <strong>Drop up to 4 images</strong>
+      <span>or click below to choose files</span>
+      <button type="button">Browse files</button>
+      <input type="file" accept="image/*" multiple>
+    </label>
+  </template>
+
+  <script>
+    const DB_NAME = 'gallery-manager';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'handles';
+
+    const state = {
+      rootHandle: null,
+      metadata: {},
+      tabs: [],
+      currentTab: null,
+      batchesSaveTimers: new WeakMap(),
+      viewer: {
+        open: false,
+        images: [],
+        index: 0
+      }
+    };
+
+    const dom = {
+      selectRoot: document.getElementById('select-root'),
+      tabBar: document.getElementById('tab-bar'),
+      newTab: document.getElementById('new-tab'),
+      tabBody: document.getElementById('tab-body'),
+      status: document.getElementById('status'),
+      appContent: document.getElementById('app-content'),
+      noRoot: document.getElementById('no-root'),
+      viewer: document.getElementById('viewer'),
+      viewerImg: document.querySelector('#viewer img'),
+      viewerClose: document.querySelector('.viewer-close'),
+      viewerPrev: document.querySelector('.viewer-prev'),
+      viewerNext: document.querySelector('.viewer-next'),
+      batchTemplate: document.getElementById('batch-template'),
+      dropzoneTemplate: document.getElementById('dropzone-template')
+    };
+
+    async function init() {
+      await ensureDb();
+      const handle = await loadStoredHandle();
+      if (handle) {
+        try {
+          const perm = await handle.queryPermission({ mode: 'readwrite' });
+          if (perm === 'granted' || perm === 'prompt') {
+            const granted = perm === 'granted' ? true : await requestPermission(handle);
+            if (granted) {
+              state.rootHandle = handle;
+              dom.noRoot.style.display = 'none';
+              dom.appContent.style.display = '';
+              await bootstrapFromRoot();
+            } else {
+              showNoRoot();
+            }
+          } else {
+            await clearStoredHandle();
+            showNoRoot();
+          }
+        } catch (error) {
+          console.warn('Stored handle unavailable', error);
+          await clearStoredHandle();
+          showNoRoot();
+        }
+      } else {
+        showNoRoot();
+      }
+    }
+
+    function showNoRoot() {
+      dom.noRoot.style.display = '';
+      dom.appContent.style.display = 'none';
+    }
+
+    async function ensureDb() {
+      await new Promise((resolve, reject) => {
+        const openRequest = indexedDB.open(DB_NAME, DB_VERSION);
+        openRequest.onupgradeneeded = () => {
+          const db = openRequest.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+        openRequest.onsuccess = () => {
+          openRequest.result.close();
+          resolve();
+        };
+        openRequest.onerror = () => reject(openRequest.error);
+      });
+    }
+
+    function openDb() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function loadStoredHandle() {
+      try {
+        const db = await openDb();
+        return await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const getReq = store.get('root');
+          getReq.onsuccess = () => resolve(getReq.result || null);
+          getReq.onerror = () => reject(getReq.error);
+          tx.oncomplete = () => db.close();
+          tx.onabort = () => {
+            const err = tx.error || new DOMException('Transaction aborted');
+            db.close();
+            reject(err);
+          };
+        });
+      } catch (err) {
+        console.error('Failed to load stored handle', err);
+        return null;
+      }
+    }
+
+    async function storeHandle(handle) {
+      const db = await openDb();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        const putReq = store.put(handle, 'root');
+        putReq.onsuccess = () => resolve();
+        putReq.onerror = () => reject(putReq.error);
+        tx.oncomplete = () => db.close();
+        tx.onabort = () => {
+          const err = tx.error || new DOMException('Transaction aborted');
+          db.close();
+          reject(err);
+        };
+      });
+    }
+
+    async function clearStoredHandle() {
+      const db = await openDb();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        const delReq = store.delete('root');
+        delReq.onsuccess = () => resolve();
+        delReq.onerror = () => reject(delReq.error);
+        tx.oncomplete = () => db.close();
+        tx.onabort = () => {
+          const err = tx.error || new DOMException('Transaction aborted');
+          db.close();
+          reject(err);
+        };
+      });
+    }
+
+    async function requestPermission(handle) {
+      const result = await handle.requestPermission({ mode: 'readwrite' });
+      return result === 'granted';
+    }
+
+    async function bootstrapFromRoot() {
+      await loadMetadata();
+      await loadTabs();
+      refreshTabBar();
+      if (state.tabs.length) {
+        await setActiveTab(state.tabs[0].name);
+      } else {
+        dom.tabBody.innerHTML = '';
+        dom.tabBody.append(createDropZone());
+      }
+    }
+
+    async function loadMetadata() {
+      state.metadata = {};
+      try {
+        const fileHandle = await state.rootHandle.getFileHandle('metadata.json');
+        const file = await fileHandle.getFile();
+        const text = await file.text();
+        const data = JSON.parse(text || '{}');
+        if (typeof data === 'object' && data) {
+          state.metadata = data;
+        }
+      } catch (err) {
+        if (err && err.name === 'NotFoundError') {
+          state.metadata = {};
+          await saveMetadata();
+        } else {
+          console.error('Failed to read metadata.json', err);
+          state.metadata = {};
+          showStatus('Could not read metadata.json. A new one will be created on save.', 4000);
+        }
+      }
+    }
+
+    async function saveMetadata() {
+      if (!state.rootHandle) return;
+      try {
+        const fileHandle = await state.rootHandle.getFileHandle('metadata.json', { create: true });
+        const writable = await fileHandle.createWritable();
+        const content = JSON.stringify(state.metadata, null, 2);
+        await writable.write(content);
+        await writable.close();
+      } catch (err) {
+        console.error('Failed to save metadata', err);
+        showStatus('Unable to save metadata.json.', 3500);
+        throw err;
+      }
+    }
+
+    async function loadTabs() {
+      state.tabs = [];
+      for await (const [name, handle] of state.rootHandle.entries()) {
+        if (handle.kind === 'directory') {
+          state.tabs.push({ name, handle });
+          if (!Array.isArray(state.metadata[name])) {
+            state.metadata[name] = [];
+          }
+        }
+      }
+      state.tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+      const metadataKeys = Object.keys(state.metadata);
+      for (const key of metadataKeys) {
+        const exists = state.tabs.some(tab => tab.name === key);
+        if (!exists) {
+          delete state.metadata[key];
+        }
+      }
+      await saveMetadata();
+    }
+
+    function refreshTabBar() {
+      const existingButtons = Array.from(dom.tabBar.querySelectorAll('.tab'));
+      existingButtons.forEach(btn => btn.remove());
+      state.tabs.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className = 'tab';
+        btn.dataset.name = tab.name;
+        const title = document.createElement('span');
+        title.className = 'tab-title';
+        title.textContent = formatTabTitle(tab.name);
+        title.title = 'Click to rename';
+        btn.append(title);
+        btn.addEventListener('click', async (event) => {
+          if (event.target === title && btn.classList.contains('active')) {
+            enableTabRename(title, tab);
+          } else {
+            await setActiveTab(tab.name);
+          }
+        });
+        title.addEventListener('dblclick', (event) => {
+          event.stopPropagation();
+          enableTabRename(title, tab);
+        });
+        dom.tabBar.insertBefore(btn, dom.newTab);
+      });
+    }
+
+    function formatTabTitle(name) {
+      const count = getTabImageCount(name);
+      return count > 0 ? `${name} (${count})` : name;
+    }
+
+    function getTabImageCount(name) {
+      const batches = state.metadata[name] || [];
+      return batches.reduce((total, batch) => total + (Array.isArray(batch.images) ? batch.images.length : 0), 0);
+    }
+
+    function enableTabRename(titleEl, tab) {
+      if (titleEl.isContentEditable) return;
+      const originalDisplay = formatTabTitle(tab.name);
+      titleEl.dataset.original = originalDisplay;
+      titleEl.contentEditable = 'true';
+      titleEl.spellcheck = false;
+      titleEl.textContent = tab.name;
+      titleEl.focus();
+      selectText(titleEl);
+      const onBlur = async () => {
+        titleEl.removeEventListener('blur', onBlur);
+        titleEl.removeEventListener('keydown', onKeyDown);
+        titleEl.contentEditable = 'false';
+        const newName = titleEl.textContent.trim();
+        if (!newName) {
+          titleEl.textContent = originalDisplay;
+          return;
+        }
+        if (newName === tab.name) {
+          titleEl.textContent = formatTabTitle(tab.name);
+          return;
+        }
+        const nameExists = state.tabs.some(t => t !== tab && t.name === newName);
+        if (nameExists) {
+          showStatus('A tab with that name already exists.', 3500);
+          titleEl.textContent = originalDisplay;
+          return;
+        }
+        try {
+          await renameDirectory(tab, newName);
+          titleEl.textContent = formatTabTitle(newName);
+        } catch (err) {
+          console.error('Rename failed', err);
+          showStatus(err.message || 'Could not rename tab.', 4000);
+          titleEl.textContent = originalDisplay;
+        }
+      };
+      const onKeyDown = (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          titleEl.blur();
+        } else if (event.key === 'Escape') {
+          titleEl.textContent = titleEl.dataset.original;
+          titleEl.blur();
+        }
+      };
+      titleEl.addEventListener('blur', onBlur);
+      titleEl.addEventListener('keydown', onKeyDown);
+    }
+
+    function selectText(element) {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    async function renameDirectory(tab, newName) {
+      const oldName = tab.name;
+      if (state.rootHandle.renameEntry) {
+        await state.rootHandle.renameEntry(oldName, newName);
+      } else if (tab.handle.move) {
+        await tab.handle.move(state.rootHandle, newName);
+      } else {
+        throw new Error('Directory renaming is not supported in this browser.');
+      }
+      tab.name = newName;
+      tab.handle = await state.rootHandle.getDirectoryHandle(newName);
+      state.tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+      const batches = state.metadata[oldName] || [];
+      state.metadata[newName] = batches;
+      delete state.metadata[oldName];
+      await saveMetadata();
+      refreshTabBar();
+      await setActiveTab(newName);
+    }
+
+    function createDropZone() {
+      const fragment = dom.dropzoneTemplate.content.cloneNode(true);
+      const dropzone = fragment.querySelector('[data-dropzone]');
+      const input = dropzone.querySelector('input[type="file"]');
+      const button = dropzone.querySelector('button');
+      button.addEventListener('click', () => input.click());
+      dropzone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+      dropzone.addEventListener('drop', async (event) => {
+        event.preventDefault();
+        dropzone.classList.remove('dragover');
+        const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+        await handleFiles(files);
+      });
+      input.addEventListener('change', async () => {
+        const files = Array.from(input.files).filter(f => f.type.startsWith('image/'));
+        await handleFiles(files);
+        input.value = '';
+      });
+      return dropzone;
+    }
+
+    async function handleFiles(files) {
+      if (!state.currentTab) {
+        showStatus('Select or create a tab before uploading.', 3500);
+        return;
+      }
+      if (!files.length) return;
+      if (files.length > 4) {
+        showStatus('Only the first 4 images will be added.', 3000);
+        files = files.slice(0, 4);
+      }
+      try {
+        const storedNames = await copyImagesToCurrentTab(files);
+        await addBatchToCurrentTab(storedNames);
+        showStatus('Images added successfully.', 2500);
+      } catch (err) {
+        console.error('Upload failed', err);
+        showStatus(err.message || 'Failed to add images.', 4000);
+      }
+    }
+
+    async function copyImagesToCurrentTab(files) {
+      const tab = state.currentTab;
+      const folderHandle = tab.handle;
+      const stored = [];
+      for (const file of files) {
+        let targetName = await ensureUniqueFileName(folderHandle, file.name);
+        const fileHandle = await folderHandle.getFileHandle(targetName, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(file);
+        await writable.close();
+        stored.push(targetName);
+      }
+      return stored;
+    }
+
+    async function ensureUniqueFileName(dirHandle, name) {
+      const extIndex = name.lastIndexOf('.');
+      const base = extIndex > -1 ? name.slice(0, extIndex) : name;
+      const ext = extIndex > -1 ? name.slice(extIndex) : '';
+      let candidate = name;
+      let counter = 1;
+      while (await fileExists(dirHandle, candidate)) {
+        candidate = `${base}-${counter}${ext}`;
+        counter += 1;
+      }
+      return candidate;
+    }
+
+    async function fileExists(dirHandle, name) {
+      try {
+        await dirHandle.getFileHandle(name);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    async function addBatchToCurrentTab(imageNames) {
+      const tabName = state.currentTab.name;
+      const batch = {
+        images: imageNames,
+        description: '',
+        timestamp: new Date().toISOString()
+      };
+      if (!Array.isArray(state.metadata[tabName])) {
+        state.metadata[tabName] = [];
+      }
+      state.metadata[tabName].push(batch);
+      await saveMetadata();
+      await renderTab(tabName);
+      refreshTabBar();
+    }
+
+    async function renderTab(tabName) {
+      const tab = state.tabs.find(t => t.name === tabName);
+      if (!tab) return;
+      dom.tabBody.innerHTML = '';
+      const batches = state.metadata[tabName] || [];
+      for (const batch of batches) {
+        const section = dom.batchTemplate.content.cloneNode(true);
+        const batchEl = section.querySelector('.batch');
+        batchEl.dataset.timestamp = batch.timestamp;
+        const thumbnails = section.querySelector('[data-thumbnails]');
+        const textarea = section.querySelector('[data-textarea]');
+        const copyBtn = section.querySelector('[data-copy]');
+        textarea.value = batch.description || '';
+        setupAutoSave(textarea, tab, batch);
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(textarea.value || '').then(() => {
+            showStatus('Prompt copied to clipboard.', 2000);
+          }).catch(err => {
+            console.error('Clipboard error', err);
+            showStatus('Unable to copy to clipboard.', 2500);
+          });
+        });
+        await populateThumbnails(tab, batch, thumbnails);
+        dom.tabBody.appendChild(batchEl);
+      }
+      dom.tabBody.appendChild(createDropZone());
+    }
+
+    function setupAutoSave(textarea, tab, batch) {
+      const handler = () => {
+        const timer = state.batchesSaveTimers.get(batch);
+        if (timer) clearTimeout(timer);
+        const newTimer = setTimeout(async () => {
+          batch.description = textarea.value;
+          batch.timestamp = new Date().toISOString();
+          await saveMetadata();
+          showStatus('Description saved.', 1800);
+        }, 1500);
+        state.batchesSaveTimers.set(batch, newTimer);
+      };
+      textarea.addEventListener('input', handler);
+    }
+
+    async function populateThumbnails(tab, batch, container) {
+      const missing = [];
+      for (const name of batch.images) {
+        try {
+          const fileHandle = await tab.handle.getFileHandle(name);
+          const file = await fileHandle.getFile();
+          const url = URL.createObjectURL(file);
+          const thumb = document.createElement('div');
+          thumb.className = 'thumbnail';
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = name;
+          img.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
+          thumb.appendChild(img);
+          thumb.addEventListener('click', () => openViewer(tab, batch.images, name));
+          container.appendChild(thumb);
+        } catch (err) {
+          console.warn('Image missing', name, err);
+          missing.push(name);
+        }
+      }
+      if (missing.length) {
+        const warning = document.createElement('div');
+        warning.textContent = `Missing files: ${missing.join(', ')}`;
+        warning.style.color = '#c92a2a';
+        warning.style.fontWeight = '600';
+        container.appendChild(warning);
+      }
+    }
+
+    function openViewer(tab, images, currentName) {
+      state.viewer.images = images.slice();
+      const idx = images.indexOf(currentName);
+      state.viewer.index = idx === -1 ? 0 : idx;
+      showCurrentViewerImage(tab).catch(err => {
+        console.error('Viewer error', err);
+        showStatus('Unable to open image.', 2500);
+      });
+    }
+
+    async function showCurrentViewerImage(tab) {
+      if (!tab) {
+        throw new Error('No active tab for viewer');
+      }
+      const { images, index } = state.viewer;
+      if (index < 0 || index >= images.length) return;
+      const name = images[index];
+      try {
+        const fileHandle = await tab.handle.getFileHandle(name);
+        const file = await fileHandle.getFile();
+        const url = URL.createObjectURL(file);
+        const previousUrl = dom.viewerImg.dataset.url;
+        if (previousUrl) {
+          URL.revokeObjectURL(previousUrl);
+        }
+        dom.viewerImg.src = url;
+        dom.viewerImg.alt = name;
+        dom.viewerImg.dataset.url = url;
+        dom.viewer.classList.add('open');
+        dom.viewer.setAttribute('aria-hidden', 'false');
+        state.viewer.open = true;
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    function closeViewer() {
+      state.viewer.open = false;
+      state.viewer.images = [];
+      state.viewer.index = 0;
+      dom.viewer.classList.remove('open');
+      dom.viewer.setAttribute('aria-hidden', 'true');
+      if (dom.viewerImg.dataset.url) {
+        URL.revokeObjectURL(dom.viewerImg.dataset.url);
+        delete dom.viewerImg.dataset.url;
+      }
+      dom.viewerImg.src = '';
+      dom.viewerImg.alt = '';
+    }
+
+    dom.viewerClose.addEventListener('click', closeViewer);
+    dom.viewer.addEventListener('click', (event) => {
+      if (event.target === dom.viewer) {
+        closeViewer();
+      }
+    });
+
+    dom.viewerPrev.addEventListener('click', async () => {
+      if (!state.viewer.open) return;
+      state.viewer.index = (state.viewer.index - 1 + state.viewer.images.length) % state.viewer.images.length;
+      await showCurrentViewerImage(state.currentTab);
+    });
+
+    dom.viewerNext.addEventListener('click', async () => {
+      if (!state.viewer.open) return;
+      state.viewer.index = (state.viewer.index + 1) % state.viewer.images.length;
+      await showCurrentViewerImage(state.currentTab);
+    });
+
+    document.addEventListener('keydown', async (event) => {
+      if (!state.viewer.open) return;
+      if (event.key === 'Escape') {
+        closeViewer();
+      } else if (event.key === 'ArrowLeft') {
+        state.viewer.index = (state.viewer.index - 1 + state.viewer.images.length) % state.viewer.images.length;
+        await showCurrentViewerImage(state.currentTab);
+      } else if (event.key === 'ArrowRight') {
+        state.viewer.index = (state.viewer.index + 1) % state.viewer.images.length;
+        await showCurrentViewerImage(state.currentTab);
+      }
+    });
+
+    dom.selectRoot.addEventListener('click', async () => {
+      try {
+        const handle = await window.showDirectoryPicker();
+        const granted = await requestPermission(handle);
+        if (!granted) {
+          showStatus('Permission to access folder was denied.', 3000);
+          return;
+        }
+        state.rootHandle = handle;
+        await storeHandle(handle);
+        dom.noRoot.style.display = 'none';
+        dom.appContent.style.display = '';
+        await bootstrapFromRoot();
+        showStatus('Root folder connected.', 2500);
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+        console.error('Root selection failed', err);
+        showStatus('Unable to access selected folder.', 3500);
+      }
+    });
+
+    dom.newTab.addEventListener('click', async () => {
+      if (!state.rootHandle) {
+        showStatus('Select a root folder first.', 3000);
+        return;
+      }
+      try {
+        const name = await nextTabName();
+        const dirHandle = await state.rootHandle.getDirectoryHandle(name, { create: true });
+        const tab = { name, handle: dirHandle };
+        state.tabs.push(tab);
+        state.tabs.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+        if (!Array.isArray(state.metadata[name])) {
+          state.metadata[name] = [];
+          await saveMetadata();
+        }
+        refreshTabBar();
+        await setActiveTab(name);
+      } catch (err) {
+        console.error('Failed to create tab', err);
+        showStatus('Could not create new tab.', 3500);
+      }
+    });
+
+    async function nextTabName() {
+      let index = 1;
+      const existing = new Set(state.tabs.map(t => t.name));
+      const metadataKeys = Object.keys(state.metadata || {});
+      metadataKeys.forEach(key => existing.add(key));
+      while (true) {
+        const padded = index.toString().padStart(2, '0');
+        if (!existing.has(padded)) {
+          return padded;
+        }
+        index += 1;
+      }
+    }
+
+    async function setActiveTab(name) {
+      const tab = state.tabs.find(t => t.name === name);
+      if (!tab) return;
+      closeViewer();
+      state.currentTab = tab;
+      for (const btn of dom.tabBar.querySelectorAll('.tab')) {
+        btn.classList.toggle('active', btn.dataset.name === name);
+        const title = btn.querySelector('.tab-title');
+        if (title && !title.isContentEditable) {
+          title.textContent = formatTabTitle(btn.dataset.name);
+        }
+      }
+      try {
+        await renderTab(name);
+      } catch (err) {
+        console.error('Render failed', err);
+        showStatus('Unable to display tab contents.', 3000);
+      }
+    }
+
+    function showStatus(message, duration = 2000) {
+      dom.status.textContent = message;
+      dom.status.classList.add('show');
+      if (dom.status.hideTimer) clearTimeout(dom.status.hideTimer);
+      dom.status.hideTimer = setTimeout(() => {
+        dom.status.classList.remove('show');
+      }, duration);
+    }
+
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('Unhandled rejection', event.reason);
+      showStatus('Unexpected error occurred.', 3000);
+    });
+
+    window.addEventListener('error', (event) => {
+      console.error('Unhandled error', event.error);
+      showStatus('Unexpected error occurred.', 3000);
+    });
+
+    init();
+  </script>
+</body>
+</html>
