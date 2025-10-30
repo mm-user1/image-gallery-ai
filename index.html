@@ -86,19 +86,34 @@
       border-radius: 16px;
       padding: 12px;
       display: flex;
-      gap: 8px;
+      gap: 12px;
       align-items: center;
       box-shadow: var(--shadow);
-      overflow-x: auto;
     }
 
-    .tab-bar::-webkit-scrollbar {
+    .tab-list {
+      display: flex;
+      gap: 8px;
+      flex: 1 1 auto;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      min-width: 0;
+    }
+
+    .tab-list::-webkit-scrollbar {
       height: 8px;
     }
 
-    .tab-bar::-webkit-scrollbar-thumb {
+    .tab-list::-webkit-scrollbar-thumb {
       background: rgba(27, 31, 59, 0.2);
       border-radius: 4px;
+    }
+
+    .tab-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
     }
 
     .tab {
@@ -116,6 +131,7 @@
       position: relative;
       transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
       user-select: none;
+      padding-right: 32px;
     }
 
     .tab.active {
@@ -147,6 +163,58 @@
       gap: 6px;
     }
 
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 6px 18px rgba(76, 110, 245, 0.18);
+    }
+
+    .icon-btn.danger {
+      color: #c92a2a;
+      border-color: rgba(201, 42, 42, 0.2);
+      background: rgba(201, 42, 42, 0.05);
+    }
+
+    .icon-btn.danger:hover {
+      border-color: #c92a2a;
+      color: #c92a2a;
+      background: rgba(201, 42, 42, 0.12);
+      box-shadow: 0 6px 18px rgba(201, 42, 42, 0.2);
+    }
+
+    .tab-remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      line-height: 1;
+      display: none;
+      padding: 0;
+    }
+
+    .tab-remove:hover {
+      border-color: #c92a2a;
+      color: #c92a2a;
+      background: rgba(201, 42, 42, 0.12);
+    }
+
     .surface-card {
       background: var(--surface);
       border-radius: 18px;
@@ -155,6 +223,17 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+    }
+
+    .edit-toggle.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(76, 110, 245, 0.12);
+      box-shadow: 0 6px 18px rgba(76, 110, 245, 0.2);
+    }
+
+    body.edit-mode .tab-remove {
+      display: inline-flex;
     }
 
     .drop-zone {
@@ -198,6 +277,7 @@
       gap: 14px;
       padding-bottom: 24px;
       border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      padding-top: 48px;
     }
 
     .batch:last-of-type {
@@ -207,7 +287,7 @@
 
     .thumbnail-row {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -231,6 +311,67 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .thumbnail-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: none;
+      padding: 0;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .thumbnail-remove:hover {
+      background: rgba(201, 42, 42, 0.12);
+    }
+
+    body.edit-mode .thumbnail-remove {
+      display: inline-flex;
+    }
+
+    .batch {
+      position: relative;
+    }
+
+    .batch-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .batch-add {
+      color: var(--accent);
+      border-color: rgba(76, 110, 245, 0.4);
+      background: rgba(76, 110, 245, 0.08);
+    }
+
+    .batch-add:hover {
+      background: rgba(76, 110, 245, 0.18);
+      border-color: var(--accent);
+    }
+
+    .batch-remove {
+      display: none;
+    }
+
+    body.edit-mode .batch-remove {
+      display: inline-flex;
+    }
+
+    .inline-dropzone {
+      margin-top: 16px;
+    }
+
+    .drop-zone.compact {
+      padding: 24px;
     }
 
     .batch input[type="text"] {
@@ -360,6 +501,18 @@
       background: rgba(255, 255, 255, 0.6);
     }
 
+    @media (max-width: 1024px) {
+      .thumbnail-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .thumbnail-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 768px) {
       header {
         flex-direction: column;
@@ -393,7 +546,11 @@
 
     <div id="app-content" style="display:none;">
       <div class="tab-bar" id="tab-bar">
-        <button id="new-tab" class="new-tab-btn">＋ New Tab</button>
+        <div id="tab-list" class="tab-list"></div>
+        <div class="tab-controls">
+          <button id="new-tab" class="new-tab-btn">＋ New Tab</button>
+          <button id="toggle-edit" class="icon-btn edit-toggle" title="Toggle edit mode" aria-pressed="false">✎</button>
+        </div>
       </div>
       <div id="tab-body" class="surface-card"></div>
     </div>
@@ -410,7 +567,12 @@
 
   <template id="batch-template">
     <section class="batch">
+      <div class="batch-controls">
+        <button type="button" class="icon-btn batch-add" data-add-images title="Add images">＋</button>
+        <button type="button" class="icon-btn danger batch-remove" data-remove-batch title="Delete block">✕</button>
+      </div>
       <div class="thumbnail-row" data-thumbnails></div>
+      <div class="inline-dropzone" data-inline-dropzone hidden></div>
       <input type="text" placeholder="Add a title..." data-title>
       <textarea placeholder="Write prompt or notes..." data-textarea></textarea>
       <div class="batch-actions">
@@ -421,7 +583,7 @@
 
   <template id="dropzone-template">
     <label class="drop-zone" data-dropzone>
-      <strong>Drop up to 4 images</strong>
+      <strong>Drop images</strong>
       <span>or click below to choose files</span>
       <button type="button">Browse files</button>
       <input type="file" accept="image/*" multiple>
@@ -439,6 +601,7 @@
       tabs: [],
       currentTab: null,
       batchesSaveTimers: new WeakMap(),
+      editMode: false,
       viewer: {
         open: false,
         images: [],
@@ -449,7 +612,9 @@
     const dom = {
       selectRoot: document.getElementById('select-root'),
       tabBar: document.getElementById('tab-bar'),
+      tabList: document.getElementById('tab-list'),
       newTab: document.getElementById('new-tab'),
+      editToggle: document.getElementById('toggle-edit'),
       tabBody: document.getElementById('tab-body'),
       status: document.getElementById('status'),
       appContent: document.getElementById('app-content'),
@@ -465,6 +630,11 @@
 
     async function init() {
       await ensureDb();
+      document.body.classList.toggle('edit-mode', state.editMode);
+      if (dom.editToggle) {
+        dom.editToggle.setAttribute('aria-pressed', state.editMode ? 'true' : 'false');
+        dom.editToggle.classList.toggle('active', state.editMode);
+      }
       const handle = await loadStoredHandle();
       if (handle) {
         try {
@@ -592,7 +762,11 @@
         await setActiveTab(state.tabs[0].name);
       } else {
         dom.tabBody.innerHTML = '';
-        dom.tabBody.append(createDropZone());
+        dom.tabBody.append(createDropZone({
+          title: 'Drop images to create a new block',
+          subtitle: 'or click below to choose files',
+          buttonLabel: 'Browse files'
+        }));
       }
     }
 
@@ -655,7 +829,7 @@
     }
 
     function refreshTabBar() {
-      const existingButtons = Array.from(dom.tabBar.querySelectorAll('.tab'));
+      const existingButtons = Array.from(dom.tabList.querySelectorAll('.tab'));
       existingButtons.forEach(btn => btn.remove());
       state.tabs.forEach(tab => {
         const btn = document.createElement('button');
@@ -666,6 +840,25 @@
         title.textContent = formatTabTitle(tab.name);
         title.title = 'Click to rename';
         btn.append(title);
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'icon-btn danger tab-remove';
+        removeBtn.textContent = '✕';
+        removeBtn.title = 'Delete tab';
+        removeBtn.addEventListener('click', async (event) => {
+          event.stopPropagation();
+          if (!state.editMode) return;
+          const confirmed = window.confirm(`Delete tab "${tab.name}" and all of its contents?`);
+          if (!confirmed) return;
+          try {
+            await deleteTab(tab);
+            showStatus('Tab deleted.', 2500);
+          } catch (err) {
+            console.error('Tab delete failed', err);
+            showStatus(err.message || 'Failed to delete tab.', 3500);
+          }
+        });
+        btn.append(removeBtn);
         btn.addEventListener('click', async (event) => {
           if (event.target === title && btn.classList.contains('active')) {
             enableTabRename(title, tab);
@@ -677,7 +870,7 @@
           event.stopPropagation();
           enableTabRename(title, tab);
         });
-        dom.tabBar.insertBefore(btn, dom.newTab);
+        dom.tabList.appendChild(btn);
       });
     }
 
@@ -769,12 +962,37 @@
       await setActiveTab(newName);
     }
 
-    function createDropZone() {
+    function createDropZone(options = {}) {
+      const {
+        onFiles = handleFilesForNewBatch,
+        title = 'Drop images',
+        subtitle = 'or click below to choose files',
+        buttonLabel = 'Browse files',
+        compact = false
+      } = options;
       const fragment = dom.dropzoneTemplate.content.cloneNode(true);
       const dropzone = fragment.querySelector('[data-dropzone]');
+      const heading = dropzone.querySelector('strong');
+      const description = dropzone.querySelector('span');
       const input = dropzone.querySelector('input[type="file"]');
       const button = dropzone.querySelector('button');
-      button.addEventListener('click', () => input.click());
+      if (heading) heading.textContent = title;
+      if (description) description.textContent = subtitle;
+      if (button) button.textContent = buttonLabel;
+      if (compact) dropzone.classList.add('compact');
+      const processFiles = async (fileList) => {
+        const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+        if (!files.length) return;
+        try {
+          await onFiles(files);
+        } catch (err) {
+          console.error('Drop zone processing failed', err);
+          showStatus(err && err.message ? err.message : 'Failed to add images.', 3500);
+        }
+      };
+      if (button && input) {
+        button.addEventListener('click', () => input.click());
+      }
       dropzone.addEventListener('dragover', (event) => {
         event.preventDefault();
         dropzone.classList.add('dragover');
@@ -783,27 +1001,23 @@
       dropzone.addEventListener('drop', async (event) => {
         event.preventDefault();
         dropzone.classList.remove('dragover');
-        const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-        await handleFiles(files);
+        await processFiles(event.dataTransfer.files);
       });
-      input.addEventListener('change', async () => {
-        const files = Array.from(input.files).filter(f => f.type.startsWith('image/'));
-        await handleFiles(files);
-        input.value = '';
-      });
+      if (input) {
+        input.addEventListener('change', async () => {
+          await processFiles(input.files);
+          input.value = '';
+        });
+      }
       return dropzone;
     }
 
-    async function handleFiles(files) {
+    async function handleFilesForNewBatch(files) {
       if (!state.currentTab) {
         showStatus('Select or create a tab before uploading.', 3500);
         return;
       }
       if (!files.length) return;
-      if (files.length > 4) {
-        showStatus('Only the first 4 images will be added.', 3000);
-        files = files.slice(0, 4);
-      }
       try {
         const storedNames = await copyImagesToCurrentTab(files);
         await addBatchToCurrentTab(storedNames);
@@ -811,6 +1025,128 @@
       } catch (err) {
         console.error('Upload failed', err);
         showStatus(err.message || 'Failed to add images.', 4000);
+      }
+    }
+
+    async function handleFilesForExistingBatch(batch, files) {
+      if (!state.currentTab) {
+        showStatus('Select or create a tab before uploading.', 3500);
+        return;
+      }
+      if (!files.length) return;
+      try {
+        const storedNames = await copyImagesToCurrentTab(files);
+        if (!Array.isArray(batch.images)) {
+          batch.images = [];
+        }
+        batch.images.push(...storedNames);
+        batch.timestamp = new Date().toISOString();
+        await saveMetadata();
+        await renderTab(state.currentTab.name);
+        refreshTabBar();
+        showStatus('Images added to block.', 2500);
+      } catch (err) {
+        console.error('Upload failed', err);
+        showStatus(err.message || 'Failed to add images.', 4000);
+      }
+    }
+
+    async function deleteImageFromBatch(tab, batch, imageName) {
+      if (!tab) return;
+      try {
+        if (tab.handle.removeEntry) {
+          await tab.handle.removeEntry(imageName);
+        } else {
+          throw new Error('File deletion is not supported in this browser.');
+        }
+      } catch (err) {
+        if (!err || err.name !== 'NotFoundError') {
+          throw err;
+        }
+      }
+      batch.images = Array.isArray(batch.images) ? batch.images.filter(name => name !== imageName) : [];
+      batch.timestamp = new Date().toISOString();
+      await saveMetadata();
+      await renderTab(tab.name);
+      refreshTabBar();
+    }
+
+    async function deleteBatch(tab, batch) {
+      if (!tab) return;
+      const images = Array.isArray(batch.images) ? [...batch.images] : [];
+      for (const name of images) {
+        try {
+          if (tab.handle.removeEntry) {
+            await tab.handle.removeEntry(name);
+          } else {
+            throw new Error('File deletion is not supported in this browser.');
+          }
+        } catch (err) {
+          if (!err || err.name !== 'NotFoundError') {
+            throw err;
+          }
+        }
+      }
+      const batches = state.metadata[tab.name] || [];
+      const index = batches.indexOf(batch);
+      if (index !== -1) {
+        batches.splice(index, 1);
+      }
+      await saveMetadata();
+      await renderTab(tab.name);
+      refreshTabBar();
+    }
+
+    async function deleteTab(tab) {
+      if (!state.rootHandle) {
+        throw new Error('Root folder is not available.');
+      }
+      try {
+        if (state.rootHandle.removeEntry) {
+          await state.rootHandle.removeEntry(tab.name, { recursive: true });
+        } else if (tab.handle.remove) {
+          await tab.handle.remove();
+        } else {
+          throw new Error('Directory deletion is not supported in this browser.');
+        }
+      } catch (err) {
+        if (!err || err.name !== 'NotFoundError') {
+          throw err;
+        }
+      }
+      const index = state.tabs.indexOf(tab);
+      if (index !== -1) {
+        state.tabs.splice(index, 1);
+      }
+      delete state.metadata[tab.name];
+      if (state.currentTab === tab) {
+        state.currentTab = null;
+      }
+      await saveMetadata();
+      refreshTabBar();
+      if (state.tabs.length) {
+        await setActiveTab(state.tabs[0].name);
+      } else {
+        dom.tabBody.innerHTML = '';
+        dom.tabBody.appendChild(createDropZone({
+          title: 'Drop images to create a new block',
+          subtitle: 'or click below to choose files',
+          buttonLabel: 'Browse files'
+        }));
+      }
+    }
+
+    async function setEditMode(active) {
+      if (state.editMode === active) return;
+      state.editMode = active;
+      document.body.classList.toggle('edit-mode', active);
+      if (dom.editToggle) {
+        dom.editToggle.setAttribute('aria-pressed', active ? 'true' : 'false');
+        dom.editToggle.classList.toggle('active', active);
+      }
+      refreshTabBar();
+      if (state.currentTab) {
+        await renderTab(state.currentTab.name);
       }
     }
 
@@ -881,6 +1217,57 @@
         const titleInput = section.querySelector('[data-title]');
         const textarea = section.querySelector('[data-textarea]');
         const copyBtn = section.querySelector('[data-copy]');
+        const addBtn = section.querySelector('[data-add-images]');
+        const removeBatchBtn = section.querySelector('[data-remove-batch]');
+        const inlineContainer = section.querySelector('[data-inline-dropzone]');
+        if (inlineContainer) {
+          inlineContainer.hidden = true;
+          inlineContainer.dataset.open = 'false';
+          const inlineDropzone = createDropZone({
+            onFiles: async (files) => {
+              await handleFilesForExistingBatch(batch, files);
+              if (inlineContainer) {
+                inlineContainer.dataset.open = 'false';
+                inlineContainer.hidden = true;
+              }
+              if (addBtn) {
+                addBtn.setAttribute('aria-expanded', 'false');
+              }
+            },
+            title: 'Drop images for this block',
+            subtitle: 'or click below to choose files',
+            buttonLabel: 'Browse files',
+            compact: true
+          });
+          inlineContainer.appendChild(inlineDropzone);
+        }
+        if (addBtn) {
+          addBtn.setAttribute('aria-expanded', 'false');
+          addBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (!inlineContainer) return;
+            const isOpen = inlineContainer.dataset.open === 'true';
+            const next = (!isOpen).toString();
+            inlineContainer.dataset.open = next;
+            inlineContainer.hidden = isOpen;
+            addBtn.setAttribute('aria-expanded', next);
+          });
+        }
+        if (removeBatchBtn) {
+          removeBatchBtn.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            if (!state.editMode) return;
+            const confirmed = window.confirm('Delete this block and all of its images?');
+            if (!confirmed) return;
+            try {
+              await deleteBatch(tab, batch);
+              showStatus('Block deleted.', 2500);
+            } catch (err) {
+              console.error('Batch delete failed', err);
+              showStatus(err.message || 'Failed to delete block.', 3500);
+            }
+          });
+        }
         if (titleInput) {
           titleInput.value = typeof batch.title === 'string' ? batch.title : '';
         }
@@ -897,7 +1284,11 @@
         await populateThumbnails(tab, batch, thumbnails);
         dom.tabBody.appendChild(batchEl);
       }
-      dom.tabBody.appendChild(createDropZone());
+      dom.tabBody.appendChild(createDropZone({
+        title: 'Drop images to create a new block',
+        subtitle: 'or click below to choose files',
+        buttonLabel: 'Browse files'
+      }));
     }
 
     function setupBatchAutoSave(textarea, titleInput, batch) {
@@ -935,6 +1326,25 @@
           img.alt = name;
           img.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
           thumb.appendChild(img);
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'icon-btn danger thumbnail-remove';
+          removeBtn.title = 'Delete image';
+          removeBtn.textContent = '✕';
+          removeBtn.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            if (!state.editMode) return;
+            const confirmed = window.confirm('Delete this image?');
+            if (!confirmed) return;
+            try {
+              await deleteImageFromBatch(tab, batch, name);
+              showStatus('Image deleted.', 2000);
+            } catch (err) {
+              console.error('Image delete failed', err);
+              showStatus(err.message || 'Failed to delete image.', 3500);
+            }
+          });
+          thumb.appendChild(removeBtn);
           thumb.addEventListener('click', () => openViewer(tab, batch.images, name));
           container.appendChild(thumb);
         } catch (err) {
@@ -1077,6 +1487,17 @@
       }
     });
 
+    if (dom.editToggle) {
+      dom.editToggle.addEventListener('click', async () => {
+        try {
+          await setEditMode(!state.editMode);
+        } catch (err) {
+          console.error('Failed to toggle edit mode', err);
+          showStatus('Unable to toggle edit mode.', 3000);
+        }
+      });
+    }
+
     async function nextTabName() {
       let index = 1;
       const existing = new Set(state.tabs.map(t => t.name));
@@ -1096,7 +1517,7 @@
       if (!tab) return;
       closeViewer();
       state.currentTab = tab;
-      for (const btn of dom.tabBar.querySelectorAll('.tab')) {
+      for (const btn of dom.tabList.querySelectorAll('.tab')) {
         btn.classList.toggle('active', btn.dataset.name === name);
         const title = btn.querySelector('.tab-title');
         if (title && !title.isContentEditable) {
