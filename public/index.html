@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Image Gallery Manager</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f9fc;
+      --surface: #ffffff;
+      --border: #d8dee9;
+      --accent: #4c6ef5;
+      --accent-hover: #3b5bdb;
+      --text: #1b1f3b;
+      --muted: #6c7a89;
+      --danger: #e03131;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f1f5ff 0%, #f7f9fc 100%);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .primary-btn {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-btn:disabled {
+      background: #a5b4fc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .primary-btn:not(:disabled):hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(76, 110, 245, 0.28);
+    }
+
+    .tab-bar {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .tab-list {
+      display: flex;
+      gap: 8px;
+      flex: 1 1 auto;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      min-width: 0;
+    }
+
+    .tab-list::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .tab-list::-webkit-scrollbar-thumb {
+      background: rgba(27, 31, 59, 0.2);
+      border-radius: 4px;
+    }
+
+    .tab-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .selection-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: rgba(76, 110, 245, 0.08);
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+
+    .selection-actions.show {
+      display: inline-flex;
+    }
+
+    .selection-summary {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .tab {
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: #eef2ff;
+      padding: 8px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      user-select: none;
+      padding-right: 32px;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .tab .tab-title {
+      outline: none;
+      border-radius: 6px;
+      padding: 2px 4px;
+    }
+
+    .tab .tab-title[contenteditable="true"] {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .tab-remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.25);
+      color: inherit;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .tab-remove:hover {
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    body.edit-mode .tab-remove {
+      display: inline-flex;
+    }
+
+    .new-tab-btn {
+      border: 1px dashed var(--accent);
+      background: transparent;
+      color: var(--accent);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 6px 18px rgba(76, 110, 245, 0.18);
+    }
+
+    .icon-btn.danger {
+      color: var(--danger);
+      border-color: rgba(224, 49, 49, 0.3);
+      background: rgba(224, 49, 49, 0.05);
+    }
+
+    .icon-btn.danger:hover {
+      border-color: var(--danger);
+      background: rgba(224, 49, 49, 0.12);
+      box-shadow: 0 6px 18px rgba(224, 49, 49, 0.2);
+    }
+
+    .surface-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(76, 110, 245, 0.08);
+      color: var(--accent);
+    }
+
+    .drop-zone input[type="file"] {
+      display: none;
+    }
+
+    .drop-zone button {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      background: rgba(76, 110, 245, 0.1);
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .drop-zone textarea {
+      width: 100%;
+      max-width: 420px;
+      min-height: 80px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      resize: vertical;
+      font-size: 0.95rem;
+    }
+
+    .batch-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .batch {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      padding-top: 24px;
+    }
+
+    .batch:first-of-type {
+      padding-top: 0;
+    }
+
+    .batch:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .batch-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .batch-title {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .batch-controls {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .batch textarea {
+      width: 100%;
+      min-height: 100px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      resize: vertical;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .batch textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.2);
+      outline: none;
+    }
+
+    .thumbnail-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .thumbnail {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      background: rgba(76, 110, 245, 0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .thumbnail:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.15);
+    }
+
+    .thumbnail img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumbnail .thumb-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: none;
+      gap: 6px;
+    }
+
+    body.edit-mode .thumbnail .thumb-actions {
+      display: inline-flex;
+    }
+
+    .thumbnail.selected::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 3px solid var(--accent);
+      border-radius: 14px;
+      box-shadow: inset 0 0 0 3px rgba(76, 110, 245, 0.25);
+    }
+
+    .viewer {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      padding: 40px;
+    }
+
+    .viewer.show {
+      display: flex;
+    }
+
+    .viewer-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .viewer-content img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 18px;
+      box-shadow: 0 25px 65px rgba(15, 23, 42, 0.6);
+    }
+
+    .viewer-close {
+      position: absolute;
+      top: -36px;
+      right: -36px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .viewer-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .viewer-nav.prev {
+      left: -72px;
+    }
+
+    .viewer-nav.next {
+      right: -72px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      border: 2px dashed rgba(76, 110, 245, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .progress {
+      width: 100%;
+      max-width: 420px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(76, 110, 245, 0.15);
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #4c6ef5, #748ffc);
+      transition: width 0.1s ease;
+    }
+
+    @media (max-width: 768px) {
+      .thumbnail img {
+        height: 130px;
+      }
+
+      .viewer {
+        padding: 20px;
+      }
+
+      .viewer-close {
+        top: 16px;
+        right: 16px;
+      }
+
+      .viewer-nav.prev {
+        left: 12px;
+      }
+
+      .viewer-nav.next {
+        right: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>AI Image Gallery Manager</h1>
+        <p style="margin: 4px 0 0; color: var(--muted); font-size: 0.95rem;">Organise AI generations collaboratively across your network.</p>
+      </div>
+      <div class="header-actions">
+        <button class="primary-btn" id="toggleEdit">Toggle edit mode</button>
+      </div>
+    </header>
+
+    <div class="tab-bar">
+      <div class="tab-list" id="tabList"></div>
+      <div class="tab-controls">
+        <div class="selection-actions" id="selectionActions">
+          <span class="selection-summary" id="selectionSummary">0 selected</span>
+          <button class="icon-btn danger" id="deleteSelected" title="Delete selected images">🗑️</button>
+          <button class="icon-btn" id="clearSelected" title="Clear selection">✖️</button>
+        </div>
+        <button class="new-tab-btn" id="createTab">➕ New tab</button>
+      </div>
+    </div>
+
+    <div class="surface-card">
+      <div class="drop-zone" id="dropZone">
+        <strong>Drop images here or select files to create a new batch</strong>
+        <textarea id="newBatchDescription" placeholder="Describe this batch (prompt, settings, notes)..."></textarea>
+        <div class="progress" id="uploadProgress">
+          <div class="progress-bar" id="uploadProgressBar"></div>
+        </div>
+        <button id="filePickerBtn">Select files</button>
+        <input type="file" id="fileInput" accept="image/*" multiple />
+        <small style="color: var(--muted);">Up to 10 images per upload · 50MB max per image</small>
+      </div>
+    </div>
+
+    <div class="surface-card" id="batchContainer">
+      <div class="batch-list" id="batchList"></div>
+    </div>
+  </div>
+
+  <div class="viewer" id="viewer">
+    <div class="viewer-content">
+      <button class="viewer-nav prev" id="viewerPrev" aria-label="Previous image">◀</button>
+      <img id="viewerImage" alt="Preview" />
+      <button class="viewer-nav next" id="viewerNext" aria-label="Next image">▶</button>
+      <button class="viewer-close" id="viewerClose" aria-label="Close viewer">✕</button>
+    </div>
+  </div>
+
+  <script>
+    const api = {
+      async getMetadata() {
+        const res = await fetch('/api/metadata?_=' + Date.now());
+        if (!res.ok) throw new Error('Unable to load metadata');
+        return res.json();
+      },
+      async createTab(name) {
+        const res = await fetch('/api/tabs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+        if (!res.ok) throw new Error((await res.json()).message || 'Unable to create tab');
+        return res.json();
+      },
+      async renameTab(oldName, newName) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(oldName)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ newName })
+        });
+        if (!res.ok) throw new Error((await res.json()).message || 'Unable to rename tab');
+        return res.json();
+      },
+      async deleteTab(name) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(name)}`, { method: 'DELETE' });
+        if (!res.ok) {
+          let message = 'Unable to delete tab';
+          try {
+            const data = await res.json();
+            if (data?.message) message = data.message;
+          } catch (_) {
+            // ignore
+          }
+          throw new Error(message);
+        }
+      },
+      async createBatch(tab, payload) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error((await res.json()).message || 'Unable to create batch');
+        return res.json();
+      },
+      async updateBatch(tab, index, payload) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${index}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error((await res.json()).message || 'Unable to update batch');
+        return res.json();
+      },
+      async deleteBatch(tab, index) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${index}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) {
+          let message = 'Unable to delete batch';
+          try {
+            const data = await res.json();
+            if (data?.message) message = data.message;
+          } catch (_) {
+            // ignore
+          }
+          throw new Error(message);
+        }
+      },
+      async deleteImage(tab, batchIndex, filename) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${batchIndex}/images/${encodeURIComponent(filename)}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) {
+          let message = 'Unable to delete image';
+          try {
+            const data = await res.json();
+            if (data?.message) message = data.message;
+          } catch (_) {
+            // ignore
+          }
+          throw new Error(message);
+        }
+      }
+    };
+
+    const debounce = (fn, delay = 500) => {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+      };
+    };
+
+    class GalleryApp {
+      constructor() {
+        this.state = {
+          metadata: { tabs: [] },
+          activeTab: null,
+          viewer: { tab: null, batchIndex: 0, imageIndex: 0 },
+          selectedImages: new Map(),
+          pollingTimer: null,
+          loading: false,
+          lastMetadataHash: null,
+          descriptionTimers: new Map()
+        };
+
+        this.elements = {
+          tabList: document.getElementById('tabList'),
+          createTabBtn: document.getElementById('createTab'),
+          toggleEdit: document.getElementById('toggleEdit'),
+          batchList: document.getElementById('batchList'),
+          dropZone: document.getElementById('dropZone'),
+          filePickerBtn: document.getElementById('filePickerBtn'),
+          fileInput: document.getElementById('fileInput'),
+          newBatchDescription: document.getElementById('newBatchDescription'),
+          uploadProgress: document.getElementById('uploadProgress'),
+          uploadProgressBar: document.getElementById('uploadProgressBar'),
+          selectionActions: document.getElementById('selectionActions'),
+          selectionSummary: document.getElementById('selectionSummary'),
+          deleteSelected: document.getElementById('deleteSelected'),
+          clearSelected: document.getElementById('clearSelected'),
+          viewer: document.getElementById('viewer'),
+          viewerImage: document.getElementById('viewerImage'),
+          viewerPrev: document.getElementById('viewerPrev'),
+          viewerNext: document.getElementById('viewerNext'),
+          viewerClose: document.getElementById('viewerClose')
+        };
+      }
+
+      async init() {
+        this.bindGlobalEvents();
+        await this.refreshMetadata(true);
+        this.startPolling();
+      }
+
+      bindGlobalEvents() {
+        this.elements.createTabBtn.addEventListener('click', () => this.promptCreateTab());
+        this.elements.toggleEdit.addEventListener('click', () => {
+          document.body.classList.toggle('edit-mode');
+        });
+        this.elements.filePickerBtn.addEventListener('click', () => this.elements.fileInput.click());
+        this.elements.fileInput.addEventListener('change', (e) => {
+          const files = Array.from(e.target.files || []);
+          if (files.length) {
+            this.handleUpload(files);
+          }
+          this.elements.fileInput.value = '';
+        });
+
+        const dropZone = this.elements.dropZone;
+        ['dragenter', 'dragover'].forEach((eventName) => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('dragover');
+          });
+        });
+        ['dragleave', 'drop'].forEach((eventName) => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
+          });
+        });
+        dropZone.addEventListener('drop', (e) => {
+          const files = Array.from(e.dataTransfer.files || []);
+          if (files.length) {
+            this.handleUpload(files);
+          }
+        });
+
+        this.elements.deleteSelected.addEventListener('click', () => this.deleteSelectedImages());
+        this.elements.clearSelected.addEventListener('click', () => this.clearSelection());
+
+        this.elements.viewerPrev.addEventListener('click', () => this.navigateViewer(-1));
+        this.elements.viewerNext.addEventListener('click', () => this.navigateViewer(1));
+        this.elements.viewerClose.addEventListener('click', () => this.closeViewer());
+        this.elements.viewer.addEventListener('click', (e) => {
+          if (e.target === this.elements.viewer) {
+            this.closeViewer();
+          }
+        });
+        document.addEventListener('keydown', (e) => {
+          if (!this.elements.viewer.classList.contains('show')) return;
+          if (e.key === 'ArrowLeft') this.navigateViewer(-1);
+          if (e.key === 'ArrowRight') this.navigateViewer(1);
+          if (e.key === 'Escape') this.closeViewer();
+        });
+      }
+
+      async refreshMetadata(initial = false) {
+        try {
+          const metadata = await api.getMetadata();
+          this.state.metadata = metadata;
+          if (!Array.isArray(metadata.tabs)) {
+            this.state.metadata.tabs = [];
+          }
+
+          if (!this.state.activeTab || !this.state.metadata.tabs.find((t) => t.name === this.state.activeTab)) {
+            this.state.activeTab = this.state.metadata.tabs[0]?.name || null;
+          }
+
+          const hash = JSON.stringify(metadata);
+          if (initial || hash !== this.state.lastMetadataHash) {
+            this.state.lastMetadataHash = hash;
+            this.renderTabs();
+            this.renderBatches();
+          }
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        }
+      }
+
+      startPolling() {
+        if (this.state.pollingTimer) clearInterval(this.state.pollingTimer);
+        this.state.pollingTimer = setInterval(() => this.refreshMetadata(false), 5000);
+      }
+
+      async promptCreateTab() {
+        const name = prompt('Enter a name for the new tab (letters, numbers, hyphen):');
+        if (!name) return;
+        try {
+          await api.createTab(name.trim());
+          await this.refreshMetadata(true);
+          this.state.activeTab = name.trim();
+          this.renderTabs();
+          this.renderBatches();
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      async renameTab(oldName, newName) {
+        if (!newName || newName === oldName) return;
+        try {
+          await api.renameTab(oldName, newName);
+          this.state.activeTab = newName;
+          await this.refreshMetadata(true);
+        } catch (error) {
+          alert(error.message);
+          await this.refreshMetadata(true);
+        }
+      }
+
+      async deleteTab(name) {
+        if (!confirm(`Delete tab "${name}" and all of its batches?`)) return;
+        try {
+          await api.deleteTab(name);
+          await this.refreshMetadata(true);
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      renderTabs() {
+        const { tabList } = this.elements;
+        tabList.innerHTML = '';
+        const tabs = this.state.metadata.tabs;
+        if (!tabs.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = 'Create a tab to get started.';
+          this.elements.batchList.innerHTML = '';
+          this.elements.batchList.appendChild(empty);
+          return;
+        }
+
+        tabs.forEach((tab) => {
+          const el = document.createElement('div');
+          el.className = 'tab' + (tab.name === this.state.activeTab ? ' active' : '');
+          el.dataset.tab = tab.name;
+
+          const span = document.createElement('span');
+          span.textContent = tab.name;
+          span.className = 'tab-title';
+          span.title = 'Double-click to rename';
+          span.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.state.activeTab = tab.name;
+            this.renderTabs();
+            this.renderBatches();
+          });
+          span.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            span.setAttribute('contenteditable', 'true');
+            span.focus();
+            document.execCommand('selectAll', false, null);
+          });
+          span.addEventListener('blur', () => {
+            if (!span.isContentEditable) return;
+            const value = span.textContent.trim();
+            span.removeAttribute('contenteditable');
+            if (value && value !== tab.name) {
+              this.renameTab(tab.name, value);
+            } else {
+              span.textContent = tab.name;
+            }
+          });
+          span.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              span.blur();
+            }
+            if (e.key === 'Escape') {
+              span.textContent = tab.name;
+              span.blur();
+            }
+          });
+
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'tab-remove';
+          removeBtn.textContent = '✕';
+          removeBtn.title = 'Delete tab';
+          removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.deleteTab(tab.name);
+          });
+
+          el.appendChild(span);
+          el.appendChild(removeBtn);
+          el.addEventListener('click', () => {
+            this.state.activeTab = tab.name;
+            this.renderTabs();
+            this.renderBatches();
+          });
+          tabList.appendChild(el);
+        });
+      }
+
+      renderBatches() {
+        const list = this.elements.batchList;
+        list.innerHTML = '';
+        const activeTab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+        if (!activeTab) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = 'Create a tab to start uploading batches.';
+          list.appendChild(empty);
+          return;
+        }
+
+        if (!activeTab.batches || !activeTab.batches.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = 'No batches yet. Upload images to create a batch.';
+          list.appendChild(empty);
+          return;
+        }
+
+        activeTab.batches.forEach((batch, batchIndex) => {
+          const batchEl = document.createElement('section');
+          batchEl.className = 'batch';
+          batchEl.dataset.batchIndex = batchIndex;
+
+          const header = document.createElement('div');
+          header.className = 'batch-header';
+
+          const title = document.createElement('div');
+          title.className = 'batch-title';
+          title.textContent = batch.createdAt ? `Batch ${batchIndex + 1} · ${new Date(batch.createdAt).toLocaleString()}` : `Batch ${batchIndex + 1}`;
+
+          const controls = document.createElement('div');
+          controls.className = 'batch-controls';
+
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'icon-btn';
+          copyBtn.textContent = '📋';
+          copyBtn.title = 'Copy description';
+          copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(batch.description || '').then(() => {
+              copyBtn.textContent = '✅';
+              setTimeout(() => (copyBtn.textContent = '📋'), 1500);
+            });
+          });
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'icon-btn danger';
+          deleteBtn.textContent = '🗑️';
+          deleteBtn.title = 'Delete batch';
+          deleteBtn.addEventListener('click', () => this.handleDeleteBatch(batchIndex));
+
+          controls.appendChild(copyBtn);
+          controls.appendChild(deleteBtn);
+
+          header.appendChild(title);
+          header.appendChild(controls);
+
+          const textarea = document.createElement('textarea');
+          textarea.value = batch.description || '';
+          textarea.placeholder = 'Describe this batch...';
+          textarea.addEventListener('input', () => {
+            this.scheduleDescriptionSave(batchIndex, textarea.value);
+          });
+
+          const thumbRow = document.createElement('div');
+          thumbRow.className = 'thumbnail-row';
+
+          (batch.images || []).forEach((filename, imageIndex) => {
+            const thumb = document.createElement('div');
+            thumb.className = 'thumbnail';
+            thumb.dataset.filename = filename;
+            thumb.dataset.batchIndex = batchIndex;
+
+            if (this.isSelected(batchIndex, filename)) {
+              thumb.classList.add('selected');
+            }
+
+            const img = document.createElement('img');
+            img.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
+            img.alt = filename;
+            img.loading = 'lazy';
+
+            img.addEventListener('click', (e) => {
+              e.preventDefault();
+              if (document.body.classList.contains('edit-mode')) {
+                this.toggleSelection(batchIndex, filename);
+                thumb.classList.toggle('selected');
+                this.updateSelectionUI();
+              } else {
+                this.openViewer(batchIndex, imageIndex);
+              }
+            });
+
+            const actions = document.createElement('div');
+            actions.className = 'thumb-actions';
+            const remove = document.createElement('button');
+            remove.className = 'icon-btn danger';
+            remove.textContent = '✖️';
+            remove.title = 'Delete image';
+            remove.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.deleteImage(batchIndex, filename);
+            });
+            actions.appendChild(remove);
+
+            thumb.appendChild(img);
+            thumb.appendChild(actions);
+            thumbRow.appendChild(thumb);
+          });
+
+          batchEl.appendChild(header);
+          batchEl.appendChild(textarea);
+          batchEl.appendChild(thumbRow);
+          list.appendChild(batchEl);
+        });
+      }
+
+      scheduleDescriptionSave(batchIndex, description) {
+        const key = `${this.state.activeTab}:${batchIndex}`;
+        if (this.state.descriptionTimers.has(key)) {
+          clearTimeout(this.state.descriptionTimers.get(key));
+        }
+        const timer = setTimeout(async () => {
+          try {
+            await api.updateBatch(this.state.activeTab, batchIndex, { description });
+            await this.refreshMetadata(true);
+          } catch (error) {
+            console.error(error);
+            alert(error.message);
+          }
+        }, 600);
+        this.state.descriptionTimers.set(key, timer);
+      }
+
+      async handleUpload(files) {
+        if (!this.state.activeTab) {
+          alert('Create a tab first.');
+          return;
+        }
+
+        if (files.length > 10) {
+          alert('You can upload up to 10 files at once.');
+          return;
+        }
+
+        const description = this.elements.newBatchDescription.value.trim();
+        const formData = new FormData();
+        files.forEach((file) => formData.append('files', file));
+        formData.append('tab', this.state.activeTab);
+
+        try {
+          const filenames = await this.uploadWithProgress(formData);
+          await api.createBatch(this.state.activeTab, {
+            description,
+            images: filenames
+          });
+          this.elements.newBatchDescription.value = '';
+          await this.refreshMetadata(true);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        } finally {
+          this.hideProgress();
+        }
+      }
+
+      uploadWithProgress(formData) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', '/api/upload');
+
+          xhr.upload.onprogress = (event) => {
+            if (!event.lengthComputable) return;
+            const percent = Math.round((event.loaded / event.total) * 100);
+            this.showProgress(percent);
+          };
+
+          xhr.onload = () => {
+            const responseText = xhr.responseText || '';
+            const parsePayload = () => {
+              if (!responseText) return {};
+              try {
+                return JSON.parse(responseText);
+              } catch (_) {
+                return {};
+              }
+            };
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+              const payload = parsePayload();
+              resolve(payload.filenames || []);
+            } else {
+              const payload = parsePayload();
+              const message = payload.message || responseText || 'Upload failed';
+              reject(new Error(message));
+            }
+          };
+
+          xhr.onerror = () => reject(new Error('Network error during upload'));
+          xhr.send(formData);
+          this.showProgress(0);
+        });
+      }
+
+      showProgress(percent) {
+        this.elements.uploadProgress.style.display = 'block';
+        this.elements.uploadProgressBar.style.width = `${percent}%`;
+      }
+
+      hideProgress() {
+        this.elements.uploadProgressBar.style.width = '0%';
+        this.elements.uploadProgress.style.display = 'none';
+      }
+
+      async handleDeleteBatch(batchIndex) {
+        if (!confirm('Delete this batch and all images?')) return;
+        try {
+          await api.deleteBatch(this.state.activeTab, batchIndex);
+          await this.refreshMetadata(true);
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      async deleteImage(batchIndex, filename) {
+        if (!confirm('Delete this image?')) return;
+        try {
+          await api.deleteImage(this.state.activeTab, batchIndex, filename);
+          await this.refreshMetadata(true);
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      toggleSelection(batchIndex, filename) {
+        const key = `${batchIndex}:${filename}`;
+        if (this.state.selectedImages.has(key)) {
+          this.state.selectedImages.delete(key);
+        } else {
+          this.state.selectedImages.set(key, { batchIndex, filename });
+        }
+      }
+
+      isSelected(batchIndex, filename) {
+        return this.state.selectedImages.has(`${batchIndex}:${filename}`);
+      }
+
+      updateSelectionUI() {
+        const count = this.state.selectedImages.size;
+        this.elements.selectionSummary.textContent = `${count} selected`;
+        this.elements.selectionActions.classList.toggle('show', count > 0);
+      }
+
+      clearSelection() {
+        this.state.selectedImages.clear();
+        this.updateSelectionUI();
+        this.renderBatches();
+      }
+
+      async deleteSelectedImages() {
+        if (!this.state.selectedImages.size) return;
+        if (!confirm('Delete all selected images?')) return;
+
+        try {
+          const tasks = [];
+          this.state.selectedImages.forEach(({ batchIndex, filename }) => {
+            tasks.push(api.deleteImage(this.state.activeTab, batchIndex, filename));
+          });
+          await Promise.all(tasks);
+          this.clearSelection();
+          await this.refreshMetadata(true);
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      openViewer(batchIndex, imageIndex) {
+        const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+        if (!tab) return;
+        const batch = tab.batches[batchIndex];
+        if (!batch) return;
+        const filename = batch.images[imageIndex];
+        if (!filename) return;
+
+        this.state.viewer = { tab: this.state.activeTab, batchIndex, imageIndex };
+        this.elements.viewerImage.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
+        this.elements.viewer.classList.add('show');
+      }
+
+      closeViewer() {
+        this.elements.viewer.classList.remove('show');
+        this.state.viewer = { tab: null, batchIndex: 0, imageIndex: 0 };
+      }
+
+      navigateViewer(delta) {
+        const { tab, batchIndex, imageIndex } = this.state.viewer;
+        if (!tab) return;
+        const activeTab = this.state.metadata.tabs.find((t) => t.name === tab);
+        if (!activeTab) return;
+        const batch = activeTab.batches[batchIndex];
+        if (!batch) return;
+        const nextIndex = imageIndex + delta;
+        if (nextIndex < 0 || nextIndex >= batch.images.length) return;
+        this.state.viewer.imageIndex = nextIndex;
+        const filename = batch.images[nextIndex];
+        this.elements.viewerImage.src = `/api/images/${encodeURIComponent(tab)}/${encodeURIComponent(filename)}`;
+      }
+    }
+
+    const app = new GalleryApp();
+    app.init();
+  </script>
+</body>
+</html>

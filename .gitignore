@@ -1,0 +1,5 @@
+node_modules/
+uploads/
+data/*
+!data/.gitkeep
+!data/metadata.json
