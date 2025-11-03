@@ -261,14 +261,14 @@
     .drop-zone {
       border: 2px dashed var(--border);
       border-radius: 16px;
-      padding: 32px;
+      padding: 18px;
       text-align: center;
       color: var(--muted);
       font-size: 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       background: rgba(255, 255, 255, 0.7);
       transition: border-color 0.2s ease, background 0.2s ease;
     }
@@ -291,17 +291,6 @@
       color: var(--accent);
       font-weight: 600;
       cursor: pointer;
-    }
-
-    .drop-zone textarea {
-      width: 100%;
-      max-width: 420px;
-      min-height: 80px;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      resize: vertical;
-      font-size: 0.95rem;
     }
 
     .batch-list {
@@ -380,6 +369,7 @@
       cursor: pointer;
       background: rgba(76, 110, 245, 0.04);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      aspect-ratio: 1 / 1;
     }
 
     .thumbnail:hover {
@@ -388,8 +378,10 @@
     }
 
     .thumbnail img {
+      position: absolute;
+      inset: 0;
       width: 100%;
-      height: 150px;
+      height: 100%;
       object-fit: cover;
       display: block;
     }
@@ -400,6 +392,7 @@
       right: 8px;
       display: none;
       gap: 6px;
+      z-index: 2;
     }
 
     body.edit-mode .thumbnail .thumb-actions {
@@ -517,8 +510,8 @@
     }
 
     @media (max-width: 768px) {
-      .thumbnail img {
-        height: 130px;
+      .thumbnail-row {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       }
 
       .viewer {
@@ -566,14 +559,12 @@
 
     <div class="surface-card">
       <div class="drop-zone" id="dropZone">
-        <strong>Drop images here or select files to create a new batch</strong>
-        <textarea id="newBatchDescription" placeholder="Describe this batch (prompt, settings, notes)..."></textarea>
+        <strong>Drop images here or select up to 50 files to create a new batch</strong>
         <div class="progress" id="uploadProgress">
           <div class="progress-bar" id="uploadProgressBar"></div>
         </div>
         <button id="filePickerBtn">Select files</button>
         <input type="file" id="fileInput" accept="image/*" multiple />
-        <small style="color: var(--muted);">Up to 10 images per upload · 50MB max per image</small>
       </div>
     </div>
 
@@ -708,7 +699,6 @@
           dropZone: document.getElementById('dropZone'),
           filePickerBtn: document.getElementById('filePickerBtn'),
           fileInput: document.getElementById('fileInput'),
-          newBatchDescription: document.getElementById('newBatchDescription'),
           uploadProgress: document.getElementById('uploadProgress'),
           uploadProgressBar: document.getElementById('uploadProgressBar'),
           selectionActions: document.getElementById('selectionActions'),
@@ -983,13 +973,6 @@
           header.appendChild(title);
           header.appendChild(controls);
 
-          const textarea = document.createElement('textarea');
-          textarea.value = batch.description || '';
-          textarea.placeholder = 'Describe this batch...';
-          textarea.addEventListener('input', () => {
-            this.scheduleDescriptionSave(batchIndex, textarea.value);
-          });
-
           const thumbRow = document.createElement('div');
           thumbRow.className = 'thumbnail-row';
 
@@ -1036,9 +1019,16 @@
             thumbRow.appendChild(thumb);
           });
 
+          const textarea = document.createElement('textarea');
+          textarea.value = batch.description || '';
+          textarea.placeholder = 'Describe this batch...';
+          textarea.addEventListener('input', () => {
+            this.scheduleDescriptionSave(batchIndex, textarea.value);
+          });
+
           batchEl.appendChild(header);
-          batchEl.appendChild(textarea);
           batchEl.appendChild(thumbRow);
+          batchEl.appendChild(textarea);
           list.appendChild(batchEl);
         });
       }
@@ -1066,12 +1056,11 @@
           return;
         }
 
-        if (files.length > 10) {
-          alert('You can upload up to 10 files at once.');
+        if (files.length > 50) {
+          alert('You can upload up to 50 files at once.');
           return;
         }
 
-        const description = this.elements.newBatchDescription.value.trim();
         const formData = new FormData();
         files.forEach((file) => formData.append('files', file));
         formData.append('tab', this.state.activeTab);
@@ -1079,10 +1068,9 @@
         try {
           const filenames = await this.uploadWithProgress(formData);
           await api.createBatch(this.state.activeTab, {
-            description,
+            description: '',
             images: filenames
           });
-          this.elements.newBatchDescription.value = '';
           await this.refreshMetadata(true);
         } catch (error) {
           console.error(error);
