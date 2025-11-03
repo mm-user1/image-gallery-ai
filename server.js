@@ -129,6 +129,21 @@ async function ensureDir(dir) {
 }
 
 /**
+ * Normalise batch structure and ensure required fields exist.
+ * @param {object} batch
+ */
+function normaliseBatch(batch) {
+  const source = batch && typeof batch === 'object' ? batch : {};
+  const images = Array.isArray(source.images) ? source.images.filter((img) => typeof img === 'string') : [];
+  return {
+    ...source,
+    title: typeof source.title === 'string' ? source.title : '',
+    description: typeof source.description === 'string' ? source.description : '',
+    images
+  };
+}
+
+/**
  * Reads metadata.json and returns structure.
  */
 async function readMetadata(metadataPath) {
@@ -138,6 +153,12 @@ async function readMetadata(metadataPath) {
     if (!Array.isArray(parsed.tabs)) {
       parsed.tabs = [];
     }
+    parsed.tabs = parsed.tabs
+      .filter((tab) => tab && typeof tab.name === 'string')
+      .map((tab) => ({
+        ...tab,
+        batches: Array.isArray(tab.batches) ? tab.batches.map(normaliseBatch) : []
+      }));
     return parsed;
   } catch (error) {
     return { tabs: [] };
@@ -249,7 +270,7 @@ async function safeUnlink(filePath) {
       if (!safeName) return acc;
       acc.push({
         name: safeName,
-        batches: Array.isArray(tab.batches) ? tab.batches : []
+        batches: Array.isArray(tab.batches) ? tab.batches.map(normaliseBatch) : []
       });
       return acc;
     }, []);
@@ -408,7 +429,7 @@ async function safeUnlink(filePath) {
       if (!name) {
         return res.status(400).json({ message: 'Invalid tab name.' });
       }
-      const { description = '', images = [] } = req.body || {};
+      const { description = '', images = [], title = '' } = req.body || {};
       if (!Array.isArray(images) || images.length === 0) {
         return res.status(400).json({ message: 'Provide at least one image for the batch.' });
       }
@@ -437,11 +458,12 @@ async function safeUnlink(filePath) {
         return res.status(400).json({ message: 'No valid images found for batch.' });
       }
 
-      const batch = {
+      const batch = normaliseBatch({
+        title: typeof title === 'string' ? title : '',
         description: typeof description === 'string' ? description : '',
         images: safeImages,
         createdAt: new Date().toISOString()
-      };
+      });
       tab.batches = tab.batches || [];
       tab.batches.unshift(batch);
       metadata.tabs[index] = tab;
@@ -463,7 +485,7 @@ async function safeUnlink(filePath) {
       if (!name || Number.isNaN(idx) || idx < 0) {
         return res.status(400).json({ message: 'Invalid batch reference.' });
       }
-      const { description = '' } = req.body || {};
+      const { description, title, images } = req.body || {};
 
       const metadata = await readMetadata(metadataPath);
       const { tab } = findTab(metadata, name);
@@ -473,10 +495,68 @@ async function safeUnlink(filePath) {
       if (!Array.isArray(tab.batches) || !tab.batches[idx]) {
         return res.status(404).json({ message: 'Batch not found.' });
       }
-      tab.batches[idx].description = typeof description === 'string' ? description : '';
-      tab.batches[idx].updatedAt = new Date().toISOString();
-      await writeMetadata(metadataPath, metadata);
+      const batch = tab.batches[idx];
+      let changed = false;
+      if (typeof description === 'string') {
+        batch.description = description;
+        changed = true;
+      }
+      if (typeof title === 'string') {
+        batch.title = title;
+        changed = true;
+      }
+      if (Array.isArray(images)) {
+        const sanitized = images
+          .map((img) => sanitizeFilename(img))
+          .filter((img) => typeof img === 'string' && img.length > 0);
+        const unique = Array.from(new Set(sanitized));
+        batch.images = unique;
+        changed = true;
+      }
+      if (changed) {
+        batch.updatedAt = new Date().toISOString();
+        tab.batches[idx] = normaliseBatch(batch);
+        await writeMetadata(metadataPath, metadata);
+      }
       res.json({ batch: tab.batches[idx] });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.put('/api/tabs/:name/batches/reorder', async (req, res, next) => {
+    try {
+      const name = sanitizeTabName(req.params.name);
+      if (!name) {
+        return res.status(400).json({ message: 'Invalid tab name.' });
+      }
+      const { order } = req.body || {};
+      if (!Array.isArray(order)) {
+        return res.status(400).json({ message: 'Order must be an array.' });
+      }
+
+      const metadata = await readMetadata(metadataPath);
+      const { index, tab } = findTab(metadata, name);
+      if (!tab || !Array.isArray(tab.batches)) {
+        return res.status(404).json({ message: 'Tab not found.' });
+      }
+      if (order.length !== tab.batches.length) {
+        return res.status(400).json({ message: 'Order length mismatch.' });
+      }
+      const maxIndex = tab.batches.length - 1;
+      const seen = new Set();
+      for (const value of order) {
+        if (!Number.isInteger(value) || value < 0 || value > maxIndex || seen.has(value)) {
+          return res.status(400).json({ message: 'Order contains invalid indices.' });
+        }
+        seen.add(value);
+      }
+
+      const current = Array.from(tab.batches);
+      const reordered = order.map((idx) => normaliseBatch(current[idx]));
+      metadata.tabs[index].batches = reordered;
+      await writeMetadata(metadataPath, metadata);
+      res.json({ batches: reordered });
     } catch (error) {
       next(error);
     }
@@ -534,6 +614,8 @@ async function safeUnlink(filePath) {
         return res.status(404).json({ message: 'Image not found.' });
       }
       batch.images.splice(imageIdx, 1);
+      batch.updatedAt = new Date().toISOString();
+      tab.batches[idx] = normaliseBatch(batch);
       await safeUnlink(path.join(dataDir, name, filename));
       await writeMetadata(metadataPath, metadata);
       log(`Deleted image ${filename} from batch ${idx} in tab ${name}`);
