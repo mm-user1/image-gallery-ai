@@ -225,11 +225,13 @@ async function safeUnlink(filePath) {
     }
   });
 
+  const MAX_FILES_PER_UPLOAD = 50;
+
   const uploadMiddleware = multer({
     storage,
     limits: {
       fileSize: 50 * 1024 * 1024,
-      files: 10
+      files: MAX_FILES_PER_UPLOAD
     },
     fileFilter: (_req, file, cb) => {
       if (file.mimetype && file.mimetype.startsWith('image/')) {
@@ -544,7 +546,7 @@ async function safeUnlink(filePath) {
   /**
    * POST /api/upload - handle multipart image upload.
    */
-  app.post('/api/upload', uploadMiddleware.array('files', 10), async (req, res, next) => {
+  app.post('/api/upload', uploadMiddleware.array('files', MAX_FILES_PER_UPLOAD), async (req, res, next) => {
     try {
       const tab = sanitizeTabName(req.body?.tab || '');
       if (!tab) {
@@ -627,8 +629,12 @@ async function safeUnlink(filePath) {
    * Generic error handler to avoid leaking stack traces to clients.
    */
   app.use((err, _req, res, _next) => {
-    const status = err instanceof multer.MulterError ? 400 : 500;
-    const message = err instanceof multer.MulterError ? err.message : 'An unexpected error occurred.';
+    const isMulter = err instanceof multer.MulterError;
+    const status = isMulter ? 400 : 500;
+    let message = isMulter ? err.message : 'An unexpected error occurred.';
+    if (isMulter && err.code === 'LIMIT_FILE_COUNT') {
+      message = `You can upload up to ${MAX_FILES_PER_UPLOAD} files at once.`;
+    }
     log(err.message, 'ERROR');
     if (err.stack) {
       log(err.stack, 'DEBUG');
