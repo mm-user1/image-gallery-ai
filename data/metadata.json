@@ -1,3 +1,31 @@
 {
-  "tabs": []
+  "tabs": [
+    {
+      "name": "test-01",
+      "batches": [
+        {
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair and dark green eyes, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, She is wearing black flat boots and a long scarf, wide shot, medium shot, realistic skin texture, maximum realism\n--v 7 --ar 4:5 --oref https://dl.dropboxusercontent.com/scl/fi/zxg8lsn7uo3hcljoy8tar/oref_2TM01537.jpg?rlkey=pnx1y59pvv92azac1k5bj8mdh&st=qwhd0hc5&dl=0 --ow 100 --s 100 --q 2 --style raw",
+          "images": [
+            "8543954-1.png",
+            "8543954-2.png",
+            "8543954-3.png",
+            "8543954-4.png"
+          ],
+          "createdAt": "2025-11-03T15:08:37.858Z",
+          "updatedAt": "2025-11-03T15:08:48.719Z"
+        },
+        {
+          "description": "Фотореалистичная фотография, высококачественная. На фото молодая женщина в полный рост, молодая женщина с короткими темными волосами, темно-зелеными глазами и веснушками, оборачивается через плечо в камеру, она стоит, вокруг мрачный темный лес с загадочными отблесками, молодая женщина смотрит в камеру, на ней утонченное, черное, кружевное платье до пола, на ногах черные туфли на высоком каблуке, туфли слегка показываются из под длинного платья, в руках антикварный бронзовый тройной канделябр со свечами, лицо освещает свет от свечей, мистическое настроение Хэллоуина \nСохрани лицо с фото 1\nСохрани освещение, стиль, одежду и настроение с фото 2\nСохрани настроение и стиль с фото 3",
+          "images": [
+            "8533599-1.png",
+            "8533599-2.png",
+            "8533599-3.png",
+            "8533599-4.png"
+          ],
+          "createdAt": "2025-11-03T15:02:06.936Z",
+          "updatedAt": "2025-11-03T15:03:03.385Z"
+        }
+      ]
+    }
+  ]
 }
