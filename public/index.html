@@ -248,6 +248,33 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     }
 
+    .ghost-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ghost-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .ghost-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
     .surface-card {
       background: var(--surface);
       border-radius: var(--radius-lg);
@@ -337,6 +364,35 @@
       align-items: center;
     }
 
+    .batch-reorder-controls {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .batch .batch-title-input {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .batch .batch-title-input::placeholder {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .batch .batch-title-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(74, 74, 74, 0.18);
+      outline: none;
+    }
+
     .batch textarea {
       width: 100%;
       min-height: 100px;
@@ -397,6 +453,10 @@
 
     body.edit-mode .thumbnail .thumb-actions {
       display: inline-flex;
+    }
+
+    body.edit-mode .thumbnail {
+      cursor: grab;
     }
 
     .thumbnail.selected::after {
@@ -638,6 +698,15 @@
         if (!res.ok) throw new Error((await res.json()).message || 'Unable to update batch');
         return res.json();
       },
+      async reorderBatches(tab, order) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/reorder`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order })
+        });
+        if (!res.ok) throw new Error((await res.json()).message || 'Unable to reorder batches');
+        return res.json();
+      },
       async deleteBatch(tab, index) {
         const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${index}`, {
           method: 'DELETE'
@@ -688,7 +757,8 @@
           pollingTimer: null,
           loading: false,
           lastMetadataHash: null,
-          descriptionTimers: new Map()
+          batchUpdateTimers: new Map(),
+          editMode: false
         };
 
         this.elements = {
@@ -721,9 +791,7 @@
 
       bindGlobalEvents() {
         this.elements.createTabBtn.addEventListener('click', () => this.promptCreateTab());
-        this.elements.toggleEdit.addEventListener('click', () => {
-          document.body.classList.toggle('edit-mode');
-        });
+        this.elements.toggleEdit.addEventListener('click', () => this.handleToggleEdit());
         this.elements.filePickerBtn.addEventListener('click', () => this.elements.fileInput.click());
         this.elements.fileInput.addEventListener('change', (e) => {
           const files = Array.from(e.target.files || []);
@@ -772,6 +840,16 @@
           if (e.key === 'ArrowRight') this.navigateViewer(1);
           if (e.key === 'Escape') this.closeViewer();
         });
+      }
+
+      handleToggleEdit() {
+        this.state.editMode = !this.state.editMode;
+        document.body.classList.toggle('edit-mode', this.state.editMode);
+        if (!this.state.editMode) {
+          this.clearSelection();
+        } else {
+          this.renderBatches();
+        }
       }
 
       async refreshMetadata(initial = false) {
@@ -924,6 +1002,7 @@
           empty.className = 'empty-state';
           empty.textContent = 'Create a tab to start uploading batches.';
           list.appendChild(empty);
+          document.body.classList.toggle('edit-mode', this.state.editMode);
           return;
         }
 
@@ -932,8 +1011,11 @@
           empty.className = 'empty-state';
           empty.textContent = 'No batches yet. Upload images to create a batch.';
           list.appendChild(empty);
+          document.body.classList.toggle('edit-mode', this.state.editMode);
           return;
         }
+
+        document.body.classList.toggle('edit-mode', this.state.editMode);
 
         activeTab.batches.forEach((batch, batchIndex) => {
           const batchEl = document.createElement('section');
@@ -943,39 +1025,95 @@
           const header = document.createElement('div');
           header.className = 'batch-header';
 
-          const title = document.createElement('div');
-          title.className = 'batch-title';
-          title.textContent = batch.createdAt ? `Batch ${batchIndex + 1} · ${new Date(batch.createdAt).toLocaleString()}` : `Batch ${batchIndex + 1}`;
+          const meta = document.createElement('div');
+          meta.className = 'batch-title';
+          meta.textContent = batch.createdAt
+            ? `Batch ${batchIndex + 1} · ${new Date(batch.createdAt).toLocaleString()}`
+            : `Batch ${batchIndex + 1}`;
 
           const controls = document.createElement('div');
           controls.className = 'batch-controls';
 
+          let descriptionField = null;
+
           const copyBtn = document.createElement('button');
-          copyBtn.className = 'icon-btn';
-          copyBtn.textContent = '📋';
-          copyBtn.title = 'Copy description';
-          copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(batch.description || '').then(() => {
-              copyBtn.textContent = '✅';
-              setTimeout(() => (copyBtn.textContent = '📋'), 1500);
-            });
+          copyBtn.className = 'ghost-btn';
+          copyBtn.textContent = 'Copy prompt';
+          copyBtn.title = 'Copy prompt';
+          copyBtn.addEventListener('click', async () => {
+            try {
+              const text = descriptionField ? descriptionField.value : batch.description || '';
+              await navigator.clipboard.writeText(text);
+              copyBtn.textContent = 'Copied!';
+              setTimeout(() => {
+                copyBtn.textContent = 'Copy prompt';
+              }, 1500);
+            } catch (error) {
+              console.error(error);
+              alert('Unable to copy prompt');
+            }
           });
 
-          const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'icon-btn danger';
-          deleteBtn.textContent = '🗑️';
-          deleteBtn.title = 'Delete batch';
-          deleteBtn.addEventListener('click', () => this.handleDeleteBatch(batchIndex));
-
           controls.appendChild(copyBtn);
-          controls.appendChild(deleteBtn);
 
-          header.appendChild(title);
+          const addInput = document.createElement('input');
+          addInput.type = 'file';
+          addInput.accept = 'image/*';
+          addInput.multiple = true;
+          addInput.style.display = 'none';
+          addInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files || []);
+            if (files.length) {
+              this.handleAddImages(batchIndex, files);
+            }
+            addInput.value = '';
+          });
+
+          if (this.state.editMode) {
+            const addBtn = document.createElement('button');
+            addBtn.className = 'icon-btn';
+            addBtn.textContent = '+';
+            addBtn.title = 'Add images';
+            addBtn.addEventListener('click', () => addInput.click());
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'icon-btn danger';
+            deleteBtn.textContent = '🗑️';
+            deleteBtn.title = 'Delete batch';
+            deleteBtn.addEventListener('click', () => this.handleDeleteBatch(batchIndex));
+
+            const reorderGroup = document.createElement('div');
+            reorderGroup.className = 'batch-reorder-controls';
+
+            const moveUpBtn = document.createElement('button');
+            moveUpBtn.className = 'icon-btn';
+            moveUpBtn.textContent = '⬆️';
+            moveUpBtn.title = 'Move batch up';
+            moveUpBtn.disabled = batchIndex === 0;
+            moveUpBtn.addEventListener('click', () => this.handleMoveBatch(batchIndex, -1));
+
+            const moveDownBtn = document.createElement('button');
+            moveDownBtn.className = 'icon-btn';
+            moveDownBtn.textContent = '⬇️';
+            moveDownBtn.title = 'Move batch down';
+            moveDownBtn.disabled = batchIndex === activeTab.batches.length - 1;
+            moveDownBtn.addEventListener('click', () => this.handleMoveBatch(batchIndex, 1));
+
+            reorderGroup.appendChild(moveUpBtn);
+            reorderGroup.appendChild(moveDownBtn);
+
+            controls.appendChild(addBtn);
+            controls.appendChild(deleteBtn);
+            controls.appendChild(reorderGroup);
+          }
+
+          header.appendChild(meta);
           header.appendChild(controls);
 
           const thumbRow = document.createElement('div');
           thumbRow.className = 'thumbnail-row';
 
+          const totalImages = Array.isArray(batch.images) ? batch.images.length : 0;
           (batch.images || []).forEach((filename, imageIndex) => {
             const thumb = document.createElement('div');
             thumb.className = 'thumbnail';
@@ -1004,6 +1142,27 @@
 
             const actions = document.createElement('div');
             actions.className = 'thumb-actions';
+
+            const moveLeft = document.createElement('button');
+            moveLeft.className = 'icon-btn';
+            moveLeft.textContent = '◀';
+            moveLeft.title = 'Move image left';
+            moveLeft.disabled = imageIndex === 0;
+            moveLeft.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.handleMoveImage(batchIndex, imageIndex, -1);
+            });
+
+            const moveRight = document.createElement('button');
+            moveRight.className = 'icon-btn';
+            moveRight.textContent = '▶';
+            moveRight.title = 'Move image right';
+            moveRight.disabled = imageIndex === totalImages - 1;
+            moveRight.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.handleMoveImage(batchIndex, imageIndex, 1);
+            });
+
             const remove = document.createElement('button');
             remove.className = 'icon-btn danger';
             remove.textContent = '✖️';
@@ -1012,6 +1171,9 @@
               e.stopPropagation();
               this.deleteImage(batchIndex, filename);
             });
+
+            actions.appendChild(moveLeft);
+            actions.appendChild(moveRight);
             actions.appendChild(remove);
 
             thumb.appendChild(img);
@@ -1019,35 +1181,124 @@
             thumbRow.appendChild(thumb);
           });
 
-          const textarea = document.createElement('textarea');
-          textarea.value = batch.description || '';
-          textarea.placeholder = 'Describe this batch...';
-          textarea.addEventListener('input', () => {
-            this.scheduleDescriptionSave(batchIndex, textarea.value);
+          const titleInput = document.createElement('input');
+          titleInput.type = 'text';
+          titleInput.className = 'batch-title-input';
+          titleInput.placeholder = 'Batch title';
+          titleInput.value = batch.title || '';
+          titleInput.addEventListener('input', () => {
+            this.scheduleBatchUpdate(batchIndex, { title: titleInput.value });
+          });
+
+          descriptionField = document.createElement('textarea');
+          descriptionField.value = batch.description || '';
+          descriptionField.placeholder = 'Describe this batch...';
+          descriptionField.addEventListener('input', () => {
+            this.scheduleBatchUpdate(batchIndex, { description: descriptionField.value });
           });
 
           batchEl.appendChild(header);
+          batchEl.appendChild(addInput);
           batchEl.appendChild(thumbRow);
-          batchEl.appendChild(textarea);
+          batchEl.appendChild(titleInput);
+          batchEl.appendChild(descriptionField);
           list.appendChild(batchEl);
         });
+
+        this.updateSelectionUI();
       }
 
-      scheduleDescriptionSave(batchIndex, description) {
-        const key = `${this.state.activeTab}:${batchIndex}`;
-        if (this.state.descriptionTimers.has(key)) {
-          clearTimeout(this.state.descriptionTimers.get(key));
+      scheduleBatchUpdate(batchIndex, payload) {
+        const tabName = this.state.activeTab;
+        if (!tabName) return;
+        const key = `${tabName}:${batchIndex}`;
+        const existing = this.state.batchUpdateTimers.get(key) || { payload: {}, tab: tabName };
+        if (existing.timer) {
+          clearTimeout(existing.timer);
         }
+        const mergedPayload = { ...existing.payload, ...payload };
         const timer = setTimeout(async () => {
           try {
-            await api.updateBatch(this.state.activeTab, batchIndex, { description });
+            await api.updateBatch(tabName, batchIndex, mergedPayload);
             await this.refreshMetadata(true);
           } catch (error) {
             console.error(error);
             alert(error.message);
+          } finally {
+            this.state.batchUpdateTimers.delete(key);
           }
         }, 600);
-        this.state.descriptionTimers.set(key, timer);
+        this.state.batchUpdateTimers.set(key, { timer, payload: mergedPayload, tab: tabName });
+      }
+
+      async handleMoveImage(batchIndex, imageIndex, direction) {
+        const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+        if (!tab) return;
+        const batch = tab.batches?.[batchIndex];
+        if (!batch || !Array.isArray(batch.images)) return;
+        const targetIndex = imageIndex + direction;
+        if (targetIndex < 0 || targetIndex >= batch.images.length) return;
+        const images = [...batch.images];
+        const [moved] = images.splice(imageIndex, 1);
+        images.splice(targetIndex, 0, moved);
+        try {
+          await api.updateBatch(this.state.activeTab, batchIndex, { images });
+          await this.refreshMetadata(true);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        }
+      }
+
+      async handleAddImages(batchIndex, files) {
+        if (!files.length) return;
+        if (!this.state.activeTab) {
+          alert('Create a tab first.');
+          return;
+        }
+        if (files.length > 50) {
+          alert('You can upload up to 50 files at once.');
+          return;
+        }
+        const formData = new FormData();
+        files.forEach((file) => formData.append('files', file));
+        formData.append('tab', this.state.activeTab);
+        try {
+          const filenames = await this.uploadWithProgress(formData);
+          if (!filenames.length) {
+            return;
+          }
+          const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+          const batch = tab?.batches?.[batchIndex];
+          if (!batch) return;
+          const images = [...(batch.images || []), ...filenames];
+          await api.updateBatch(this.state.activeTab, batchIndex, { images });
+          await this.refreshMetadata(true);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        } finally {
+          this.hideProgress();
+        }
+      }
+
+      async handleMoveBatch(batchIndex, direction) {
+        const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+        if (!tab || !Array.isArray(tab.batches)) return;
+        const targetIndex = batchIndex + direction;
+        if (targetIndex < 0 || targetIndex >= tab.batches.length) return;
+        const order = tab.batches.map((_, idx) => idx);
+        const [moved] = order.splice(batchIndex, 1);
+        order.splice(targetIndex, 0, moved);
+        try {
+          await api.reorderBatches(this.state.activeTab, order);
+          this.state.selectedImages.clear();
+          this.updateSelectionUI();
+          await this.refreshMetadata(true);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        }
       }
 
       async handleUpload(files) {
