@@ -398,6 +398,27 @@
       outline: none;
     }
 
+    .batch-status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .batch-saved-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .batch-saved-indicator::before {
+      content: '●';
+      font-size: 0.6rem;
+      color: var(--accent);
+    }
+
     .batch-drop-zone {
       border: 2px dashed var(--border);
       border-radius: 16px;
@@ -777,6 +798,50 @@
       }
     };
 
+    function isTextInput(el) {
+      if (!el) return false;
+      if (el.tagName === 'TEXTAREA') return true;
+      if (el.tagName === 'INPUT') {
+        const type = (el.type || '').toLowerCase();
+        return type === 'text' || type === 'search';
+      }
+      return false;
+    }
+
+    function isInsideBatch(el, batchId) {
+      if (!el) return false;
+      const container = el.closest('[data-batch-id]');
+      if (!container) return false;
+      return String(container.getAttribute('data-batch-id')) === String(batchId);
+    }
+
+    function formatSavedLabel(isoString) {
+      if (!isoString) return 'Saved just now';
+      const date = new Date(isoString);
+      if (Number.isNaN(date.getTime())) {
+        return 'Saved just now';
+      }
+      const diff = Date.now() - date.getTime();
+      if (diff < 0) {
+        return `Saved on ${date.toLocaleString()}`;
+      }
+      const minute = 60 * 1000;
+      const hour = 60 * minute;
+      const day = 24 * hour;
+      if (diff < minute) {
+        return 'Saved just now';
+      }
+      if (diff < hour) {
+        const minutes = Math.floor(diff / minute);
+        return minutes === 1 ? 'Saved 1 minute ago' : `Saved ${minutes} minutes ago`;
+      }
+      if (diff < day) {
+        const hours = Math.floor(diff / hour);
+        return hours === 1 ? 'Saved 1 hour ago' : `Saved ${hours} hours ago`;
+      }
+      return `Saved on ${date.toLocaleString()}`;
+    }
+
     const debounce = (fn, delay = 500) => {
       let timer;
       return (...args) => {
@@ -796,7 +861,8 @@
           loading: false,
           lastMetadataHash: null,
           batchUpdateTimers: new Map(),
-          activeBatchDropZones: new Set()
+          activeBatchDropZones: new Set(),
+          pendingBatchRefresh: new Set()
         };
 
         this.elements = {
@@ -904,7 +970,19 @@
           if (initial || hash !== this.state.lastMetadataHash) {
             this.state.lastMetadataHash = hash;
             this.renderTabs();
-            this.renderBatches();
+            const activeEl = document.activeElement;
+            const editingInput = isTextInput(activeEl);
+            if (editingInput) {
+              this.state.pendingBatchRefresh.add('__all__');
+              for (const tabEntry of this.state.metadata.tabs) {
+                if (!Array.isArray(tabEntry.batches)) continue;
+                tabEntry.batches.forEach((batch, index) => {
+                  this.updateBatchSavedIndicator(tabEntry.name, index, batch);
+                });
+              }
+            } else {
+              this.renderBatches();
+            }
           }
         } catch (error) {
           console.error(error);
@@ -1072,7 +1150,9 @@
         activeTab.batches.forEach((batch, batchIndex) => {
           const batchEl = document.createElement('section');
           batchEl.className = 'batch';
+          const batchKey = this.getBatchKey(activeTab.name, batchIndex);
           batchEl.dataset.batchIndex = batchIndex;
+          batchEl.dataset.batchId = batchKey;
 
           const header = document.createElement('div');
           header.className = 'batch-header';
@@ -1102,8 +1182,6 @@
               copyBtn.textContent = baseCopyLabel;
             }, 1500);
           });
-
-          const batchKey = `${this.state.activeTab}:${batchIndex}`;
 
           const addBtn = document.createElement('button');
           addBtn.className = 'icon-btn batch-edit-only';
@@ -1193,25 +1271,98 @@
           titleInput.placeholder = 'Add a title for this batch...';
           titleInput.value = batch.title || '';
           titleInput.dataset.batchIndex = batchIndex;
+          titleInput.dataset.batchId = batchKey;
           titleInput.dataset.field = 'title';
           titleInput.addEventListener('input', () => {
             this.scheduleBatchUpdate(batchIndex, { title: titleInput.value });
           });
+          titleInput.addEventListener('blur', () => this.handleFieldBlur());
 
           const textarea = document.createElement('textarea');
           textarea.value = batch.description || '';
           textarea.placeholder = 'Describe this batch...';
           textarea.dataset.batchIndex = batchIndex;
+          textarea.dataset.batchId = batchKey;
           textarea.dataset.field = 'description';
           textarea.addEventListener('input', () => {
             this.scheduleBatchUpdate(batchIndex, { description: textarea.value });
           });
+          textarea.addEventListener('blur', () => this.handleFieldBlur());
+
+          const status = document.createElement('div');
+          status.className = 'batch-status';
+          const savedIndicator = document.createElement('span');
+          savedIndicator.className = 'batch-saved-indicator';
+          savedIndicator.textContent = formatSavedLabel(batch.updatedAt || batch.createdAt);
+          status.appendChild(savedIndicator);
 
           batchEl.appendChild(thumbRow);
           batchEl.appendChild(titleInput);
           batchEl.appendChild(textarea);
+          batchEl.appendChild(status);
           list.appendChild(batchEl);
         });
+      }
+
+      getBatchKey(tabName, batchIndex) {
+        const safeTab = tabName ?? '';
+        const index = typeof batchIndex === 'number' ? batchIndex : parseInt(batchIndex, 10) || 0;
+        return `${safeTab}:${index}`;
+      }
+
+      getBatchFromState(tabName, batchIndex) {
+        if (!tabName && tabName !== '') return null;
+        const tabEntry = this.state.metadata.tabs.find((t) => t.name === tabName);
+        if (!tabEntry || !Array.isArray(tabEntry.batches)) {
+          return null;
+        }
+        const index = typeof batchIndex === 'number' ? batchIndex : parseInt(batchIndex, 10);
+        if (Number.isNaN(index) || index < 0 || index >= tabEntry.batches.length) {
+          return null;
+        }
+        return tabEntry.batches[index] || null;
+      }
+
+      updateLocalBatch(tabName, batchIndex, nextBatch) {
+        if (!nextBatch) return;
+        const tabEntry = this.state.metadata.tabs.find((t) => t.name === tabName);
+        if (!tabEntry || !Array.isArray(tabEntry.batches)) {
+          return;
+        }
+        const index = typeof batchIndex === 'number' ? batchIndex : parseInt(batchIndex, 10);
+        if (Number.isNaN(index) || index < 0 || index >= tabEntry.batches.length) {
+          return;
+        }
+        const current = tabEntry.batches[index];
+        tabEntry.batches[index] = { ...current, ...nextBatch };
+      }
+
+      updateBatchSavedIndicator(tabName, batchIndex, batchData) {
+        const batchKey = this.getBatchKey(tabName, batchIndex);
+        const container = document.querySelector(`[data-batch-id="${batchKey}"]`);
+        if (!container) return;
+        const indicator = container.querySelector('.batch-saved-indicator');
+        if (!indicator) return;
+        const batch = batchData || this.getBatchFromState(tabName, batchIndex);
+        const timestamp = batch?.updatedAt || batch?.createdAt;
+        indicator.textContent = formatSavedLabel(timestamp);
+      }
+
+      handleFieldBlur() {
+        setTimeout(() => this.maybeRefreshAfterEditing(), 0);
+      }
+
+      maybeRefreshAfterEditing() {
+        const active = document.activeElement;
+        if (isTextInput(active)) {
+          return;
+        }
+        if (!this.state.pendingBatchRefresh.size) {
+          return;
+        }
+        this.state.pendingBatchRefresh.clear();
+        this.renderTabs();
+        this.renderBatches();
       }
 
       createBatchDropZone(batchIndex) {
@@ -1271,7 +1422,7 @@
       scheduleBatchUpdate(batchIndex, updates) {
         const tab = this.state.activeTab;
         if (!tab || !updates || typeof updates !== 'object') return;
-        const key = `${tab}:${batchIndex}`;
+        const key = this.getBatchKey(tab, batchIndex);
         const existing = this.state.batchUpdateTimers.get(key);
         if (existing?.timer) {
           clearTimeout(existing.timer);
@@ -1280,9 +1431,13 @@
         const timer = setTimeout(async () => {
           const current = this.state.batchUpdateTimers.get(key);
           const payload = current?.updates || merged;
+          const targetTab = current?.tab || tab;
+          const batchKey = this.getBatchKey(targetTab, batchIndex);
           const focusState = this.captureFocusState();
-          let shouldRestore = focusState && document.activeElement === focusState.element;
-          const restoreState = shouldRestore
+          const activeEl = document.activeElement;
+          const editingAny = isTextInput(activeEl);
+          const editingSameBatch = editingAny && isInsideBatch(activeEl, batchKey);
+          const restoreState = !editingAny && focusState && document.activeElement === focusState.element
             ? {
                 batchIndex: focusState.batchIndex,
                 field: focusState.field,
@@ -1291,17 +1446,28 @@
               }
             : null;
           try {
-            await api.updateBatch(tab, batchIndex, payload);
-            if (shouldRestore && document.activeElement !== focusState.element) {
-              shouldRestore = false;
+            const response = await api.updateBatch(targetTab, batchIndex, payload);
+            const updatedBatch = response?.batch;
+            if (updatedBatch) {
+              this.updateLocalBatch(targetTab, batchIndex, updatedBatch);
             }
-            await this.refreshMetadata(true);
-            if (shouldRestore && restoreState) {
-              this.restoreFocusState(restoreState);
+            if (editingAny) {
+              if (!editingSameBatch) {
+                this.state.pendingBatchRefresh.add('__all__');
+              }
+              this.state.pendingBatchRefresh.add(batchKey);
+              this.updateBatchSavedIndicator(targetTab, batchIndex, updatedBatch);
+            } else {
+              await this.refreshMetadata(true);
+              if (restoreState) {
+                this.restoreFocusState(restoreState);
+              }
+              this.state.pendingBatchRefresh.delete(batchKey);
             }
           } catch (error) {
             console.error(error);
             alert(error.message);
+            this.state.pendingBatchRefresh.delete(batchKey);
           } finally {
             this.state.batchUpdateTimers.delete(key);
           }
@@ -1370,7 +1536,7 @@
         fileArray.forEach((file) => formData.append('files', file));
         formData.append('tab', this.state.activeTab);
 
-        const key = `${this.state.activeTab}:${batchIndex}`;
+        const key = this.getBatchKey(this.state.activeTab, batchIndex);
 
         try {
           const filenames = await this.uploadWithProgress(formData);
@@ -1469,7 +1635,7 @@
       async handleDeleteBatch(batchIndex) {
         if (!confirm('Delete this batch and all images?')) return;
         try {
-          this.state.activeBatchDropZones.delete(`${this.state.activeTab}:${batchIndex}`);
+          this.state.activeBatchDropZones.delete(this.getBatchKey(this.state.activeTab, batchIndex));
           await api.deleteBatch(this.state.activeTab, batchIndex);
           await this.refreshMetadata(true);
         } catch (error) {
