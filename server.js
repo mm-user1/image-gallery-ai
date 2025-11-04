@@ -408,7 +408,7 @@ async function safeUnlink(filePath) {
       if (!name) {
         return res.status(400).json({ message: 'Invalid tab name.' });
       }
-      const { description = '', images = [] } = req.body || {};
+      const { title = '', description = '', images = [] } = req.body || {};
       if (!Array.isArray(images) || images.length === 0) {
         return res.status(400).json({ message: 'Provide at least one image for the batch.' });
       }
@@ -438,6 +438,7 @@ async function safeUnlink(filePath) {
       }
 
       const batch = {
+        title: typeof title === 'string' ? title : '',
         description: typeof description === 'string' ? description : '',
         images: safeImages,
         createdAt: new Date().toISOString()
@@ -463,7 +464,7 @@ async function safeUnlink(filePath) {
       if (!name || Number.isNaN(idx) || idx < 0) {
         return res.status(400).json({ message: 'Invalid batch reference.' });
       }
-      const { description = '' } = req.body || {};
+      const { description, title } = req.body || {};
 
       const metadata = await readMetadata(metadataPath);
       const { tab } = findTab(metadata, name);
@@ -473,10 +474,87 @@ async function safeUnlink(filePath) {
       if (!Array.isArray(tab.batches) || !tab.batches[idx]) {
         return res.status(404).json({ message: 'Batch not found.' });
       }
-      tab.batches[idx].description = typeof description === 'string' ? description : '';
-      tab.batches[idx].updatedAt = new Date().toISOString();
+      const batch = tab.batches[idx];
+      let updated = false;
+
+      if (description !== undefined) {
+        if (typeof description !== 'string') {
+          return res.status(400).json({ message: 'Description must be a string.' });
+        }
+        batch.description = description;
+        updated = true;
+      }
+
+      if (title !== undefined) {
+        if (typeof title !== 'string') {
+          return res.status(400).json({ message: 'Title must be a string.' });
+        }
+        batch.title = title;
+        updated = true;
+      }
+
+      if (updated) {
+        batch.updatedAt = new Date().toISOString();
+        await writeMetadata(metadataPath, metadata);
+      }
+
+      res.json({ batch });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /**
+   * POST /api/tabs/:name/batches/:index/images - append images to batch.
+   */
+  app.post('/api/tabs/:name/batches/:index/images', async (req, res, next) => {
+    try {
+      const name = sanitizeTabName(req.params.name);
+      const idx = parseInt(req.params.index, 10);
+      if (!name || Number.isNaN(idx) || idx < 0) {
+        return res.status(400).json({ message: 'Invalid batch reference.' });
+      }
+
+      const images = Array.isArray(req.body?.images) ? req.body.images : [];
+      if (!images.length) {
+        return res.status(400).json({ message: 'Provide images to append.' });
+      }
+
+      const metadata = await readMetadata(metadataPath);
+      const { tab } = findTab(metadata, name);
+      if (!tab || !Array.isArray(tab.batches) || !tab.batches[idx]) {
+        return res.status(404).json({ message: 'Batch not found.' });
+      }
+
+      const batch = tab.batches[idx];
+      if (!Array.isArray(batch.images)) {
+        batch.images = [];
+      }
+
+      const tabDir = path.join(dataDir, name);
+      const appended = [];
+      for (const image of images) {
+        const safe = sanitizeFilename(image);
+        if (!safe) continue;
+        const target = path.join(tabDir, safe);
+        try {
+          await fsp.access(target, fs.constants.F_OK);
+          if (!batch.images.includes(safe)) {
+            batch.images.push(safe);
+          }
+          appended.push(safe);
+        } catch (_) {
+          log(`Missing image referenced for append: ${target}`, 'WARN');
+        }
+      }
+
+      if (!appended.length) {
+        return res.status(400).json({ message: 'No valid images found to append.' });
+      }
+
+      batch.updatedAt = new Date().toISOString();
       await writeMetadata(metadataPath, metadata);
-      res.json({ batch: tab.batches[idx] });
+      res.json({ batch, appended });
     } catch (error) {
       next(error);
     }
