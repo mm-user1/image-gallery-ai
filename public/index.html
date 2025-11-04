@@ -337,6 +337,49 @@
       align-items: center;
     }
 
+    .batch-controls .batch-edit-only {
+      display: none;
+    }
+
+    body.edit-mode .batch-controls .batch-edit-only {
+      display: inline-flex;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .batch .batch-title-input {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .batch .batch-title-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(74, 74, 74, 0.2);
+      outline: none;
+    }
+
     .batch textarea {
       width: 100%;
       min-height: 100px;
@@ -353,6 +396,52 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(74, 74, 74, 0.2);
       outline: none;
+    }
+
+    .batch-drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--muted);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .batch-drop-zone strong {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .batch-drop-zone button {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      background: rgba(74, 74, 74, 0.08);
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .batch-drop-zone button:hover {
+      background: rgba(74, 74, 74, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .batch-drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(74, 74, 74, 0.08);
+      color: var(--accent);
+    }
+
+    .batch-drop-zone input[type="file"] {
+      display: none;
     }
 
     .thumbnail-row {
@@ -653,6 +742,24 @@
           throw new Error(message);
         }
       },
+      async appendBatchImages(tab, index, payload) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${index}/images`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) {
+          let message = 'Unable to add images to batch';
+          try {
+            const data = await res.json();
+            if (data?.message) message = data.message;
+          } catch (_) {
+            // ignore
+          }
+          throw new Error(message);
+        }
+        return res.json();
+      },
       async deleteImage(tab, batchIndex, filename) {
         const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${batchIndex}/images/${encodeURIComponent(filename)}`, {
           method: 'DELETE'
@@ -688,7 +795,8 @@
           pollingTimer: null,
           loading: false,
           lastMetadataHash: null,
-          descriptionTimers: new Map()
+          batchUpdateTimers: new Map(),
+          activeBatchDropZones: new Set()
         };
 
         this.elements = {
@@ -722,7 +830,13 @@
       bindGlobalEvents() {
         this.elements.createTabBtn.addEventListener('click', () => this.promptCreateTab());
         this.elements.toggleEdit.addEventListener('click', () => {
-          document.body.classList.toggle('edit-mode');
+          const enabled = document.body.classList.toggle('edit-mode');
+          if (!enabled) {
+            this.state.activeBatchDropZones.clear();
+            this.clearSelection();
+          } else {
+            this.renderBatches();
+          }
         });
         this.elements.filePickerBtn.addEventListener('click', () => this.elements.fileInput.click());
         this.elements.fileInput.addEventListener('change', (e) => {
@@ -915,6 +1029,24 @@
         });
       }
 
+      pruneBatchDropZones(tabName, totalBatches) {
+        if (!tabName) {
+          this.state.activeBatchDropZones.clear();
+          return;
+        }
+        const prefix = `${tabName}:`;
+        for (const key of Array.from(this.state.activeBatchDropZones)) {
+          if (!key.startsWith(prefix)) {
+            this.state.activeBatchDropZones.delete(key);
+            continue;
+          }
+          const index = parseInt(key.slice(prefix.length), 10);
+          if (Number.isNaN(index) || index < 0 || index >= totalBatches) {
+            this.state.activeBatchDropZones.delete(key);
+          }
+        }
+      }
+
       renderBatches() {
         const list = this.elements.batchList;
         list.innerHTML = '';
@@ -935,6 +1067,8 @@
           return;
         }
 
+        this.pruneBatchDropZones(activeTab.name, Array.isArray(activeTab.batches) ? activeTab.batches.length : 0);
+
         activeTab.batches.forEach((batch, batchIndex) => {
           const batchEl = document.createElement('section');
           batchEl.className = 'batch';
@@ -950,28 +1084,62 @@
           const controls = document.createElement('div');
           controls.className = 'batch-controls';
 
+          const baseCopyLabel = 'Copy prompt';
           const copyBtn = document.createElement('button');
-          copyBtn.className = 'icon-btn';
-          copyBtn.textContent = '📋';
-          copyBtn.title = 'Copy description';
-          copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(batch.description || '').then(() => {
-              copyBtn.textContent = '✅';
-              setTimeout(() => (copyBtn.textContent = '📋'), 1500);
-            });
+          copyBtn.className = 'copy-btn';
+          copyBtn.type = 'button';
+          copyBtn.textContent = baseCopyLabel;
+          copyBtn.title = 'Copy prompt';
+          copyBtn.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(batch.description || '');
+              copyBtn.textContent = 'Copied!';
+            } catch (error) {
+              console.error(error);
+              copyBtn.textContent = 'Copy failed';
+            }
+            setTimeout(() => {
+              copyBtn.textContent = baseCopyLabel;
+            }, 1500);
+          });
+
+          const batchKey = `${this.state.activeTab}:${batchIndex}`;
+
+          const addBtn = document.createElement('button');
+          addBtn.className = 'icon-btn batch-edit-only';
+          addBtn.type = 'button';
+          addBtn.textContent = '+';
+          addBtn.title = 'Add images to this batch';
+          addBtn.addEventListener('click', () => {
+            if (!document.body.classList.contains('edit-mode')) return;
+            if (this.state.activeBatchDropZones.has(batchKey)) {
+              this.state.activeBatchDropZones.delete(batchKey);
+            } else {
+              this.state.activeBatchDropZones.add(batchKey);
+            }
+            this.renderBatches();
           });
 
           const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'icon-btn danger';
+          deleteBtn.className = 'icon-btn danger batch-edit-only';
+          deleteBtn.type = 'button';
           deleteBtn.textContent = '🗑️';
           deleteBtn.title = 'Delete batch';
           deleteBtn.addEventListener('click', () => this.handleDeleteBatch(batchIndex));
 
           controls.appendChild(copyBtn);
+          controls.appendChild(addBtn);
           controls.appendChild(deleteBtn);
 
           header.appendChild(title);
           header.appendChild(controls);
+
+          batchEl.appendChild(header);
+
+          const showDropZone = document.body.classList.contains('edit-mode') && this.state.activeBatchDropZones.has(batchKey);
+          if (showDropZone) {
+            batchEl.appendChild(this.createBatchDropZone(batchIndex));
+          }
 
           const thumbRow = document.createElement('div');
           thumbRow.className = 'thumbnail-row';
@@ -1019,35 +1187,145 @@
             thumbRow.appendChild(thumb);
           });
 
+          const titleInput = document.createElement('input');
+          titleInput.type = 'text';
+          titleInput.className = 'batch-title-input';
+          titleInput.placeholder = 'Add a title for this batch...';
+          titleInput.value = batch.title || '';
+          titleInput.addEventListener('input', () => {
+            this.scheduleBatchUpdate(batchIndex, { title: titleInput.value });
+          });
+
           const textarea = document.createElement('textarea');
           textarea.value = batch.description || '';
           textarea.placeholder = 'Describe this batch...';
           textarea.addEventListener('input', () => {
-            this.scheduleDescriptionSave(batchIndex, textarea.value);
+            this.scheduleBatchUpdate(batchIndex, { description: textarea.value });
           });
 
-          batchEl.appendChild(header);
           batchEl.appendChild(thumbRow);
+          batchEl.appendChild(titleInput);
           batchEl.appendChild(textarea);
           list.appendChild(batchEl);
         });
       }
 
-      scheduleDescriptionSave(batchIndex, description) {
-        const key = `${this.state.activeTab}:${batchIndex}`;
-        if (this.state.descriptionTimers.has(key)) {
-          clearTimeout(this.state.descriptionTimers.get(key));
+      createBatchDropZone(batchIndex) {
+        const dropZone = document.createElement('div');
+        dropZone.className = 'batch-drop-zone';
+
+        const title = document.createElement('strong');
+        title.textContent = 'Drop images here to add to this batch';
+        dropZone.appendChild(title);
+
+        const hint = document.createElement('span');
+        hint.textContent = 'or use the button below.';
+        dropZone.appendChild(hint);
+
+        const selectBtn = document.createElement('button');
+        selectBtn.type = 'button';
+        selectBtn.textContent = 'Select files';
+        dropZone.appendChild(selectBtn);
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.multiple = true;
+        dropZone.appendChild(fileInput);
+
+        const handleFiles = (fileList) => {
+          const files = Array.from(fileList || []);
+          if (!files.length) return;
+          this.handleBatchUpload(batchIndex, files);
+        };
+
+        selectBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+          handleFiles(e.target.files);
+          fileInput.value = '';
+        });
+
+        ['dragenter', 'dragover'].forEach((eventName) => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('dragover');
+          });
+        });
+
+        ['dragleave', 'drop'].forEach((eventName) => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
+          });
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+          handleFiles(e.dataTransfer?.files);
+        });
+
+        return dropZone;
+      }
+
+      scheduleBatchUpdate(batchIndex, updates) {
+        const tab = this.state.activeTab;
+        if (!tab || !updates || typeof updates !== 'object') return;
+        const key = `${tab}:${batchIndex}`;
+        const existing = this.state.batchUpdateTimers.get(key);
+        if (existing?.timer) {
+          clearTimeout(existing.timer);
         }
+        const merged = { ...(existing?.updates || {}), ...updates };
         const timer = setTimeout(async () => {
+          const current = this.state.batchUpdateTimers.get(key);
+          const payload = current?.updates || merged;
           try {
-            await api.updateBatch(this.state.activeTab, batchIndex, { description });
+            await api.updateBatch(tab, batchIndex, payload);
             await this.refreshMetadata(true);
           } catch (error) {
             console.error(error);
             alert(error.message);
+          } finally {
+            this.state.batchUpdateTimers.delete(key);
           }
         }, 600);
-        this.state.descriptionTimers.set(key, timer);
+        this.state.batchUpdateTimers.set(key, { timer, updates: merged, tab });
+      }
+
+      async handleBatchUpload(batchIndex, files) {
+        if (!this.state.activeTab) {
+          alert('Create a tab first.');
+          return;
+        }
+
+        const fileArray = Array.from(files || []).filter(Boolean);
+        if (!fileArray.length) return;
+        if (fileArray.length > 50) {
+          alert('You can upload up to 50 files at once.');
+          return;
+        }
+
+        const formData = new FormData();
+        fileArray.forEach((file) => formData.append('files', file));
+        formData.append('tab', this.state.activeTab);
+
+        const key = `${this.state.activeTab}:${batchIndex}`;
+
+        try {
+          const filenames = await this.uploadWithProgress(formData);
+          if (!filenames.length) {
+            return;
+          }
+          await api.appendBatchImages(this.state.activeTab, batchIndex, { images: filenames });
+          this.state.activeBatchDropZones.delete(key);
+          await this.refreshMetadata(true);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        } finally {
+          this.hideProgress();
+        }
       }
 
       async handleUpload(files) {
@@ -1131,6 +1409,7 @@
       async handleDeleteBatch(batchIndex) {
         if (!confirm('Delete this batch and all images?')) return;
         try {
+          this.state.activeBatchDropZones.delete(`${this.state.activeTab}:${batchIndex}`);
           await api.deleteBatch(this.state.activeTab, batchIndex);
           await this.refreshMetadata(true);
         } catch (error) {
