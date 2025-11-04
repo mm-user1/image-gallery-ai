@@ -382,7 +382,7 @@
 
     .batch textarea {
       width: 100%;
-      min-height: 100px;
+      min-height: 124px;
       border-radius: 12px;
       border: 1px solid var(--border);
       padding: 12px;
@@ -396,27 +396,6 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(74, 74, 74, 0.2);
       outline: none;
-    }
-
-    .batch-status {
-      margin-top: 8px;
-      font-size: 0.85rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .batch-saved-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .batch-saved-indicator::before {
-      content: '●';
-      font-size: 0.6rem;
-      color: var(--accent);
     }
 
     .batch-drop-zone {
@@ -534,8 +513,10 @@
     }
 
     .viewer-content {
-      max-width: 90vw;
-      max-height: 90vh;
+      max-width: calc(100vw - 80px);
+      max-height: calc(100vh - 80px);
+      width: min(90vw, 1200px);
+      height: min(90vh, calc(100vh - 80px));
       position: relative;
       display: flex;
       align-items: center;
@@ -543,8 +524,11 @@
     }
 
     .viewer-content img {
+      width: 100%;
+      height: 100%;
       max-width: 100%;
       max-height: 100%;
+      object-fit: contain;
       border-radius: 18px;
       box-shadow: 0 25px 65px rgba(0, 0, 0, 0.2);
     }
@@ -626,6 +610,13 @@
 
       .viewer {
         padding: 20px;
+      }
+
+      .viewer-content {
+        width: calc(100vw - 40px);
+        max-width: calc(100vw - 40px);
+        height: calc(100vh - 40px);
+        max-height: calc(100vh - 40px);
       }
 
       .viewer-close {
@@ -815,33 +806,6 @@
       return String(container.getAttribute('data-batch-id')) === String(batchId);
     }
 
-    function formatSavedLabel(isoString) {
-      if (!isoString) return 'Saved just now';
-      const date = new Date(isoString);
-      if (Number.isNaN(date.getTime())) {
-        return 'Saved just now';
-      }
-      const diff = Date.now() - date.getTime();
-      if (diff < 0) {
-        return `Saved on ${date.toLocaleString()}`;
-      }
-      const minute = 60 * 1000;
-      const hour = 60 * minute;
-      const day = 24 * hour;
-      if (diff < minute) {
-        return 'Saved just now';
-      }
-      if (diff < hour) {
-        const minutes = Math.floor(diff / minute);
-        return minutes === 1 ? 'Saved 1 minute ago' : `Saved ${minutes} minutes ago`;
-      }
-      if (diff < day) {
-        const hours = Math.floor(diff / hour);
-        return hours === 1 ? 'Saved 1 hour ago' : `Saved ${hours} hours ago`;
-      }
-      return `Saved on ${date.toLocaleString()}`;
-    }
-
     const debounce = (fn, delay = 500) => {
       let timer;
       return (...args) => {
@@ -974,12 +938,6 @@
             const editingInput = isTextInput(activeEl);
             if (editingInput) {
               this.state.pendingBatchRefresh.add('__all__');
-              for (const tabEntry of this.state.metadata.tabs) {
-                if (!Array.isArray(tabEntry.batches)) continue;
-                tabEntry.batches.forEach((batch, index) => {
-                  this.updateBatchSavedIndicator(tabEntry.name, index, batch);
-                });
-              }
             } else {
               this.renderBatches();
             }
@@ -1289,17 +1247,9 @@
           });
           textarea.addEventListener('blur', () => this.handleFieldBlur());
 
-          const status = document.createElement('div');
-          status.className = 'batch-status';
-          const savedIndicator = document.createElement('span');
-          savedIndicator.className = 'batch-saved-indicator';
-          savedIndicator.textContent = formatSavedLabel(batch.updatedAt || batch.createdAt);
-          status.appendChild(savedIndicator);
-
           batchEl.appendChild(thumbRow);
           batchEl.appendChild(titleInput);
           batchEl.appendChild(textarea);
-          batchEl.appendChild(status);
           list.appendChild(batchEl);
         });
       }
@@ -1335,17 +1285,6 @@
         }
         const current = tabEntry.batches[index];
         tabEntry.batches[index] = { ...current, ...nextBatch };
-      }
-
-      updateBatchSavedIndicator(tabName, batchIndex, batchData) {
-        const batchKey = this.getBatchKey(tabName, batchIndex);
-        const container = document.querySelector(`[data-batch-id="${batchKey}"]`);
-        if (!container) return;
-        const indicator = container.querySelector('.batch-saved-indicator');
-        if (!indicator) return;
-        const batch = batchData || this.getBatchFromState(tabName, batchIndex);
-        const timestamp = batch?.updatedAt || batch?.createdAt;
-        indicator.textContent = formatSavedLabel(timestamp);
       }
 
       handleFieldBlur() {
@@ -1456,7 +1395,6 @@
                 this.state.pendingBatchRefresh.add('__all__');
               }
               this.state.pendingBatchRefresh.add(batchKey);
-              this.updateBatchSavedIndicator(targetTab, batchIndex, updatedBatch);
             } else {
               await this.refreshMetadata(true);
               if (restoreState) {
