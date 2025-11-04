@@ -5,7 +5,7 @@
       "batches": [
         {
           "title": "Заголовок 2",
-          "description": "Крупный фронтальный портрет девушки с короткими темными волосами, темно-зелеными глазами и веснушками, она стоит, вокруг мрачный темный лес с загадочными отблесками, девушка смотрит в камеру, на ней утонченное кружевное платье chanel, в руках винтажный канделябр со свечами, лицо освещает свет от свечи, мистическое настроение Хэллоуина, у нее высокодетализированная кожа, фотореалистичное изображение\nКамера Canon EOS 500D\n--v 7 --ar 2:3 --oref https://uploads.syntxai.com/e42ba8a986890d61 --ow 900 --sref https://uploads.syntxai.com/0e5efe2f862a13c5 --sw 500 --style raw --s 1000",
+          "description": "Крупный фронтальный портрет с короткими темными волосами, темно-зелеными глазами и веснушками, она стоит, вокруг мрачный темный лес с загадочными отблесsjfhjdg рит в камеру, на ней утонченное кружевное платье chanel, в руках винтажный канделябр со свечами, лицо освещает свет от свечи, мистическое настроение Хэллоуина, у нее высокодетализированная кожа, фотореалистичное изображение\nКамера Canon EOS 500D\n--v 7 --ar 2:3  --ow 900 --sref https://uploads.syntxai.com/0e5efe2f862a13c5 --sw 500 --style raw --s 1000\n--oref https://uploads.syntxai.com/e42ba8a986890d61",
           "images": [
             "8380314-1.png",
             "8380314-2.png",
@@ -13,7 +13,7 @@
             "8380314-4.png"
           ],
           "createdAt": "2025-11-04T03:39:17.866Z",
-          "updatedAt": "2025-11-04T03:39:43.419Z"
+          "updatedAt": "2025-11-04T03:43:49.346Z"
         },
         {
           "title": "Заголовок 1",
@@ -26,6 +26,35 @@
           ],
           "createdAt": "2025-11-04T03:39:12.009Z",
           "updatedAt": "2025-11-04T03:40:17.526Z"
+        }
+      ]
+    },
+    {
+      "name": "test-autumn",
+      "batches": [
+        {
+          "title": "MidJourney",
+          "description": "Фотореалистичная фотография, портрет молодой женщины, у нее короткие темными волосами, темно-зеленые глаза и веснушки, она стоит, вокруг мистический темный лес с загадочными отблесками, девушка смотрит в камеру, на ней платье из чёрного кружева, в руках антикварный канделябр со свечами, лицо освещает свет от свечей, мистическое настроение Хэллоуина \n--v 7 --ar 2:3 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01517.jpg\n--ow 700 --sref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/sref_1.jpg\n--sw 600 --style raw --s 600 --chaos 2--q 2\n",
+          "images": [
+            "8543954-1.png",
+            "8543954-2.png",
+            "8543954-3.png",
+            "8543954-4.png"
+          ],
+          "createdAt": "2025-11-04T03:50:36.791Z",
+          "updatedAt": "2025-11-04T03:51:08.835Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Ultra-realistic natural portrait for the my character a young woman with dark green eyes, freckles on the face and short dark soft wavy hair flowing beautifully in the autumn wind. Her delicate face with expressive eyes and light natural makeup looks serene and thoughtful. The camera is close to her face, cinematic framing, she looks off to the side, not at the camera. She wears a muted tailored coat and simple elegant accessories, minimalistic and contemporary, no retro style. Golden autumn trees and scattered leaves blur in the background, soft natural sunlight adding warmth and texture. The mood feels alive, authentic, atmospheric, with subtle melancholy a candid autumn portrait, refined yet natural.\n--v 7 --ar 4:5 --ow 100 --s 100 --q 2 --style raw \n--oref https://dl.dropboxusercontent.com/scl/fi/nfytadmne786frvre5mpb/oref_2TM01537.jpg?rlkey=b5h9871mefnbzedkde417mui3&st=gngm6yij&dl=0",
+          "images": [
+            "8554607-4.png",
+            "8554607-1.png",
+            "8554607-2.png",
+            "8554607-3.png"
+          ],
+          "createdAt": "2025-11-04T03:48:01.968Z",
+          "updatedAt": "2025-11-04T03:48:37.305Z"
         }
       ]
     }
