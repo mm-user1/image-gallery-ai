@@ -333,6 +333,31 @@
       padding-bottom: 24px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       padding-top: 24px;
+      position: relative;
+    }
+
+    .batch.dragging {
+      opacity: 0.6;
+    }
+
+    .batch.drag-over-before::before,
+    .batch.drag-over-after::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 999px;
+      box-shadow: 0 6px 12px rgba(74, 74, 74, 0.2);
+    }
+
+    .batch.drag-over-before::before {
+      top: -10px;
+    }
+
+    .batch.drag-over-after::after {
+      bottom: -10px;
     }
 
     .batch:first-of-type {
@@ -361,12 +386,6 @@
     .batch-controls {
       display: inline-flex;
       gap: 8px;
-      align-items: center;
-    }
-
-    .batch-reorder-controls {
-      display: inline-flex;
-      gap: 6px;
       align-items: center;
     }
 
@@ -415,6 +434,54 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 16px;
+      position: relative;
+    }
+
+    .thumbnail-row.drag-over {
+      outline: 2px dashed var(--accent);
+      outline-offset: 8px;
+      border-radius: 16px;
+    }
+
+    .batch-list.drag-over {
+      outline: 2px dashed var(--accent);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .batch-drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .batch-drop-zone.show {
+      display: flex;
+    }
+
+    .batch-drop-zone.dragover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(74, 74, 74, 0.08);
+    }
+
+    .batch-drop-zone button {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      background: rgba(74, 74, 74, 0.1);
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
     }
 
     .thumbnail {
@@ -431,6 +498,29 @@
     .thumbnail:hover {
       transform: translateY(-3px);
       box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .thumbnail.dragging {
+      opacity: 0.6;
+    }
+
+    .thumbnail.drag-over-before::before,
+    .thumbnail.drag-over-after::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--accent);
+      box-shadow: 0 0 0 2px rgba(74, 74, 74, 0.2);
+    }
+
+    .thumbnail.drag-over-before::before {
+      left: -4px;
+    }
+
+    .thumbnail.drag-over-after::before {
+      right: -4px;
     }
 
     .thumbnail img {
@@ -781,6 +871,9 @@
           viewerNext: document.getElementById('viewerNext'),
           viewerClose: document.getElementById('viewerClose')
         };
+
+        this.dragState = null;
+        this.boundBatchListDragEvents = false;
       }
 
       async init() {
@@ -845,11 +938,13 @@
       handleToggleEdit() {
         this.state.editMode = !this.state.editMode;
         document.body.classList.toggle('edit-mode', this.state.editMode);
+        this.dragState = null;
+        this.clearBatchDropIndicators();
+        this.closeAllBatchDropZones();
         if (!this.state.editMode) {
           this.clearSelection();
-        } else {
-          this.renderBatches();
         }
+        this.renderBatches();
       }
 
       async refreshMetadata(initial = false) {
@@ -996,6 +1091,9 @@
       renderBatches() {
         const list = this.elements.batchList;
         list.innerHTML = '';
+        if (!this.boundBatchListDragEvents) {
+          this.bindBatchListDragEvents();
+        }
         const activeTab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
         if (!activeTab) {
           const empty = document.createElement('div');
@@ -1040,6 +1138,8 @@
           copyBtn.className = 'ghost-btn';
           copyBtn.textContent = 'Copy prompt';
           copyBtn.title = 'Copy prompt';
+          copyBtn.type = 'button';
+          copyBtn.draggable = false;
           copyBtn.addEventListener('click', async () => {
             try {
               const text = descriptionField ? descriptionField.value : batch.description || '';
@@ -1061,64 +1161,59 @@
           addInput.accept = 'image/*';
           addInput.multiple = true;
           addInput.style.display = 'none';
-          addInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files || []);
-            if (files.length) {
-              this.handleAddImages(batchIndex, files);
-            }
-            addInput.value = '';
-          });
+          const inlineDropZone = this.createBatchDropZone(batchIndex, addInput);
 
           if (this.state.editMode) {
             const addBtn = document.createElement('button');
             addBtn.className = 'icon-btn';
             addBtn.textContent = '+';
             addBtn.title = 'Add images';
-            addBtn.addEventListener('click', () => addInput.click());
+            addBtn.type = 'button';
+            addBtn.draggable = false;
+            addBtn.setAttribute('aria-expanded', 'false');
+            inlineDropZone._toggleButton = addBtn;
+            addBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const wasOpen = inlineDropZone.classList.contains('show');
+              this.closeAllBatchDropZones();
+              inlineDropZone.classList.toggle('show', !wasOpen);
+              addBtn.setAttribute('aria-expanded', inlineDropZone.classList.contains('show') ? 'true' : 'false');
+            });
 
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'icon-btn danger';
             deleteBtn.textContent = '🗑️';
             deleteBtn.title = 'Delete batch';
+            deleteBtn.type = 'button';
+            deleteBtn.draggable = false;
             deleteBtn.addEventListener('click', () => this.handleDeleteBatch(batchIndex));
-
-            const reorderGroup = document.createElement('div');
-            reorderGroup.className = 'batch-reorder-controls';
-
-            const moveUpBtn = document.createElement('button');
-            moveUpBtn.className = 'icon-btn';
-            moveUpBtn.textContent = '⬆️';
-            moveUpBtn.title = 'Move batch up';
-            moveUpBtn.disabled = batchIndex === 0;
-            moveUpBtn.addEventListener('click', () => this.handleMoveBatch(batchIndex, -1));
-
-            const moveDownBtn = document.createElement('button');
-            moveDownBtn.className = 'icon-btn';
-            moveDownBtn.textContent = '⬇️';
-            moveDownBtn.title = 'Move batch down';
-            moveDownBtn.disabled = batchIndex === activeTab.batches.length - 1;
-            moveDownBtn.addEventListener('click', () => this.handleMoveBatch(batchIndex, 1));
-
-            reorderGroup.appendChild(moveUpBtn);
-            reorderGroup.appendChild(moveDownBtn);
 
             controls.appendChild(addBtn);
             controls.appendChild(deleteBtn);
-            controls.appendChild(reorderGroup);
           }
 
           header.appendChild(meta);
           header.appendChild(controls);
+          batchEl.appendChild(header);
+          batchEl.appendChild(inlineDropZone);
 
           const thumbRow = document.createElement('div');
           thumbRow.className = 'thumbnail-row';
+          thumbRow.dataset.batchIndex = batchIndex;
 
-          const totalImages = Array.isArray(batch.images) ? batch.images.length : 0;
+          if (this.state.editMode) {
+            this.attachBatchDragHandlers(batchEl, batchIndex);
+          } else {
+            batchEl.removeAttribute('draggable');
+          }
+
           (batch.images || []).forEach((filename, imageIndex) => {
             const thumb = document.createElement('div');
             thumb.className = 'thumbnail';
             thumb.dataset.filename = filename;
             thumb.dataset.batchIndex = batchIndex;
+            thumb.dataset.imageIndex = imageIndex;
 
             if (this.isSelected(batchIndex, filename)) {
               thumb.classList.add('selected');
@@ -1128,6 +1223,7 @@
             img.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
             img.alt = filename;
             img.loading = 'lazy';
+            img.draggable = false;
 
             img.addEventListener('click', (e) => {
               e.preventDefault();
@@ -1142,44 +1238,33 @@
 
             const actions = document.createElement('div');
             actions.className = 'thumb-actions';
-
-            const moveLeft = document.createElement('button');
-            moveLeft.className = 'icon-btn';
-            moveLeft.textContent = '◀';
-            moveLeft.title = 'Move image left';
-            moveLeft.disabled = imageIndex === 0;
-            moveLeft.addEventListener('click', (e) => {
-              e.stopPropagation();
-              this.handleMoveImage(batchIndex, imageIndex, -1);
-            });
-
-            const moveRight = document.createElement('button');
-            moveRight.className = 'icon-btn';
-            moveRight.textContent = '▶';
-            moveRight.title = 'Move image right';
-            moveRight.disabled = imageIndex === totalImages - 1;
-            moveRight.addEventListener('click', (e) => {
-              e.stopPropagation();
-              this.handleMoveImage(batchIndex, imageIndex, 1);
-            });
+            actions.draggable = false;
 
             const remove = document.createElement('button');
             remove.className = 'icon-btn danger';
             remove.textContent = '✖️';
             remove.title = 'Delete image';
+            remove.type = 'button';
+            remove.draggable = false;
             remove.addEventListener('click', (e) => {
               e.stopPropagation();
               this.deleteImage(batchIndex, filename);
             });
 
-            actions.appendChild(moveLeft);
-            actions.appendChild(moveRight);
             actions.appendChild(remove);
 
             thumb.appendChild(img);
             thumb.appendChild(actions);
+
+            if (this.state.editMode) {
+              this.attachThumbnailDragHandlers(thumb, batchIndex, imageIndex, thumbRow);
+            }
             thumbRow.appendChild(thumb);
           });
+
+          if (this.state.editMode) {
+            this.attachThumbnailRowDropHandlers(thumbRow, batchIndex);
+          }
 
           const titleInput = document.createElement('input');
           titleInput.type = 'text';
@@ -1197,8 +1282,6 @@
             this.scheduleBatchUpdate(batchIndex, { description: descriptionField.value });
           });
 
-          batchEl.appendChild(header);
-          batchEl.appendChild(addInput);
           batchEl.appendChild(thumbRow);
           batchEl.appendChild(titleInput);
           batchEl.appendChild(descriptionField);
@@ -1231,18 +1314,357 @@
         this.state.batchUpdateTimers.set(key, { timer, payload: mergedPayload, tab: tabName });
       }
 
-      async handleMoveImage(batchIndex, imageIndex, direction) {
+      bindBatchListDragEvents() {
+        const list = this.elements.batchList;
+        if (!list) return;
+        list.addEventListener('dragover', (e) => {
+          if (!this.state.editMode || this.dragState?.type !== 'batch') return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          list.classList.add('drag-over');
+        });
+        list.addEventListener('dragleave', (e) => {
+          if (list.contains(e.relatedTarget)) return;
+          list.classList.remove('drag-over');
+        });
+        list.addEventListener('drop', (e) => {
+          if (!this.state.editMode || this.dragState?.type !== 'batch') return;
+          e.preventDefault();
+          list.classList.remove('drag-over');
+          const activeTab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+          const total = activeTab?.batches?.length ?? 0;
+          this.handleBatchReorder(this.dragState.batchIndex, total);
+        });
+        this.boundBatchListDragEvents = true;
+      }
+
+      createBatchDropZone(batchIndex, addInput) {
+        const dropZone = document.createElement('div');
+        dropZone.className = 'batch-drop-zone';
+        dropZone.dataset.batchIndex = batchIndex;
+
+        const title = document.createElement('strong');
+        title.textContent = 'Drop images here to add to this batch';
+
+        const hint = document.createElement('span');
+        hint.textContent = 'or click to select up to 50 files';
+        hint.style.fontSize = '0.9rem';
+        hint.style.color = 'var(--muted)';
+
+        const browseButton = document.createElement('button');
+        browseButton.type = 'button';
+        browseButton.textContent = 'Select files';
+
+        const openPicker = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          addInput.click();
+        };
+
+        const resetHover = () => {
+          dropZone.classList.remove('dragover');
+        };
+
+        const handleFiles = (files) => {
+          if (!files.length) return;
+          resetHover();
+          dropZone.classList.remove('show');
+          if (dropZone._toggleButton) {
+            dropZone._toggleButton.setAttribute('aria-expanded', 'false');
+          }
+          this.handleAddImages(batchIndex, files);
+        };
+
+        browseButton.addEventListener('click', openPicker);
+        dropZone.addEventListener('click', (event) => {
+          if (event.target === dropZone || event.target === title || event.target === hint) {
+            openPicker(event);
+          }
+        });
+
+        addInput.addEventListener('change', (e) => {
+          const files = Array.from(e.target.files || []);
+          addInput.value = '';
+          if (!files.length) return;
+          handleFiles(files);
+        });
+
+        ['dragenter', 'dragover'].forEach((eventName) => {
+          dropZone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            dropZone.classList.add('dragover');
+          });
+        });
+
+        dropZone.addEventListener('dragleave', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (dropZone.contains(event.relatedTarget)) return;
+          resetHover();
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const files = Array.from(event.dataTransfer.files || []);
+          handleFiles(files);
+        });
+
+        dropZone.appendChild(title);
+        dropZone.appendChild(hint);
+        dropZone.appendChild(browseButton);
+        dropZone.appendChild(addInput);
+
+        return dropZone;
+      }
+
+      closeAllBatchDropZones() {
+        const list = this.elements.batchList;
+        if (!list) return;
+        list.querySelectorAll('.batch-drop-zone').forEach((zone) => {
+          zone.classList.remove('show', 'dragover');
+        });
+        list.querySelectorAll('.batch-controls .icon-btn[aria-expanded]').forEach((btn) => {
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      attachBatchDragHandlers(batchEl, batchIndex) {
+        batchEl.setAttribute('draggable', 'true');
+        batchEl.addEventListener('dragstart', (e) => {
+          if (!this.state.editMode) {
+            e.preventDefault();
+            return;
+          }
+          const blockedSelector = 'button, input, textarea, .batch-controls, .batch-drop-zone, .thumb-actions, .thumbnail';
+          if (e.target.closest(blockedSelector)) {
+            e.preventDefault();
+            return;
+          }
+          const currentIndex = Number(batchEl.dataset.batchIndex ?? batchIndex);
+          this.dragState = { type: 'batch', batchIndex: currentIndex };
+          batchEl.classList.add('dragging');
+          this.closeAllBatchDropZones();
+          if (e.dataTransfer) {
+            e.dataTransfer.effectAllowed = 'move';
+            try {
+              e.dataTransfer.setData('text/plain', `batch:${currentIndex}`);
+            } catch (_) {
+              // ignore
+            }
+          }
+        });
+        batchEl.addEventListener('dragend', () => {
+          batchEl.classList.remove('dragging');
+          this.clearBatchDropIndicators();
+          this.dragState = null;
+        });
+        batchEl.addEventListener('dragover', (e) => {
+          if (this.dragState?.type !== 'batch') return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          const rect = batchEl.getBoundingClientRect();
+          const isAfter = e.clientY > rect.top + rect.height / 2;
+          batchEl.dataset.dropPosition = isAfter ? 'after' : 'before';
+          batchEl.classList.toggle('drag-over-before', !isAfter);
+          batchEl.classList.toggle('drag-over-after', isAfter);
+        });
+        batchEl.addEventListener('dragleave', (e) => {
+          if (batchEl.contains(e.relatedTarget)) return;
+          batchEl.classList.remove('drag-over-before', 'drag-over-after');
+          batchEl.dataset.dropPosition = '';
+        });
+        batchEl.addEventListener('drop', (e) => {
+          if (this.dragState?.type !== 'batch') return;
+          e.preventDefault();
+          e.stopPropagation();
+          const isAfter = batchEl.dataset.dropPosition === 'after';
+          const sourceIndex = this.dragState?.batchIndex ?? Number(batchEl.dataset.batchIndex ?? batchIndex);
+          let targetIndex = Number(batchEl.dataset.batchIndex ?? batchIndex);
+          if (isAfter) {
+            targetIndex += 1;
+          }
+          batchEl.classList.remove('drag-over-before', 'drag-over-after');
+          batchEl.dataset.dropPosition = '';
+          this.handleBatchReorder(sourceIndex, targetIndex);
+        });
+      }
+
+      attachThumbnailDragHandlers(thumb, batchIndex, imageIndex, thumbRow) {
+        thumb.setAttribute('draggable', 'true');
+        thumb.addEventListener('dragstart', (e) => {
+          if (!this.state.editMode) {
+            e.preventDefault();
+            return;
+          }
+          const currentBatchIndex = Number(thumb.dataset.batchIndex ?? batchIndex);
+          const currentImageIndex = Number(thumb.dataset.imageIndex ?? imageIndex);
+          this.dragState = { type: 'image', batchIndex: currentBatchIndex, imageIndex: currentImageIndex };
+          thumb.classList.add('dragging');
+          this.clearImageDropIndicators(currentBatchIndex);
+          if (e.dataTransfer) {
+            e.dataTransfer.effectAllowed = 'move';
+            try {
+              e.dataTransfer.setData('text/plain', `image:${currentBatchIndex}:${currentImageIndex}`);
+            } catch (_) {
+              // ignore
+            }
+          }
+        });
+        thumb.addEventListener('dragend', () => {
+          thumb.classList.remove('dragging');
+          const currentBatchIndex = Number(thumb.dataset.batchIndex ?? batchIndex);
+          this.clearImageDropIndicators(currentBatchIndex);
+          this.dragState = null;
+        });
+        thumb.addEventListener('dragover', (e) => {
+          const currentBatchIndex = Number(thumb.dataset.batchIndex ?? batchIndex);
+          if (this.dragState?.type !== 'image' || this.dragState.batchIndex !== currentBatchIndex) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          const rect = thumb.getBoundingClientRect();
+          const isAfter = e.clientX > rect.left + rect.width / 2;
+          thumb.dataset.dropPosition = isAfter ? 'after' : 'before';
+          thumb.classList.toggle('drag-over-before', !isAfter);
+          thumb.classList.toggle('drag-over-after', isAfter);
+        });
+        thumb.addEventListener('dragleave', (e) => {
+          if (thumb.contains(e.relatedTarget)) return;
+          thumb.classList.remove('drag-over-before', 'drag-over-after');
+          thumb.dataset.dropPosition = '';
+        });
+        thumb.addEventListener('drop', (e) => {
+          const currentBatchIndex = Number(thumb.dataset.batchIndex ?? batchIndex);
+          if (this.dragState?.type !== 'image' || this.dragState.batchIndex !== currentBatchIndex) return;
+          e.preventDefault();
+          e.stopPropagation();
+          const isAfter = thumb.dataset.dropPosition === 'after';
+          const sourceIndex = this.dragState?.imageIndex ?? Number(thumb.dataset.imageIndex ?? imageIndex);
+          let targetIndex = Number(thumb.dataset.imageIndex ?? imageIndex);
+          if (isAfter) {
+            targetIndex += 1;
+          }
+          thumb.classList.remove('drag-over-before', 'drag-over-after');
+          thumb.dataset.dropPosition = '';
+          thumbRow.classList.remove('drag-over');
+          this.handleImageReorder(currentBatchIndex, sourceIndex, targetIndex);
+        });
+      }
+
+      attachThumbnailRowDropHandlers(thumbRow, batchIndex) {
+        thumbRow.addEventListener('dragover', (e) => {
+          const currentBatchIndex = Number(thumbRow.dataset.batchIndex ?? batchIndex);
+          if (this.dragState?.type !== 'image' || this.dragState.batchIndex !== currentBatchIndex) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          thumbRow.classList.add('drag-over');
+        });
+        thumbRow.addEventListener('dragleave', (e) => {
+          if (thumbRow.contains(e.relatedTarget)) return;
+          thumbRow.classList.remove('drag-over');
+        });
+        thumbRow.addEventListener('drop', (e) => {
+          const currentBatchIndex = Number(thumbRow.dataset.batchIndex ?? batchIndex);
+          if (this.dragState?.type !== 'image' || this.dragState.batchIndex !== currentBatchIndex) return;
+          e.preventDefault();
+          e.stopPropagation();
+          thumbRow.classList.remove('drag-over');
+          const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+          const total = tab?.batches?.[batchIndex]?.images?.length ?? 0;
+          const sourceIndex = this.dragState?.imageIndex ?? Number(
+            thumbRow.querySelector('.thumbnail.dragging')?.dataset.imageIndex ?? total - 1
+          );
+          this.handleImageReorder(currentBatchIndex, sourceIndex, total);
+        });
+      }
+
+      clearImageDropIndicators(batchIndex) {
+        const batchEl = this.elements.batchList.querySelector(`.batch[data-batch-index="${batchIndex}"]`);
+        if (!batchEl) return;
+        const row = batchEl.querySelector('.thumbnail-row');
+        if (row) {
+          row.classList.remove('drag-over');
+        }
+        batchEl.querySelectorAll('.thumbnail').forEach((thumb) => {
+          thumb.classList.remove('drag-over-before', 'drag-over-after', 'dragging');
+          thumb.dataset.dropPosition = '';
+        });
+      }
+
+      clearBatchDropIndicators() {
+        const list = this.elements.batchList;
+        if (!list) return;
+        list.classList.remove('drag-over');
+        list.querySelectorAll('.batch').forEach((batchEl) => {
+          batchEl.classList.remove('drag-over-before', 'drag-over-after', 'dragging');
+          batchEl.dataset.dropPosition = '';
+        });
+      }
+
+      async handleImageReorder(batchIndex, fromIndex, toIndex) {
         const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
         if (!tab) return;
         const batch = tab.batches?.[batchIndex];
         if (!batch || !Array.isArray(batch.images)) return;
-        const targetIndex = imageIndex + direction;
-        if (targetIndex < 0 || targetIndex >= batch.images.length) return;
+        const total = batch.images.length;
+        if (fromIndex < 0 || fromIndex >= total) return;
+        let insertIndex = typeof toIndex === 'number' ? toIndex : fromIndex;
+        insertIndex = Math.max(0, Math.min(insertIndex, total));
+        if (fromIndex === insertIndex || (fromIndex + 1 === insertIndex && fromIndex < insertIndex)) {
+          this.clearImageDropIndicators(batchIndex);
+          this.dragState = null;
+          return;
+        }
         const images = [...batch.images];
-        const [moved] = images.splice(imageIndex, 1);
-        images.splice(targetIndex, 0, moved);
+        const [moved] = images.splice(fromIndex, 1);
+        if (fromIndex < insertIndex) {
+          insertIndex -= 1;
+        }
+        if (insertIndex < 0) insertIndex = 0;
+        if (insertIndex > images.length) insertIndex = images.length;
+        images.splice(insertIndex, 0, moved);
+        this.clearImageDropIndicators(batchIndex);
+        this.dragState = null;
+        const changed = images.length !== batch.images.length || images.some((img, idx) => img !== batch.images[idx]);
+        if (!changed) return;
         try {
           await api.updateBatch(this.state.activeTab, batchIndex, { images });
+          await this.refreshMetadata(true);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        }
+      }
+
+      async handleBatchReorder(fromIndex, toIndex) {
+        const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
+        if (!tab || !Array.isArray(tab.batches)) return;
+        const total = tab.batches.length;
+        if (fromIndex < 0 || fromIndex >= total) return;
+        let insertIndex = typeof toIndex === 'number' ? toIndex : fromIndex;
+        insertIndex = Math.max(0, Math.min(insertIndex, total));
+        if (fromIndex === insertIndex || (fromIndex + 1 === insertIndex && fromIndex < insertIndex)) {
+          this.clearBatchDropIndicators();
+          this.dragState = null;
+          return;
+        }
+        const order = tab.batches.map((_, idx) => idx);
+        const [moved] = order.splice(fromIndex, 1);
+        if (fromIndex < insertIndex) {
+          insertIndex -= 1;
+        }
+        if (insertIndex < 0) insertIndex = 0;
+        if (insertIndex > order.length) insertIndex = order.length;
+        order.splice(insertIndex, 0, moved);
+        this.clearBatchDropIndicators();
+        this.dragState = null;
+        const unchanged = order.every((value, idx) => value === idx);
+        if (unchanged) return;
+        try {
+          await api.reorderBatches(this.state.activeTab, order);
+          this.state.selectedImages.clear();
+          this.updateSelectionUI();
           await this.refreshMetadata(true);
         } catch (error) {
           console.error(error);
@@ -1279,25 +1701,6 @@
           alert(error.message);
         } finally {
           this.hideProgress();
-        }
-      }
-
-      async handleMoveBatch(batchIndex, direction) {
-        const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
-        if (!tab || !Array.isArray(tab.batches)) return;
-        const targetIndex = batchIndex + direction;
-        if (targetIndex < 0 || targetIndex >= tab.batches.length) return;
-        const order = tab.batches.map((_, idx) => idx);
-        const [moved] = order.splice(batchIndex, 1);
-        order.splice(targetIndex, 0, moved);
-        try {
-          await api.reorderBatches(this.state.activeTab, order);
-          this.state.selectedImages.clear();
-          this.updateSelectionUI();
-          await this.refreshMetadata(true);
-        } catch (error) {
-          console.error(error);
-          alert(error.message);
         }
       }
 
