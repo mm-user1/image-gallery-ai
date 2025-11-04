@@ -1192,6 +1192,8 @@
           titleInput.className = 'batch-title-input';
           titleInput.placeholder = 'Add a title for this batch...';
           titleInput.value = batch.title || '';
+          titleInput.dataset.batchIndex = batchIndex;
+          titleInput.dataset.field = 'title';
           titleInput.addEventListener('input', () => {
             this.scheduleBatchUpdate(batchIndex, { title: titleInput.value });
           });
@@ -1199,6 +1201,8 @@
           const textarea = document.createElement('textarea');
           textarea.value = batch.description || '';
           textarea.placeholder = 'Describe this batch...';
+          textarea.dataset.batchIndex = batchIndex;
+          textarea.dataset.field = 'description';
           textarea.addEventListener('input', () => {
             this.scheduleBatchUpdate(batchIndex, { description: textarea.value });
           });
@@ -1217,10 +1221,6 @@
         const title = document.createElement('strong');
         title.textContent = 'Drop images here to add to this batch';
         dropZone.appendChild(title);
-
-        const hint = document.createElement('span');
-        hint.textContent = 'or use the button below.';
-        dropZone.appendChild(hint);
 
         const selectBtn = document.createElement('button');
         selectBtn.type = 'button';
@@ -1280,17 +1280,77 @@
         const timer = setTimeout(async () => {
           const current = this.state.batchUpdateTimers.get(key);
           const payload = current?.updates || merged;
+          const focusState = this.captureFocusState();
+          let shouldRestore = focusState && document.activeElement === focusState.element;
+          const restoreState = shouldRestore
+            ? {
+                batchIndex: focusState.batchIndex,
+                field: focusState.field,
+                selectionStart: focusState.selectionStart,
+                selectionEnd: focusState.selectionEnd
+              }
+            : null;
           try {
             await api.updateBatch(tab, batchIndex, payload);
+            if (shouldRestore && document.activeElement !== focusState.element) {
+              shouldRestore = false;
+            }
             await this.refreshMetadata(true);
+            if (shouldRestore && restoreState) {
+              this.restoreFocusState(restoreState);
+            }
           } catch (error) {
             console.error(error);
             alert(error.message);
           } finally {
             this.state.batchUpdateTimers.delete(key);
           }
-        }, 600);
+        }, 1000);
         this.state.batchUpdateTimers.set(key, { timer, updates: merged, tab });
+      }
+
+      captureFocusState() {
+        const el = document.activeElement;
+        if (!el) return null;
+        const isInput = el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement;
+        if (!isInput) return null;
+        const { batchIndex, field } = el.dataset || {};
+        if (batchIndex === undefined || field === undefined) return null;
+        let selectionStart = null;
+        let selectionEnd = null;
+        if (typeof el.selectionStart === 'number' && typeof el.selectionEnd === 'number') {
+          selectionStart = el.selectionStart;
+          selectionEnd = el.selectionEnd;
+        }
+        return {
+          element: el,
+          batchIndex: Number(batchIndex),
+          field,
+          selectionStart,
+          selectionEnd
+        };
+      }
+
+      restoreFocusState(state) {
+        if (!state) return;
+        const selector = `[data-batch-index="${state.batchIndex}"][data-field="${state.field}"]`;
+        requestAnimationFrame(() => {
+          const target = document.querySelector(selector);
+          if (!target) return;
+          if (typeof target.focus === 'function') {
+            target.focus({ preventScroll: true });
+          }
+          if (
+            typeof state.selectionStart === 'number' &&
+            typeof state.selectionEnd === 'number' &&
+            typeof target.setSelectionRange === 'function'
+          ) {
+            const valueLength = typeof target.value === 'string' ? target.value.length : 0;
+            const start = Math.min(state.selectionStart, valueLength);
+            const end = Math.min(state.selectionEnd, valueLength);
+            target.setSelectionRange(start, end);
+          }
+        });
       }
 
       async handleBatchUpload(batchIndex, files) {
