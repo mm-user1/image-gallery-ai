@@ -939,6 +939,21 @@
           touchEndY = e.changedTouches[0].screenY;
           this.handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
         }, { passive: true });
+
+        // Click/tap on image halves for navigation
+        this.elements.viewerImage.addEventListener('click', (e) => {
+          const rect = this.elements.viewerImage.getBoundingClientRect();
+          const clickX = e.clientX - rect.left;
+          const imageWidth = rect.width;
+
+          if (clickX < imageWidth / 2) {
+            // Clicked on left half -> previous image
+            this.navigateViewer(-1);
+          } else {
+            // Clicked on right half -> next image
+            this.navigateViewer(1);
+          }
+        });
       }
 
       async refreshMetadata(initial = false) {
@@ -1753,29 +1768,11 @@
 
       handleSwipe(startX, startY, endX, endY) {
         const minSwipeDistance = 50;
-        const deltaX = endX - startX;
         const deltaY = endY - startY;
-        const absDeltaX = Math.abs(deltaX);
-        const absDeltaY = Math.abs(deltaY);
 
-        // Determine if swipe is horizontal or vertical
-        if (absDeltaX > absDeltaY) {
-          // Horizontal swipe
-          if (absDeltaX > minSwipeDistance) {
-            if (deltaX > 0) {
-              // Swipe right -> previous image
-              this.navigateViewer(-1);
-            } else {
-              // Swipe left -> next image
-              this.navigateViewer(1);
-            }
-          }
-        } else {
-          // Vertical swipe
-          if (absDeltaY > minSwipeDistance && deltaY > 0) {
-            // Swipe down -> close viewer
-            this.closeViewer();
-          }
+        // Only vertical swipe down to close viewer
+        if (deltaY > minSwipeDistance) {
+          this.closeViewer();
         }
       }
     }
