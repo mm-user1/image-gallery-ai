@@ -34,6 +34,10 @@
       color: var(--text);
     }
 
+    body.viewer-open {
+      overflow: hidden;
+    }
+
     button,
     input,
     textarea {
@@ -538,7 +542,7 @@
       height: 44px;
       border-radius: 50%;
       border: none;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.5);
       color: var(--text);
       cursor: pointer;
       font-size: 1.25rem;
@@ -556,7 +560,7 @@
       height: 52px;
       border-radius: 50%;
       border: none;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.45);
       color: var(--text);
       font-size: 1.2rem;
       cursor: pointer;
@@ -623,6 +627,13 @@
         right: 16px;
       }
     }
+
+    @media (max-width: 1024px) {
+      .viewer-nav,
+      .viewer-close {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -666,7 +677,7 @@
   </div>
 
   <div class="viewer" id="viewer">
-    <div class="viewer-content">
+    <div class="viewer-content" id="viewerContent">
       <button class="viewer-nav prev" id="viewerPrev" aria-label="Previous image">◀</button>
       <img id="viewerImage" alt="Preview" />
       <button class="viewer-nav next" id="viewerNext" aria-label="Next image">▶</button>
@@ -835,6 +846,7 @@
           deleteSelected: document.getElementById('deleteSelected'),
           clearSelected: document.getElementById('clearSelected'),
           viewer: document.getElementById('viewer'),
+          viewerContent: document.getElementById('viewerContent'),
           viewerImage: document.getElementById('viewerImage'),
           viewerPrev: document.getElementById('viewerPrev'),
           viewerNext: document.getElementById('viewerNext'),
@@ -897,7 +909,8 @@
         this.elements.viewerNext.addEventListener('click', () => this.navigateViewer(1));
         this.elements.viewerClose.addEventListener('click', () => this.closeViewer());
         this.elements.viewer.addEventListener('click', (e) => {
-          if (e.target === this.elements.viewer) {
+          // Close viewer when clicking on background (not on image or buttons)
+          if (e.target === this.elements.viewer || e.target === this.elements.viewerContent) {
             this.closeViewer();
           }
         });
@@ -906,6 +919,40 @@
           if (e.key === 'ArrowLeft') this.navigateViewer(-1);
           if (e.key === 'ArrowRight') this.navigateViewer(1);
           if (e.key === 'Escape') this.closeViewer();
+        });
+
+        // Touch swipe support for viewer
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        this.elements.viewer.addEventListener('touchstart', (e) => {
+          if (!this.elements.viewer.classList.contains('show')) return;
+          touchStartX = e.changedTouches[0].screenX;
+          touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        this.elements.viewer.addEventListener('touchend', (e) => {
+          if (!this.elements.viewer.classList.contains('show')) return;
+          touchEndX = e.changedTouches[0].screenX;
+          touchEndY = e.changedTouches[0].screenY;
+          this.handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+        }, { passive: true });
+
+        // Click/tap on image halves for navigation
+        this.elements.viewerImage.addEventListener('click', (e) => {
+          const rect = this.elements.viewerImage.getBoundingClientRect();
+          const clickX = e.clientX - rect.left;
+          const imageWidth = rect.width;
+
+          if (clickX < imageWidth / 2) {
+            // Clicked on left half -> previous image
+            this.navigateViewer(-1);
+          } else {
+            // Clicked on right half -> next image
+            this.navigateViewer(1);
+          }
         });
       }
 
@@ -1693,10 +1740,12 @@
         this.state.viewer = { tab: this.state.activeTab, globalImageIndex };
         this.elements.viewerImage.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
         this.elements.viewer.classList.add('show');
+        document.body.classList.add('viewer-open');
       }
 
       closeViewer() {
         this.elements.viewer.classList.remove('show');
+        document.body.classList.remove('viewer-open');
         this.state.viewer = { tab: null, globalImageIndex: 0 };
       }
 
@@ -1715,6 +1764,16 @@
 
         this.state.viewer.globalImageIndex = nextGlobalIndex;
         this.elements.viewerImage.src = `/api/images/${encodeURIComponent(tab)}/${encodeURIComponent(imageData.filename)}`;
+      }
+
+      handleSwipe(startX, startY, endX, endY) {
+        const minSwipeDistance = 50;
+        const deltaY = endY - startY;
+
+        // Only vertical swipe down to close viewer
+        if (deltaY > minSwipeDistance) {
+          this.closeViewer();
+        }
       }
     }
 
