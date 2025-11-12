@@ -1119,14 +1119,24 @@
           copyBtn.type = 'button';
           copyBtn.textContent = baseCopyLabel;
           copyBtn.title = 'Copy prompt';
-          copyBtn.addEventListener('click', async () => {
+          copyBtn.addEventListener('click', () => {
+            const textarea = document.createElement('textarea');
+            textarea.value = batch.description || '';
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+
             try {
-              await navigator.clipboard.writeText(batch.description || '');
-              copyBtn.textContent = 'Copied!';
+              const success = document.execCommand('copy');
+              copyBtn.textContent = success ? 'Copied!' : 'Copy failed';
             } catch (error) {
               console.error(error);
               copyBtn.textContent = 'Copy failed';
+            } finally {
+              document.body.removeChild(textarea);
             }
+
             setTimeout(() => {
               copyBtn.textContent = baseCopyLabel;
             }, 1500);
