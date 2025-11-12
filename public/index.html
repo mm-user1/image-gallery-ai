@@ -34,6 +34,10 @@
       color: var(--text);
     }
 
+    body.viewer-open {
+      overflow: hidden;
+    }
+
     button,
     input,
     textarea {
@@ -673,7 +677,7 @@
   </div>
 
   <div class="viewer" id="viewer">
-    <div class="viewer-content">
+    <div class="viewer-content" id="viewerContent">
       <button class="viewer-nav prev" id="viewerPrev" aria-label="Previous image">◀</button>
       <img id="viewerImage" alt="Preview" />
       <button class="viewer-nav next" id="viewerNext" aria-label="Next image">▶</button>
@@ -842,6 +846,7 @@
           deleteSelected: document.getElementById('deleteSelected'),
           clearSelected: document.getElementById('clearSelected'),
           viewer: document.getElementById('viewer'),
+          viewerContent: document.getElementById('viewerContent'),
           viewerImage: document.getElementById('viewerImage'),
           viewerPrev: document.getElementById('viewerPrev'),
           viewerNext: document.getElementById('viewerNext'),
@@ -904,8 +909,8 @@
         this.elements.viewerNext.addEventListener('click', () => this.navigateViewer(1));
         this.elements.viewerClose.addEventListener('click', () => this.closeViewer());
         this.elements.viewer.addEventListener('click', (e) => {
-          // Close viewer when clicking outside the image
-          if (e.target !== this.elements.viewerImage) {
+          // Close viewer when clicking on background (not on image or buttons)
+          if (e.target === this.elements.viewer || e.target === this.elements.viewerContent) {
             this.closeViewer();
           }
         });
@@ -1720,10 +1725,12 @@
         this.state.viewer = { tab: this.state.activeTab, globalImageIndex };
         this.elements.viewerImage.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
         this.elements.viewer.classList.add('show');
+        document.body.classList.add('viewer-open');
       }
 
       closeViewer() {
         this.elements.viewer.classList.remove('show');
+        document.body.classList.remove('viewer-open');
         this.state.viewer = { tab: null, globalImageIndex: 0 };
       }
 
