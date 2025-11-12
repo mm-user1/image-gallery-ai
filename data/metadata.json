@@ -1,60 +1,1075 @@
 {
   "tabs": [
     {
-      "name": "test-03",
+      "name": "autumn",
       "batches": [
         {
-          "title": "Заголовок 2",
-          "description": "Крупный фронтальный портрет с короткими темными волосами, темно-зелеными глазами и веснушками, она стоит, вокруг мрачный темный лес с загадочными отблесsjfhjdg рит в камеру, на ней утонченное кружевное платье chanel, в руках винтажный канделябр со свечами, лицо освещает свет от свечи, мистическое настроение Хэллоуина, у нее высокодетализированная кожа, фотореалистичное изображение\nКамера Canon EOS 500D\n--v 7 --ar 2:3  --ow 900 --sref https://uploads.syntxai.com/0e5efe2f862a13c5 --sw 500 --style raw --s 1000\n--oref https://uploads.syntxai.com/e42ba8a986890d61",
+          "title": "",
+          "description": "",
           "images": [
-            "8380314-1.png",
-            "8380314-2.png",
-            "8380314-3.png",
-            "8380314-4.png"
+            "8717336-1.png",
+            "8717336-2.png",
+            "8717336-3.png",
+            "8717336-4.png"
           ],
-          "createdAt": "2025-11-04T03:39:17.866Z",
-          "updatedAt": "2025-11-04T03:43:49.346Z"
+          "createdAt": "2025-11-10T12:34:47.088Z"
         },
         {
-          "title": "Заголовок 1",
-          "description": "Editorial beauty photo of young woman with short dark hair, dark-green eyes and freckles, she stands in dark moody forest with mistyc shining in background, she looks in front of camera, she wears sophisticated lace dress Chanel, she holds vintage candelabra with candles, candle lights her face, mystic halloween mood, minimalist and cinematic composition emphasizing hair movement and flow, luxurious soft lighting, hyper-realistic 8K photography, ultra detailed skin and hair texture, refined and elegant fashion magazine aesthetic\n--v 7 --ar 2:3 --oref https://uploads.syntxai.com/e42ba8a986890d61 --ow 900 --sref https://uploads.syntxai.com/0e5efe2f862a13c5 --sw 500 --style raw --s 1000",
+          "title": "",
+          "description": "",
           "images": [
-            "8379595-1.png",
-            "8379595-2.png",
-            "8379595-3.png",
-            "8379595-4.png"
+            "01.jpg",
+            "02.jpg",
+            "03-1.jpg",
+            "04.jpg"
           ],
-          "createdAt": "2025-11-04T03:39:12.009Z",
-          "updatedAt": "2025-11-04T03:40:17.526Z"
-        }
-      ]
-    },
-    {
-      "name": "test-autumn",
-      "batches": [
+          "createdAt": "2025-11-10T02:59:12.464Z",
+          "updatedAt": "2025-11-10T03:02:13.688Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "8717255-1-2.jpg"
+          ],
+          "createdAt": "2025-11-09T16:19:08.900Z",
+          "updatedAt": "2025-11-09T16:19:22.660Z"
+        },
         {
           "title": "MidJourney",
-          "description": "Фотореалистичная фотография, портрет молодой женщины, у нее короткие темными волосами, темно-зеленые глаза и веснушки, она стоит, вокруг мистический темный лес с загадочными отблесками, девушка смотрит в камеру, на ней платье из чёрного кружева, в руках антикварный канделябр со свечами, лицо освещает свет от свечей, мистическое настроение Хэллоуина \n--v 7 --ar 2:3 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01517.jpg\n--ow 700 --sref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/sref_1.jpg\n--sw 600 --style raw --s 600 --chaos 2--q 2\n",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair, freckles on the face and dark green eyes, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, realistic skin texture, maximum realism\n--ow 250 --sw 50 --style raw --v 7 --ar 4:5 --q 2 \n--sref https://dl.dropboxusercontent.com/scl/fi/8xvjvq4n4iv6o55rr8not/1d40035d07a1630bb044547302c81682-1.jpg?rlkey=47j6xw7rhj2jjda2koce1oafv&st=cgdw359y&dl=0\n--oref https://dl.dropboxusercontent.com/scl/fi/nfytadmne786frvre5mpb/oref_2TM01537.jpg?rlkey=b5h9871mefnbzedkde417mui3&st=gngm6yij&dl=0",
+          "images": [
+            "8717255-1.png",
+            "8717255-2.png",
+            "8717255-3.png",
+            "8717255-4.png"
+          ],
+          "createdAt": "2025-11-09T16:00:43.143Z",
+          "updatedAt": "2025-11-09T16:18:57.796Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair and dark green eyes, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, realistic skin textur, maximum realism\n--ow 400 --s 200 --chaos 20 --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8716959-1.png",
+            "8716959-2.png",
+            "8716959-3.png",
+            "8716959-4.png"
+          ],
+          "createdAt": "2025-11-09T15:58:52.997Z",
+          "updatedAt": "2025-11-09T15:59:24.954Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair and dark green eyes, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, realistic skin textur, maximum realism\n--ow 200 --s 200 --chaos 50 --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8716793-1.png",
+            "8716793-2.png",
+            "8716793-3.png",
+            "8716793-4.png"
+          ],
+          "createdAt": "2025-11-09T15:58:49.904Z",
+          "updatedAt": "2025-11-09T15:59:23.455Z"
+        },
+        {
+          "title": "MidJourney+Seedream",
+          "description": "",
+          "images": [
+            "8542398-3-6.jpg",
+            "8543954-4-6.jpg",
+            "8569526-1-6.jpg",
+            "8569526-2-2.jpg"
+          ],
+          "createdAt": "2025-11-07T03:59:06.373Z",
+          "updatedAt": "2025-11-07T04:00:10.823Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair, freckles on the face and dark green eyes, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, realistic skin texture, maximum realism\n--ow 100 --sw 100 --style raw --v 7 --ar 4:5 --q 2 \n--sref https://dl.dropboxusercontent.com/scl/fi/8xvjvq4n4iv6o55rr8not/1d40035d07a1630bb044547302c81682-1.jpg?rlkey=47j6xw7rhj2jjda2koce1oafv&st=cgdw359y&dl=0\n--oref https://dl.dropboxusercontent.com/scl/fi/nfytadmne786frvre5mpb/oref_2TM01537.jpg?rlkey=b5h9871mefnbzedkde417mui3&st=gngm6yij&dl=0",
+          "images": [
+            "8631515-1.png",
+            "8631515-2.png",
+            "8631515-3.png",
+            "8631515-4.png"
+          ],
+          "createdAt": "2025-11-07T03:38:14.744Z",
+          "updatedAt": "2025-11-07T04:00:04.057Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Keep image 1 without changes, but replace it with the face from photo 2 save freckles on the face",
+          "images": [
+            "6c88785297911c53f63fd1c139646183_seedream_seedream-4_177890273_37a30691_0_1762270258.jpg",
+            "8569526-2-2.png",
+            "oref_2TM01537---------------.jpg"
+          ],
+          "createdAt": "2025-11-04T15:36:01.329Z",
+          "updatedAt": "2025-11-06T13:11:46.900Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Photorealistic Professional photoshoot series, autumn photo shoot for the my character a young woman with short dark hair and dark green eyes and freckles on the face, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, She is wearing black flat boots and a long, voluminous scarf,  realistic skin texture, maximum realism\n--ow 300 --s 150 --style raw --ar 2:3 --q 2 --v 7\n--oref https://dl.dropboxusercontent.com/scl/fi/zxg8lsn7uo3hcljoy8tar/oref_2TM01537.jpg?rlkey=pnx1y59pvv92azac1k5bj8mdh&st=qwhd0hc5&dl=0",
+          "images": [
+            "8569526-4.png",
+            "8569526-1.png",
+            "8569526-2.png",
+            "8569526-3.png"
+          ],
+          "createdAt": "2025-11-04T15:25:05.998Z",
+          "updatedAt": "2025-11-04T15:37:55.448Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Создай изображение, используя композицию, фон и все детали из изображения 1, но замени лицо на лицо из изображения 2. Сохрани: \n- оригинальную позу, освещение и атмосферу изображения 1 \n- детали одежды и окружение изображения 1 \n- без изменений в цветовой гамме и стиле исходного изображения 1",
+          "images": [
+            "aa6c422ebd52542091682432c36cee00_seedream_seedream-4_177890273_3324097d_0_1762268981.jpg",
+            "2TM01537-5.jpg",
+            "8542398-3-2.png"
+          ],
+          "createdAt": "2025-11-04T15:12:17.003Z",
+          "updatedAt": "2025-11-04T15:13:04.995Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Keep image 1 without changes, but replace it with the face from photo 2",
+          "images": [
+            "2cb77fde84d4d4acb867b2edb7dc116c_seedream_seedream-4_177890273_bdef9e52_0_1762266675.jpg",
+            "2TM01537-4.jpg",
+            "8533599-3-2.png"
+          ],
+          "createdAt": "2025-11-04T14:54:42.518Z",
+          "updatedAt": "2025-11-04T15:02:41.250Z"
+        },
+        {
+          "title": "Nano Banana",
+          "description": "Ultra-realistic natural portrait for the my character a young woman with dark green eyes, freckles on the face and short dark soft wavy hair flowing beautifully in the autumn wind. Her delicate face with expressive eyes and light natural makeup looks serene and thoughtful. The camera is close to her face, cinematic framing, she looks off to the side, not at the camera. She wears a muted tailored coat and simple elegant accessories, minimalistic and contemporary, no retro style. Golden autumn trees and scattered leaves blur in the background, soft natural sunlight adding warmth and texture. The mood feels alive, authentic, atmospheric, with subtle melancholy a candid autumn portrait, refined yet natural",
+          "images": [
+            "e5d401dcc380a59a8bba251c8cfa1811_banana_image_177890273_2981b037_1762265643.png",
+            "2TM01537-3.jpg"
+          ],
+          "createdAt": "2025-11-04T14:44:46.233Z",
+          "updatedAt": "2025-11-04T14:55:41.255Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "c9d4de8e-ac53-4ed7-bcf6-430c8ee4a27d.png",
+            "9e31f492-941f-4cd5-9993-573f61cecae5.png",
+            "e967b0eb-e859-4a72-9413-b3e6947c3441.png",
+            "412bc1b2-dce1-4063-a5ae-0a51034535a2.png",
+            "2TM01538-2.jpg",
+            "2TM01537-2.jpg",
+            "a5260174851da023f4b02338fb97a113.jpg"
+          ],
+          "createdAt": "2025-11-04T14:44:35.872Z",
+          "updatedAt": "2025-11-04T14:49:45.677Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "ca8524af-fa88-4aa4-8d4c-bdd57b8b03f4.png",
+            "6e7f0a0c-2a78-4737-b30b-d8f6a5d525d4.png",
+            "660ca395-fe52-4607-9808-d833439f703d.png",
+            "a4751407-d231-4a88-af2e-56a23aded42a.png",
+            "2TM01537.jpg",
+            "2TM01538.jpg",
+            "44d949c7a997944eb3e1fb9dbc0577c2.jpg"
+          ],
+          "createdAt": "2025-11-04T14:44:33.201Z",
+          "updatedAt": "2025-11-04T14:49:08.880Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Ultra-realistic natural portrait for the my character a young woman with dark green eyes, freckles on the face and short dark soft wavy hair flowing beautifully in the autumn wind. Her delicate face with expressive eyes and light natural makeup looks serene and thoughtful. The camera is close to her face, cinematic framing, she looks off to the side, not at the camera. She wears a muted tailored coat and simple elegant accessories, minimalistic and contemporary, no retro style. Golden autumn trees and scattered leaves blur in the background, soft natural sunlight adding warmth and texture. The mood feels alive, authentic, atmospheric, with subtle melancholy a candid autumn portrait, refined yet natural. \n--v 7 --ar 4:5 --ow 100 --s 100 --q 2 --style raw \n--oref https://dl.dropboxusercontent.com/scl/fi/nfytadmne786frvre5mpb/oref_2TM01537.jpg?rlkey=b5h9871mefnbzedkde417mui3&st=gngm6yij&dl=0",
+          "images": [
+            "8554607-1.png",
+            "8554607-2.png",
+            "8554607-3.png",
+            "8554607-4.png"
+          ],
+          "createdAt": "2025-11-04T14:44:06.577Z",
+          "updatedAt": "2025-11-04T14:47:42.045Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair and dark green eyes, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, She is wearing black flat boots and a long scarf, wide shot, medium shot, realistic skin texture, maximum realism\n--v 7 --ar 4:5 --ow 100 --s 100 --q 2 --style raw\n--oref https://dl.dropboxusercontent.com/scl/fi/zxg8lsn7uo3hcljoy8tar/oref_2TM01537.jpg?rlkey=pnx1y59pvv92azac1k5bj8mdh&st=qwhd0hc5&dl=0",
           "images": [
             "8543954-1.png",
             "8543954-2.png",
             "8543954-3.png",
             "8543954-4.png"
           ],
-          "createdAt": "2025-11-04T03:50:36.791Z",
-          "updatedAt": "2025-11-04T03:51:08.835Z"
+          "createdAt": "2025-11-04T14:44:03.867Z",
+          "updatedAt": "2025-11-04T14:47:40.835Z"
         },
         {
           "title": "MidJourney",
-          "description": "Ultra-realistic natural portrait for the my character a young woman with dark green eyes, freckles on the face and short dark soft wavy hair flowing beautifully in the autumn wind. Her delicate face with expressive eyes and light natural makeup looks serene and thoughtful. The camera is close to her face, cinematic framing, she looks off to the side, not at the camera. She wears a muted tailored coat and simple elegant accessories, minimalistic and contemporary, no retro style. Golden autumn trees and scattered leaves blur in the background, soft natural sunlight adding warmth and texture. The mood feels alive, authentic, atmospheric, with subtle melancholy a candid autumn portrait, refined yet natural.\n--v 7 --ar 4:5 --ow 100 --s 100 --q 2 --style raw \n--oref https://dl.dropboxusercontent.com/scl/fi/nfytadmne786frvre5mpb/oref_2TM01537.jpg?rlkey=b5h9871mefnbzedkde417mui3&st=gngm6yij&dl=0",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair and dark green eyes, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, She is wearing black flat boots and a long, voluminous scarf, different framing and shot types (wide shot, medium shot, close-up, extreme close-up) realistic skin texture, maximum realism\n--v 7 --ar 2:3 --ow 300 --s 150 --q 2 --style raw\n--oref https://dl.dropboxusercontent.com/scl/fi/zxg8lsn7uo3hcljoy8tar/oref_2TM01537.jpg?rlkey=pnx1y59pvv92azac1k5bj8mdh&st=qwhd0hc5&dl=0",
           "images": [
-            "8554607-4.png",
-            "8554607-1.png",
-            "8554607-2.png",
-            "8554607-3.png"
+            "8542398-1.png",
+            "8542398-2.png",
+            "8542398-3.png",
+            "8542398-4.png"
           ],
-          "createdAt": "2025-11-04T03:48:01.968Z",
-          "updatedAt": "2025-11-04T03:48:37.305Z"
+          "createdAt": "2025-11-04T14:44:00.681Z",
+          "updatedAt": "2025-11-04T14:47:39.649Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair and dark green eyes, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, different framing and shot types (wide shot, medium shot, close-up, extreme close-up) realistic skin texture, maximum realism\n--v 7 --ar 2:3 --ow 100 --s 50 --q 2 --style raw\n --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8542063-1.png",
+            "8542063-2.png",
+            "8542063-3.png",
+            "8542063-4.png"
+          ],
+          "createdAt": "2025-11-04T14:43:55.494Z",
+          "updatedAt": "2025-11-04T14:47:38.489Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Photorealistic autumn photo shoot for the my character a young woman with short dark hair and dark green eyes, in a long brown coat, in the autumn forest in the setting sun, She is illuminated by the backlight of the setting sun, she has a harmonious autumn look in clothes, realistic skin textur, maximum realism\n--v 7 --ar 2:3 --ow 100 --s 100 --q 2 --style raw\n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8533599-1.png",
+            "8533599-2.png",
+            "8533599-3.png",
+            "8533599-4.png"
+          ],
+          "createdAt": "2025-11-04T14:43:49.474Z",
+          "updatedAt": "2025-11-04T14:45:49.408Z"
+        }
+      ]
+    },
+    {
+      "name": "Misha",
+      "batches": [
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "3eda41b9ad4b60761f5c9e527957a50f_seedream_seedream-4_177890273_eb8b3b2e_0_1762787279-2.jpg"
+          ],
+          "createdAt": "2025-11-10T15:15:43.920Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "",
+          "images": [
+            "01.jpg",
+            "02.jpg",
+            "03.jpg",
+            "04.jpg"
+          ],
+          "createdAt": "2025-11-07T04:01:45.262Z",
+          "updatedAt": "2025-11-07T04:02:19.325Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a yong man with short dark hair, with a well-groomed short dark beard, dark brown eyes, he is wearing a black cap with the visor backwards\nA story about a young man he walking in nature. Take looks of my character a yong man from photos 1, 2 \nAccurately reproduce the facial traits of a my character from a photo 1, 2\nTake from photo 3 only color, clothing, style, and lighting",
+          "images": [
+            "a49c8233-0d38-4f0f-84e0-ced89a5c5778.png"
+          ],
+          "createdAt": "2025-11-06T14:10:16.313Z",
+          "updatedAt": "2025-11-06T14:10:29.129Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait of a young man with short hair, with a well-groomed short dark beard, intense gaze. He is wearing a black suit jacket with a black shirt and He wore his cap backwards. Soft golden natural light,  realistic skin with visible pores. Warm earthy undertones, delicate facial texture, he walks in nature. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength. \n--ow 100 --sw 100 --style raw --ar 4:5 --quality 2 --v 7 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/m4420vtf3ga1bnssunve6/a4f213c4e6a1271ebce097930c6a0ed8_6.jpg?rlkey=hr0hdm56c93sc1aftjbxovdp5&st=s0xqj9wp&dl=0",
+          "images": [
+            "8626031-1.png"
+          ],
+          "createdAt": "2025-11-06T14:08:56.450Z",
+          "updatedAt": "2025-11-06T14:09:36.711Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young man with short dark hair, with a well-groomed short dark beard, dark brown eyes, he is wearing a black cap with the visor backwards\nA story about a young man he walking in nature. Take looks of my character a young man from photos 1, 2 \nAccurately reproduce the facial traits of a my character from a photo 1, 2\nTake from photo 3 only color, clothing, style, and lighting",
+          "images": [
+            "01.png",
+            "02.png",
+            "03.png",
+            "04.png",
+            "05.png",
+            "06.png"
+          ],
+          "createdAt": "2025-11-06T11:21:39.660Z",
+          "updatedAt": "2025-11-06T13:50:03.652Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait of a young man with short hair, with a well-groomed short dark beard, intense gaze. He is wearing a black suit jacket with a black shirt and He wore his cap backwards. Soft golden natural light, glowing realistic skin with visible pores and subtle highlights. Warm earthy undertones, delicate facial texture, slight sheen. Shot in the style of Petra Collins raw, intimate aesthetic, gentle shadow play, pastel haze, low contrast, fine film grain, minimalism. Light, airy background, calm and refined atmosphere. Hyper-realistic, high resolution, natural expression with quiet strength. \n--ow 100 --stylize 100 --p 5mwblry 5aj4dnk --style raw --ar 4:5 --quality 2 --v 7 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0",
+          "images": [
+            "8610648-1.png",
+            "8610648-4.png",
+            "8621348-1.png",
+            "8621348-2.png",
+            "8621348-3.png",
+            "8621348-4.png"
+          ],
+          "createdAt": "2025-11-06T03:19:55.327Z",
+          "updatedAt": "2025-11-06T11:37:46.103Z"
+        }
+      ]
+    },
+    {
+      "name": "Halloween",
+      "batches": [
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8459299-1.png",
+            "8459299-2.png",
+            "8459299-3.png",
+            "8459299-4.png"
+          ],
+          "createdAt": "2025-11-07T03:37:30.609Z",
+          "updatedAt": "2025-11-07T04:00:19.293Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8458142-1.png",
+            "8458142-2.png",
+            "8458142-3.png",
+            "8458142-4.png"
+          ],
+          "createdAt": "2025-11-07T03:37:27.364Z",
+          "updatedAt": "2025-11-07T04:00:20.593Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8458110-1.png",
+            "8458110-2.png",
+            "8458110-3.png",
+            "8458110-4.png"
+          ],
+          "createdAt": "2025-11-07T03:37:24.585Z",
+          "updatedAt": "2025-11-07T04:00:21.692Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8458071-1.png",
+            "8458071-2.png",
+            "8458071-3.png",
+            "8458071-4.png"
+          ],
+          "createdAt": "2025-11-07T03:37:21.794Z",
+          "updatedAt": "2025-11-07T04:00:22.879Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8458042-1.png",
+            "8458042-2.png",
+            "8458042-3.png",
+            "8458042-4.png"
+          ],
+          "createdAt": "2025-11-07T03:37:18.207Z",
+          "updatedAt": "2025-11-07T04:00:23.923Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8447343-1.png",
+            "8447343-2.png",
+            "8447343-3.png",
+            "8447343-4.png"
+          ],
+          "createdAt": "2025-11-07T03:37:13.954Z",
+          "updatedAt": "2025-11-07T04:00:25.073Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8447064-1.png",
+            "8447064-2.png",
+            "8447064-3.png",
+            "8447064-4.png"
+          ],
+          "createdAt": "2025-11-07T03:37:10.821Z",
+          "updatedAt": "2025-11-07T04:00:26.318Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8438369-1.png",
+            "8438369-2.png",
+            "8438369-3.png",
+            "8438369-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:57.686Z",
+          "updatedAt": "2025-11-07T04:00:27.412Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8393315-1.png",
+            "8393315-2.png",
+            "8393315-3.png",
+            "8393315-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:45.225Z",
+          "updatedAt": "2025-11-07T04:00:28.417Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8381573-1.png",
+            "8381573-2.png",
+            "8381573-3.png",
+            "8381573-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:36.449Z",
+          "updatedAt": "2025-11-07T04:00:29.618Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8380713-1.png",
+            "8380713-2.png",
+            "8380713-3.png",
+            "8380713-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:31.908Z",
+          "updatedAt": "2025-11-07T04:00:30.767Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8380314-1.png",
+            "8380314-2.png",
+            "8380314-3.png",
+            "8380314-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:28.732Z",
+          "updatedAt": "2025-11-07T04:00:32.150Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8379903-1.png",
+            "8379903-2.png",
+            "8379903-3.png",
+            "8379903-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:25.179Z",
+          "updatedAt": "2025-11-07T04:00:33.243Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8379595-1.png",
+            "8379595-2.png",
+            "8379595-3.png",
+            "8379595-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:20.272Z",
+          "updatedAt": "2025-11-07T04:00:35.153Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "",
+          "images": [
+            "8379225-1.png",
+            "8379225-2.png",
+            "8379225-3.png",
+            "8379225-4.png"
+          ],
+          "createdAt": "2025-11-07T03:36:16.206Z",
+          "updatedAt": "2025-11-07T04:00:36.416Z"
+        }
+      ]
+    },
+    {
+      "name": "test",
+      "batches": [
+        {
+          "title": "MidJourney",
+          "description": "ultra-realistic close-up fashion portrait of a young woman, black short  hair, soft natural makeup, pale clear skin with visible pores and freckles, neutral expression, piercing green eyes, wearing a minimalist black leather coat, minimal gold hoop earrings, looking directly into the camera, bright diffused studio lighting, white background, high-fashion editorial style, raw and unretouched, extremely detailed \n--p cz2pqao --ow 600 --chaos 6 --stylize 500 --weird 13 --style raw --v 7 --ar 4:5 --quality 2 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8749425-1.png",
+            "8749425-2.png",
+            "8749425-3.png",
+            "8749425-4.png",
+            "1821738.png"
+          ],
+          "createdAt": "2025-11-11T16:09:03.654Z",
+          "updatedAt": "2025-11-11T16:26:17.210Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Model, my character a young woman with short dark hair and dark green eyes and freckles, lying on reflective silver floor, light bouncing from bottom plane, 3-point setup with overhead diffused key, visible skin detail on shoulder, specular reflections precise, editorial modernism \n--ow 200 --chaos 6 --stylize 960 --weird 13 --style raw --v 7 --ar 4:5 --quality 2 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8739150-1.png",
+            "8739150-2.png",
+            "8739150-3.png",
+            "8739150-4.png"
+          ],
+          "createdAt": "2025-11-10T12:34:16.783Z",
+          "updatedAt": "2025-11-10T15:23:39.958Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Model, medium shot of my character a young woman with short dark hair and dark green eyes and freckles, in a lace dress, lying on reflective silver floor, light bouncing from bottom plane, 3-point setup with overhead diffused key, visible skin detail on shoulder, specular reflections precise, editorial modernism \n--ow 600 --chaos 6 --stylize 500 --weird 13 --style raw --v 7 --ar 4:5 --quality 2 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8739443-1.png",
+            "8739443-2.png",
+            "8739443-3.png",
+            "8739443-4.png"
+          ],
+          "createdAt": "2025-11-10T12:34:12.620Z",
+          "updatedAt": "2025-11-10T15:23:38.389Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "537d812b-8ea3-445d-a2cc-5183b7f67521.png",
+            "3b85bf91-c9d3-41de-80b7-917b903254f3.png",
+            "3419ef73-f58c-49a9-9d45-7d01420edd5e.png",
+            "d9312f35-335c-4fcb-9b3f-f101b98b4760.png"
+          ],
+          "createdAt": "2025-11-10T03:27:43.836Z",
+          "updatedAt": "2025-11-10T12:17:42.192Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "d8d9bb88f7de9d782008cde8481e5b4c_seedream_seedream-4_177890273_d62b85fa_0_1762703512.jpg",
+            "8715815-2-2.png"
+          ],
+          "createdAt": "2025-11-09T15:52:59.046Z",
+          "updatedAt": "2025-11-09T16:19:28.640Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 50 --sw 100 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/258hly4w9r2c2akyrqbr7/nheh8K_3iTEZUAjuu_yHHFv6SG56hkOuCxar1ST1ra1xyQ_bd_-Q-azCVMwA05-2tpEagPzN.jpg?rlkey=4m9yt5fqoe1087ucjc1tvim4p&st=40hyxfzo&dl=0",
+          "images": [
+            "8716516-1.png",
+            "8716516-2.png",
+            "8716516-3.png",
+            "8716516-4.png"
+          ],
+          "createdAt": "2025-11-09T15:46:37.733Z",
+          "updatedAt": "2025-11-09T15:47:51.835Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress and black shoes, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 100 --sw 100 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/258hly4w9r2c2akyrqbr7/nheh8K_3iTEZUAjuu_yHHFv6SG56hkOuCxar1ST1ra1xyQ_bd_-Q-azCVMwA05-2tpEagPzN.jpg?rlkey=4m9yt5fqoe1087ucjc1tvim4p&st=40hyxfzo&dl=0",
+          "images": [
+            "8716453-1.png",
+            "8716453-2.png",
+            "8716453-3.png",
+            "8716453-4.png"
+          ],
+          "createdAt": "2025-11-09T15:46:34.782Z",
+          "updatedAt": "2025-11-09T15:47:41.882Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 500 --s 100 --sw 300 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/xh67a5bt77sshmw7gzlg8/I5oiPCqXx4UsNQ3r5kSb-gCYJVx4SBXLg2ChWNPV4YMY33N9hFjzgM24puzL5LuVUYAj65asxqCVivhs3hFrJ7Fs.jpg?rlkey=8zelrgi5u4iptg26p4s7hi1mo&st=m1o7p5ea&dl=0",
+          "images": [
+            "8716181-1.png",
+            "8716181-2.png",
+            "8716181-3.png",
+            "8716181-4.png"
+          ],
+          "createdAt": "2025-11-09T15:46:30.280Z",
+          "updatedAt": "2025-11-09T15:47:30.453Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress and black shoes, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 100 --sw 100 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/xh67a5bt77sshmw7gzlg8/I5oiPCqXx4UsNQ3r5kSb-gCYJVx4SBXLg2ChWNPV4YMY33N9hFjzgM24puzL5LuVUYAj65asxqCVivhs3hFrJ7Fs.jpg?rlkey=8zelrgi5u4iptg26p4s7hi1mo&st=m1o7p5ea&dl=0",
+          "images": [
+            "8716035-1.png",
+            "8716035-2.png",
+            "8716035-3.png",
+            "8716035-4.png"
+          ],
+          "createdAt": "2025-11-09T15:46:27.006Z",
+          "updatedAt": "2025-11-09T15:47:16.652Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 100 --sw 100 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/0tgx7rt1vu3arr5rm3o3k/1.jpg?rlkey=b7et8z8s05il7tif7505whjp8&st=aw65anci&dl=0",
+          "images": [
+            "8715815-1.png",
+            "8715815-2.png",
+            "8715815-3.png",
+            "8715815-4.png"
+          ],
+          "createdAt": "2025-11-09T15:46:09.184Z",
+          "updatedAt": "2025-11-09T15:47:09.631Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Keep image 1 without changes, but replace the face from photo 2 save freckles on the face",
+          "images": [
+            "10.jpg",
+            "11.jpg"
+          ],
+          "createdAt": "2025-11-09T14:56:53.686Z",
+          "updatedAt": "2025-11-09T14:57:18.326Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 500 --weird 500 --no text --q 2 --style raw --v 7 --ar 2:3 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8714994-1.png",
+            "8714994-2.png",
+            "8714994-3.png",
+            "8714994-4.png"
+          ],
+          "createdAt": "2025-11-09T14:25:46.343Z",
+          "updatedAt": "2025-11-09T14:26:01.960Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 800 --s 500 --weird 1000 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8714895-1.png",
+            "8714895-2.png",
+            "8714895-3.png",
+            "8714895-4.png"
+          ],
+          "createdAt": "2025-11-09T14:15:46.449Z",
+          "updatedAt": "2025-11-09T14:16:01.291Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 800 --s 500 --weird 200 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8714771-1.png",
+            "8714771-2.png",
+            "8714771-3.png",
+            "8714771-4.png"
+          ],
+          "createdAt": "2025-11-09T14:11:09.498Z",
+          "updatedAt": "2025-11-09T14:11:23.921Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 800 --s 500 --chaos 100 --no text --q 2 --style raw --v 7 --ar 2:3 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8714675-1.png",
+            "8714675-2.png",
+            "8714675-3.png",
+            "8714675-4.png"
+          ],
+          "createdAt": "2025-11-09T14:07:26.705Z",
+          "updatedAt": "2025-11-09T14:08:11.356Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 600 --s 500 --chaos 50 --no text --q 2 --style raw --v 7 --ar 2:3 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8714052-1.png",
+            "8714052-2.png",
+            "8714052-3.png",
+            "8714052-4.png"
+          ],
+          "createdAt": "2025-11-09T13:53:11.702Z",
+          "updatedAt": "2025-11-09T14:08:10.089Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 600 --s 500 --chaos 10 --no text --q 2 --style raw --v 7 --ar 2:3 --oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8713557-1.png",
+            "8713557-2.png",
+            "8713557-3.png",
+            "8713557-4.png"
+          ],
+          "createdAt": "2025-11-09T13:43:17.879Z",
+          "updatedAt": "2025-11-09T13:43:31.581Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 700 --s 500 --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8713386-1.png",
+            "8713386-2.png",
+            "8713386-3.png",
+            "8713386-4.png"
+          ],
+          "createdAt": "2025-11-09T13:27:05.833Z",
+          "updatedAt": "2025-11-09T13:27:21.495Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 600 --s 500 --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8713285-1-2.png",
+            "8713285-2-2.png",
+            "8713285-3-2.png",
+            "8713285-4-2.png"
+          ],
+          "createdAt": "2025-11-09T13:19:58.321Z",
+          "updatedAt": "2025-11-09T13:27:26.560Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 500 --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8713227-1.png",
+            "8713227-2.png",
+            "8713227-3.png",
+            "8713227-4.png"
+          ],
+          "createdAt": "2025-11-09T13:18:48.136Z",
+          "updatedAt": "2025-11-09T13:19:23.034Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 50 --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8712932-1.png",
+            "8712932-2.png",
+            "8712932-3.png",
+            "8712932-4.png"
+          ],
+          "createdAt": "2025-11-09T13:18:42.502Z",
+          "updatedAt": "2025-11-09T13:19:27.368Z"
+        }
+      ]
+    },
+    {
+      "name": "test-1",
+      "batches": [
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "8739345-1.png",
+            "8739345-2.png",
+            "8739345-3.png",
+            "8739345-4.png"
+          ],
+          "createdAt": "2025-11-10T12:34:22.124Z"
+        },
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "8743077-1.png",
+            "8743077-2.png",
+            "8743077-3.png",
+            "8743077-4.png",
+            "a3f1262616ec3cc595a3e73303c21708_seedream_seedream-4_177890273_f9d671b0_0_1762778624.jpg",
+            "8743077-1-2.jpg"
+          ],
+          "createdAt": "2025-11-10T12:33:52.086Z",
+          "updatedAt": "2025-11-10T12:55:18.222Z"
+        },
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "8742532-1.png",
+            "8742532-2.png",
+            "8742532-3.png",
+            "8742532-3-1-2.png",
+            "00e5194a001b21c020550ecc4823febf_seedream_seedream-4_177890273_93a615ee_0_1762777557.jpg"
+          ],
+          "createdAt": "2025-11-10T12:33:48.987Z",
+          "updatedAt": "2025-11-10T12:57:48.264Z"
+        }
+      ]
+    },
+    {
+      "name": "test-2",
+      "batches": [
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\na story about a girl with a beautiful bouquet. Take her appearance from photos ",
+          "images": [
+            "c862348c-d971-4d5b-9b82-f2379a41d26f.png",
+            "a2f5683f-abd5-4e6b-ae21-2e22202f1ffb.png",
+            "0d37d7f6-7ccd-492a-a49e-f790e89cf46c.png",
+            "1c39a188-1d67-425d-9d88-6476113e626b.png"
+          ],
+          "createdAt": "2025-11-11T18:26:15.955Z",
+          "updatedAt": "2025-11-11T18:26:33.749Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "0c736eb1-4eab-47cf-8683-f4dc84727a8a.png",
+            "5e1af998-08d3-4b99-bfa2-aa9ec5a9277b.png",
+            "25d64910-db57-441a-9035-40141780d05c.png",
+            "73d4f9de-2dc3-47f6-a183-e4227e8fa341.png"
+          ],
+          "createdAt": "2025-11-11T16:19:14.511Z",
+          "updatedAt": "2025-11-11T16:19:29.431Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "05.png",
+            "06.png",
+            "07.png",
+            "08.png"
+          ],
+          "createdAt": "2025-11-10T12:39:41.858Z",
+          "updatedAt": "2025-11-11T16:20:50.473Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1, 2, 3 and from photo 4 take color, clothing, style, and lighting ",
+          "images": [
+            "01.png",
+            "02.png",
+            "03.png",
+            "04.png"
+          ],
+          "createdAt": "2025-11-10T12:39:38.288Z",
+          "updatedAt": "2025-11-11T16:20:56.384Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\nTake her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "06c2eb9c-89ce-44ba-b292-43a923706d2a-2.png",
+            "058de65f-6831-462e-b38a-3c42760a4576-2.png",
+            "768c7e17-83d6-49b3-ad1d-a6481d7a62c9-2.png",
+            "64428067-6950-4c1a-ad1a-d50f03d2a594-2.png"
+          ],
+          "createdAt": "2025-11-10T12:38:54.927Z",
+          "updatedAt": "2025-11-11T16:21:10.859Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "304e387f-e525-48a6-b25a-8bbc90fc1b4c.png",
+            "3769c02e-f74a-4e09-b5a1-9242ea3e89f5.png",
+            "d8f2f649-5ec0-4a6f-9899-3026e5753b18.png",
+            "7abd116c-322b-4eae-b0a4-985c11de8820.png"
+          ],
+          "createdAt": "2025-11-10T12:38:28.263Z",
+          "updatedAt": "2025-11-11T16:20:29.171Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "7fd25059-eb4d-440f-a8af-5685b787e957.png",
+            "34c74697-9e42-4fbb-88a6-f3985ef67f37.png",
+            "69accb3f-dcab-42dc-8221-8eeb56b68d1a.png",
+            "1818d0a9-9a68-4915-9cde-045f4a30abee.png",
+            "28019659-1d63-4409-a747-bdce09cecfba.png",
+            "a023d823-d323-4480-b0ec-903fda80082b.png",
+            "ae20f6f6-b386-4313-be66-148eb8074387.png"
+          ],
+          "createdAt": "2025-11-10T12:38:07.222Z",
+          "updatedAt": "2025-11-11T16:20:22.664Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "1ab4ea00-25d0-4dc9-982a-7a9e0d7e3e60.png",
+            "7c0909ab-dcc8-43e3-9a9c-75dedff21f89.png",
+            "92cc8e29-fa66-4329-80c7-40b6db139ea5.png",
+            "e979c590-b4c1-453c-b7d9-aca9db4ea25f.png"
+          ],
+          "createdAt": "2025-11-10T12:37:48.633Z",
+          "updatedAt": "2025-11-11T16:20:14.019Z"
+        },
+        {
+          "title": "Higgsfield",
+          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
+          "images": [
+            "3e8e1686-2664-4bfd-ab73-a60eef61430d.png",
+            "4eb09ad4-5b10-451c-bdf0-cec210c11a07.png",
+            "708c84b4-7ef3-491b-8503-0a396edda5bf.png",
+            "d3be1b24-863a-413f-adb2-5f107de0a90a.png"
+          ],
+          "createdAt": "2025-11-10T12:37:37.167Z",
+          "updatedAt": "2025-11-11T16:20:08.665Z"
+        }
+      ]
+    },
+    {
+      "name": "snow",
+      "batches": [
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot full length photo for the my character a young woman with short dark hair, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --seed 868364806 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/2cpiomaejgpy1jeyawfc8/200511_192531_120.jpg?rlkey=cn1lkutbez2mzf9hp6de6gf56&st=a4s0hovk&dl=0",
+          "images": [
+            "8786091-1.png",
+            "8786091-2.png",
+            "8786091-3.png",
+            "8786091-4.png"
+          ],
+          "createdAt": "2025-11-11T17:02:08.032Z",
+          "updatedAt": "2025-11-11T17:02:43.335Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot full length photo for the my character a young woman with short dark hair, warm earthy undertones, delicate facial texture, confidently looks past the camera, she walks in a winter forest in a buttoned  pink coat in pastel tones, in light gray jeans, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 --oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0",
+          "images": [
+            "8785622-1.png",
+            "8785622-2.png",
+            "8785622-3.png",
+            "8785622-4.png"
+          ],
+          "createdAt": "2025-11-11T16:46:24.525Z",
+          "updatedAt": "2025-11-11T16:55:38.596Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot full length photo for the my character a young woman with short dark hair, warm earthy undertones, delicate facial texture, she walks in a winter forest in a buttoned  pink coat in pastel tones, in light gray jeans, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 150 --chaos 10 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0",
+          "images": [
+            "8785276-1.png",
+            "8785276-2.png",
+            "8785276-3.png",
+            "8785276-4.png"
+          ],
+          "createdAt": "2025-11-11T16:36:14.198Z",
+          "updatedAt": "2025-11-11T16:40:58.036Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot full length photo for the my character a young woman with short dark hair, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, in light gray jeans, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0",
+          "images": [
+            "8785073-1.png",
+            "8785073-2.png",
+            "8785073-3.png",
+            "8785073-4.png"
+          ],
+          "createdAt": "2025-11-11T16:32:50.426Z",
+          "updatedAt": "2025-11-11T16:41:01.673Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot full length photo for the my character a young woman with short dark hair, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0\n\n🌱 Seed: 868364806\n🌱 Command: --seed 868364806",
+          "images": [
+            "8784490-1.png",
+            "8784490-2.png",
+            "8784490-3.png",
+            "8784490-4.png"
+          ],
+          "createdAt": "2025-11-11T16:21:50.031Z",
+          "updatedAt": "2025-11-11T18:21:43.983Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0\n\n🌱 Seed: 1582803670\n🌱 Command: --seed 1582803670",
+          "images": [
+            "8784375-1.png",
+            "8784375-2.png",
+            "8784375-3.png",
+            "8784375-4.png"
+          ],
+          "createdAt": "2025-11-11T16:15:51.612Z",
+          "updatedAt": "2025-11-11T16:48:31.861Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/2cpiomaejgpy1jeyawfc8/200511_192531_120.jpg?rlkey=cn1lkutbez2mzf9hp6de6gf56&st=0pvjyv14&dl=0",
+          "images": [
+            "8783732-1.png",
+            "8783732-2.png",
+            "8783732-3.png",
+            "8783732-4.png"
+          ],
+          "createdAt": "2025-11-11T16:15:48.752Z",
+          "updatedAt": "2025-11-11T16:18:53.335Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white long fluffy fur coat, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/2cpiomaejgpy1jeyawfc8/200511_192531_120.jpg?rlkey=cn1lkutbez2mzf9hp6de6gf56&st=0pvjyv14&dl=0\n\n🌱 Seed: 460215544\n🌱 Command: --seed 460215544",
+          "images": [
+            "8783059-1.png",
+            "8783059-2.png",
+            "8783059-3.png",
+            "8783059-4.png"
+          ],
+          "createdAt": "2025-11-11T16:15:38.622Z",
+          "updatedAt": "2025-11-11T16:50:41.491Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white long fluffy fur coat, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 700 --chaos 20 --stylize 300 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8750121-1.png",
+            "8750121-2.png",
+            "8750121-3.png",
+            "8750121-4.png"
+          ],
+          "createdAt": "2025-11-11T16:15:35.134Z",
+          "updatedAt": "2025-11-11T16:18:46.160Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white long fluffy fur coat, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 600 --chaos 10 --stylize 300 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8749909-1.png",
+            "8749909-2.png",
+            "8749909-3.png",
+            "8749909-4.png"
+          ],
+          "createdAt": "2025-11-11T16:15:32.273Z",
+          "updatedAt": "2025-11-11T16:18:43.588Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white fluffy fur coat, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 600 --chaos 6 --stylize 500 --weird 13 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8749766-1.png",
+            "8749766-2.png",
+            "8749766-3.png",
+            "8749766-4.png",
+            "1822484.png"
+          ],
+          "createdAt": "2025-11-11T16:15:22.171Z",
+          "updatedAt": "2025-11-11T16:27:34.402Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white fluffy fur coat, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 600 --chaos 6 --stylize 500 --weird 13 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8749272-1.png",
+            "8749272-2.png",
+            "8749272-3.png",
+            "8749272-4.png"
+          ],
+          "createdAt": "2025-11-11T16:15:15.057Z",
+          "updatedAt": "2025-11-11T16:18:36.786Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white fluffy fur coat, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 300 --s 500 --weird 300 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8747164-1.png",
+            "8747164-2.png",
+            "8747164-3.png",
+            "8747164-4.png"
+          ],
+          "createdAt": "2025-11-11T16:15:09.405Z",
+          "updatedAt": "2025-11-11T16:18:30.866Z"
         }
       ]
     }
