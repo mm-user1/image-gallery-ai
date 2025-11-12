@@ -904,7 +904,8 @@
         this.elements.viewerNext.addEventListener('click', () => this.navigateViewer(1));
         this.elements.viewerClose.addEventListener('click', () => this.closeViewer());
         this.elements.viewer.addEventListener('click', (e) => {
-          if (e.target === this.elements.viewer) {
+          // Close viewer when clicking outside the image
+          if (e.target !== this.elements.viewerImage) {
             this.closeViewer();
           }
         });
