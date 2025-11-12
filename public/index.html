@@ -623,6 +623,13 @@
         right: 16px;
       }
     }
+
+    @media (max-width: 1700px) {
+      .viewer-nav,
+      .viewer-close {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -907,6 +914,25 @@
           if (e.key === 'ArrowRight') this.navigateViewer(1);
           if (e.key === 'Escape') this.closeViewer();
         });
+
+        // Touch swipe support for viewer
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        this.elements.viewer.addEventListener('touchstart', (e) => {
+          if (!this.elements.viewer.classList.contains('show')) return;
+          touchStartX = e.changedTouches[0].screenX;
+          touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        this.elements.viewer.addEventListener('touchend', (e) => {
+          if (!this.elements.viewer.classList.contains('show')) return;
+          touchEndX = e.changedTouches[0].screenX;
+          touchEndY = e.changedTouches[0].screenY;
+          this.handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+        }, { passive: true });
       }
 
       async refreshMetadata(initial = false) {
@@ -1715,6 +1741,34 @@
 
         this.state.viewer.globalImageIndex = nextGlobalIndex;
         this.elements.viewerImage.src = `/api/images/${encodeURIComponent(tab)}/${encodeURIComponent(imageData.filename)}`;
+      }
+
+      handleSwipe(startX, startY, endX, endY) {
+        const minSwipeDistance = 50;
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+
+        // Determine if swipe is horizontal or vertical
+        if (absDeltaX > absDeltaY) {
+          // Horizontal swipe
+          if (absDeltaX > minSwipeDistance) {
+            if (deltaX > 0) {
+              // Swipe right -> previous image
+              this.navigateViewer(-1);
+            } else {
+              // Swipe left -> next image
+              this.navigateViewer(1);
+            }
+          }
+        } else {
+          // Vertical swipe
+          if (absDeltaY > minSwipeDistance && deltaY > 0) {
+            // Swipe down -> close viewer
+            this.closeViewer();
+          }
+        }
       }
     }
 
