@@ -810,7 +810,7 @@
         this.state = {
           metadata: { tabs: [] },
           activeTab: null,
-          viewer: { tab: null, batchIndex: 0, imageIndex: 0 },
+          viewer: { tab: null, globalImageIndex: 0 },
           selectedImages: new Map(),
           pollingTimer: null,
           loading: false,
@@ -1002,12 +1002,6 @@
           span.textContent = tab.name;
           span.className = 'tab-title';
           span.title = 'Double-click to rename';
-          span.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.state.activeTab = tab.name;
-            this.renderTabs();
-            this.renderBatches();
-          });
           span.addEventListener('dblclick', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -1048,9 +1042,11 @@
           el.appendChild(span);
           el.appendChild(removeBtn);
           el.addEventListener('click', () => {
-            this.state.activeTab = tab.name;
-            this.renderTabs();
-            this.renderBatches();
+            if (this.state.activeTab !== tab.name) {
+              this.state.activeTab = tab.name;
+              this.renderTabs();
+              this.renderBatches();
+            }
           });
           tabList.appendChild(el);
         });
@@ -1119,14 +1115,24 @@
           copyBtn.type = 'button';
           copyBtn.textContent = baseCopyLabel;
           copyBtn.title = 'Copy prompt';
-          copyBtn.addEventListener('click', async () => {
+          copyBtn.addEventListener('click', () => {
+            const textarea = document.createElement('textarea');
+            textarea.value = batch.description || '';
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+
             try {
-              await navigator.clipboard.writeText(batch.description || '');
-              copyBtn.textContent = 'Copied!';
+              const success = document.execCommand('copy');
+              copyBtn.textContent = success ? 'Copied!' : 'Copy failed';
             } catch (error) {
               console.error(error);
               copyBtn.textContent = 'Copy failed';
+            } finally {
+              document.body.removeChild(textarea);
             }
+
             setTimeout(() => {
               copyBtn.textContent = baseCopyLabel;
             }, 1500);
@@ -1624,6 +1630,55 @@
         }
       }
 
+      getGlobalImageIndex(tabName, batchIndex, imageIndex) {
+        const tab = this.state.metadata.tabs.find((t) => t.name === tabName);
+        if (!tab || !Array.isArray(tab.batches)) return -1;
+
+        let globalIndex = 0;
+        for (let i = 0; i < batchIndex; i++) {
+          const batch = tab.batches[i];
+          if (batch && Array.isArray(batch.images)) {
+            globalIndex += batch.images.length;
+          }
+        }
+        globalIndex += imageIndex;
+        return globalIndex;
+      }
+
+      getImageByGlobalIndex(tabName, globalIndex) {
+        const tab = this.state.metadata.tabs.find((t) => t.name === tabName);
+        if (!tab || !Array.isArray(tab.batches)) return null;
+
+        let currentIndex = 0;
+        for (let batchIndex = 0; batchIndex < tab.batches.length; batchIndex++) {
+          const batch = tab.batches[batchIndex];
+          if (!batch || !Array.isArray(batch.images)) continue;
+
+          if (currentIndex + batch.images.length > globalIndex) {
+            const imageIndex = globalIndex - currentIndex;
+            const filename = batch.images[imageIndex];
+            if (filename) {
+              return { batchIndex, imageIndex, filename };
+            }
+          }
+          currentIndex += batch.images.length;
+        }
+        return null;
+      }
+
+      getTotalImagesInTab(tabName) {
+        const tab = this.state.metadata.tabs.find((t) => t.name === tabName);
+        if (!tab || !Array.isArray(tab.batches)) return 0;
+
+        let total = 0;
+        for (const batch of tab.batches) {
+          if (batch && Array.isArray(batch.images)) {
+            total += batch.images.length;
+          }
+        }
+        return total;
+      }
+
       openViewer(batchIndex, imageIndex) {
         const tab = this.state.metadata.tabs.find((t) => t.name === this.state.activeTab);
         if (!tab) return;
@@ -1632,28 +1687,34 @@
         const filename = batch.images[imageIndex];
         if (!filename) return;
 
-        this.state.viewer = { tab: this.state.activeTab, batchIndex, imageIndex };
+        const globalImageIndex = this.getGlobalImageIndex(this.state.activeTab, batchIndex, imageIndex);
+        if (globalImageIndex === -1) return;
+
+        this.state.viewer = { tab: this.state.activeTab, globalImageIndex };
         this.elements.viewerImage.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
         this.elements.viewer.classList.add('show');
       }
 
       closeViewer() {
         this.elements.viewer.classList.remove('show');
-        this.state.viewer = { tab: null, batchIndex: 0, imageIndex: 0 };
+        this.state.viewer = { tab: null, globalImageIndex: 0 };
       }
 
       navigateViewer(delta) {
-        const { tab, batchIndex, imageIndex } = this.state.viewer;
+        const { tab, globalImageIndex } = this.state.viewer;
         if (!tab) return;
-        const activeTab = this.state.metadata.tabs.find((t) => t.name === tab);
-        if (!activeTab) return;
-        const batch = activeTab.batches[batchIndex];
-        if (!batch) return;
-        const nextIndex = imageIndex + delta;
-        if (nextIndex < 0 || nextIndex >= batch.images.length) return;
-        this.state.viewer.imageIndex = nextIndex;
-        const filename = batch.images[nextIndex];
-        this.elements.viewerImage.src = `/api/images/${encodeURIComponent(tab)}/${encodeURIComponent(filename)}`;
+
+        const totalImages = this.getTotalImagesInTab(tab);
+        if (totalImages === 0) return;
+
+        const nextGlobalIndex = globalImageIndex + delta;
+        if (nextGlobalIndex < 0 || nextGlobalIndex >= totalImages) return;
+
+        const imageData = this.getImageByGlobalIndex(tab, nextGlobalIndex);
+        if (!imageData) return;
+
+        this.state.viewer.globalImageIndex = nextGlobalIndex;
+        this.elements.viewerImage.src = `/api/images/${encodeURIComponent(tab)}/${encodeURIComponent(imageData.filename)}`;
       }
     }
 
