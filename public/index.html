@@ -1002,12 +1002,6 @@
           span.textContent = tab.name;
           span.className = 'tab-title';
           span.title = 'Double-click to rename';
-          span.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.state.activeTab = tab.name;
-            this.renderTabs();
-            this.renderBatches();
-          });
           span.addEventListener('dblclick', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -1048,9 +1042,11 @@
           el.appendChild(span);
           el.appendChild(removeBtn);
           el.addEventListener('click', () => {
-            this.state.activeTab = tab.name;
-            this.renderTabs();
-            this.renderBatches();
+            if (this.state.activeTab !== tab.name) {
+              this.state.activeTab = tab.name;
+              this.renderTabs();
+              this.renderBatches();
+            }
           });
           tabList.appendChild(el);
         });
