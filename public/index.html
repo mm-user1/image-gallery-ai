@@ -1528,7 +1528,6 @@
             return;
           }
           await api.appendBatchImages(this.state.activeTab, batchIndex, { images: filenames });
-          this.state.activeBatchDropZones.delete(key);
           await this.refreshMetadata(true);
         } catch (error) {
           console.error(error);
