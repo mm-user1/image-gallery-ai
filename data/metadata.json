@@ -246,12 +246,13 @@
       "name": "Misha",
       "batches": [
         {
-          "title": "",
+          "title": "Seedream",
           "description": "",
           "images": [
             "3eda41b9ad4b60761f5c9e527957a50f_seedream_seedream-4_177890273_eb8b3b2e_0_1762787279-2.jpg"
           ],
-          "createdAt": "2025-11-10T15:15:43.920Z"
+          "createdAt": "2025-11-10T15:15:43.920Z",
+          "updatedAt": "2025-11-13T13:04:25.279Z"
         },
         {
           "title": "Higgsfield",
@@ -499,7 +500,7 @@
       ]
     },
     {
-      "name": "test",
+      "name": "studio",
       "batches": [
         {
           "title": "MidJourney",
@@ -753,8 +754,303 @@
       ]
     },
     {
-      "name": "test-1",
+      "name": "flowers",
       "batches": [
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "9024553-1.png",
+            "9024553-2.png",
+            "9024553-3.png",
+            "9024553-4.png"
+          ],
+          "createdAt": "2025-11-19T15:19:03.242Z"
+        },
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "9023621-1.png",
+            "9023621-2.png",
+            "9023621-3.png",
+            "9023621-4.png"
+          ],
+          "createdAt": "2025-11-19T15:18:59.145Z"
+        },
+        {
+          "title": "--seed 1856601702",
+          "description": "Close-up portrait of a young woman with short, dark, wavy hair and freckles. She holds a branch of white orchids. She wears a cream shirt and a thin gold chain with a minimalist pendant. A light, monochromatic background with soft, natural lighting. Natural makeup and a calm gaze. Style: delicate, minimalist, with an emphasis on natural beauty.\n--ow 200 --p m7390008805532106785 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/0ti3do73x997ag1f3a48c/2.jpg?rlkey=mrwcx4eyee3t7yt5tukz09q5k&st=pxamo2xy&dl=0",
+          "images": [
+            "9024156-1.png",
+            "9024156-2.png",
+            "9024156-3.png",
+            "9024156-4.png"
+          ],
+          "createdAt": "2025-11-19T15:14:16.139Z",
+          "updatedAt": "2025-11-19T15:18:49.642Z"
+        },
+        {
+          "title": "--seed 2514766033",
+          "description": "Close-up portrait of a young woman with short, dark, wavy hair and freckles. She holds a branch of white orchids. She wears a cream shirt and a thin gold chain with a minimalist pendant. A light, monochromatic background with soft, natural lighting. Natural makeup and a calm gaze. Style: delicate, minimalist, with an emphasis on natural beauty.\n--ow 200 --p m7390008805532106785 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "9020135-1.png",
+            "9020135-2.png",
+            "9020135-3.png",
+            "9020135-4.png"
+          ],
+          "createdAt": "2025-11-19T13:49:13.243Z",
+          "updatedAt": "2025-11-19T13:49:50.632Z"
+        },
+        {
+          "title": "--seed 257064647",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --p m7390012152796413980 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/v2joubb5r148ttfh458z5/251026_102536_020.jpg?rlkey=7of78s7qeijhkrhy0oknbbhv4&st=lz4x6aa5&dl=0",
+          "images": [
+            "9020350-1.png",
+            "9020350-2.png",
+            "9020350-3.png",
+            "9020350-4.png"
+          ],
+          "createdAt": "2025-11-19T13:49:10.475Z",
+          "updatedAt": "2025-11-19T13:50:21.285Z"
+        },
+        {
+          "title": "MidJourney orig",
+          "description": "A close-up of a young woman with dark short, wavy hair. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles. She holds a big Siamese cat in her arms.\n--no text --chaos 20 --ar 4:5 --style raw --v 7 --stylize 200 --p m7388414598409355296",
+          "images": [
+            "u1423292179_httpss.mj.runCqMnZXGyv-s_A_close-up_of_a_young_wo_261dd65a-7586-459e-ba7c-edc22bb7e072_0.png",
+            "u1423292179_httpss.mj.runCqMnZXGyv-s_A_close-up_of_a_young_wo_261dd65a-7586-459e-ba7c-edc22bb7e072_1.png",
+            "u1423292179_httpss.mj.runCqMnZXGyv-s_A_close-up_of_a_young_wo_261dd65a-7586-459e-ba7c-edc22bb7e072_2.png",
+            "u1423292179_httpss.mj.runCqMnZXGyv-s_A_close-up_of_a_young_wo_261dd65a-7586-459e-ba7c-edc22bb7e072_3.png"
+          ],
+          "createdAt": "2025-11-19T02:41:02.010Z",
+          "updatedAt": "2025-11-19T02:42:53.416Z"
+        },
+        {
+          "title": "MidJourney orig",
+          "description": "A close-up of a young woman with dark short, wavy hair. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles. She holds a big Siamese cat in her arms.\n--ow 200 --p m7388414598409355296 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 ",
+          "images": [
+            "u1423292179_A_close-up_of_a_young_woman_with_dark_short_wavy__d32209d8-8da9-4d82-98f5-52b228bea510_0.png",
+            "u1423292179_A_close-up_of_a_young_woman_with_dark_short_wavy__d32209d8-8da9-4d82-98f5-52b228bea510_1.png",
+            "u1423292179_A_close-up_of_a_young_woman_with_dark_short_wavy__d32209d8-8da9-4d82-98f5-52b228bea510_2.png",
+            "u1423292179_A_close-up_of_a_young_woman_with_dark_short_wavy__d32209d8-8da9-4d82-98f5-52b228bea510_3.png"
+          ],
+          "createdAt": "2025-11-19T02:40:03.411Z",
+          "updatedAt": "2025-11-19T02:42:38.785Z"
+        },
+        {
+          "title": "MidJourney --seed 4089827710",
+          "description": "A close-up of a young woman with dark short, wavy hair. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles. She holds a big Siamese cat in her arms.\n--ow 200 --p m7388414598409355296 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/photo_2024-01-25_09-08-00.jpg",
+          "images": [
+            "9005703-1.png",
+            "9005703-2.png",
+            "9005703-3.png",
+            "9005703-4.png"
+          ],
+          "createdAt": "2025-11-19T02:38:52.262Z",
+          "updatedAt": "2025-11-19T02:39:11.856Z"
+        },
+        {
+          "title": "MidJourney --seed 557232822",
+          "description": "A close-up of a young woman with dark short, wavy hair. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles. She holds a big Siamese cat in her arms.\n--ow 200 --p m7388414598409355296 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/v2joubb5r148ttfh458z5/251026_102536_020.jpg?rlkey=7of78s7qeijhkrhy0oknbbhv4&st=lz4x6aa5&dl=0",
+          "images": [
+            "8995813-1.png",
+            "8995813-2.png",
+            "8995813-3.png",
+            "8995813-4.png"
+          ],
+          "createdAt": "2025-11-18T17:51:41.384Z",
+          "updatedAt": "2025-11-19T02:39:13.843Z"
+        },
+        {
+          "title": "MidJourney --seed 430435429",
+          "description": "A close-up of a young woman with dark short, wavy hair entwined with pale pink Phalaenopsis orchids with red patterns on the petals. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles. She holds a Siamese cat in her arms.\n--ow 200 --p m7388414598409355296 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/v2joubb5r148ttfh458z5/251026_102536_020.jpg?rlkey=7of78s7qeijhkrhy0oknbbhv4&st=lz4x6aa5&dl=0",
+          "images": [
+            "8995618-1.png",
+            "8995618-2.png",
+            "8995618-3.png",
+            "8995618-4.png"
+          ],
+          "createdAt": "2025-11-18T17:51:37.136Z",
+          "updatedAt": "2025-11-19T02:39:15.976Z"
+        },
+        {
+          "title": "MidJourney  --seed 4267288015",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --p m7388414598409355296 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/v2joubb5r148ttfh458z5/251026_102536_020.jpg?rlkey=7of78s7qeijhkrhy0oknbbhv4&st=lz4x6aa5&dl=0",
+          "images": [
+            "8987784-1.png",
+            "8987784-2.png",
+            "8987784-3.png",
+            "8987784-4.png"
+          ],
+          "createdAt": "2025-11-18T17:51:34.037Z",
+          "updatedAt": "2025-11-19T02:39:17.886Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "A close-up of a young woman with dark short, wavy hair entwined with pale pink Phalaenopsis orchids with red patterns on the petals. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles\n--ow 200 --s 200 --p m7388410707710050331 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/v2joubb5r148ttfh458z5/251026_102536_020.jpg?rlkey=7of78s7qeijhkrhy0oknbbhv4&st=lz4x6aa5&dl=0",
+          "images": [
+            "IMG_8034.png",
+            "IMG_8033.png",
+            "IMG_8032.png",
+            "IMG_8031.png"
+          ],
+          "createdAt": "2025-11-18T08:41:36.276Z",
+          "updatedAt": "2025-11-19T02:39:19.681Z"
+        },
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "6568eeb8123790ddc2f7d580ab9bf9b2_banana_image_177890273_952ff852_1763442470.png",
+            "ed6467d96f865584f74f3e2274e1e98b_banana_image_177890273_cfb9a35a_1763442796.png",
+            "118a1fe2f93aaf1a33a911dc0fdcd025_banana_image_177890273_21f27f48_1763443091.png"
+          ],
+          "createdAt": "2025-11-18T05:21:26.522Z",
+          "updatedAt": "2025-11-18T05:21:45.281Z"
+        },
+        {
+          "title": "MidJourney --seed 2049662230",
+          "description": "A close-up of a young woman with dark short, wavy hair entwined with pale pink Phalaenopsis orchids with red patterns on the petals. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles\n--ow 200 --p m7388414598409355296 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/v2joubb5r148ttfh458z5/251026_102536_020.jpg?rlkey=7of78s7qeijhkrhy0oknbbhv4&st=lz4x6aa5&dl=0",
+          "images": [
+            "8980838-1.png",
+            "8980838-2.png",
+            "8980838-3.png",
+            "8980838-4.png"
+          ],
+          "createdAt": "2025-11-18T05:18:00.406Z",
+          "updatedAt": "2025-11-19T02:39:24.457Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 200 --chaos 20 --p m7389525248288227329 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6",
+          "images": [
+            "8980687-1.png",
+            "8980687-2.png",
+            "8980687-3.png",
+            "8980687-4.png"
+          ],
+          "createdAt": "2025-11-18T05:03:21.176Z",
+          "updatedAt": "2025-11-19T02:39:26.030Z"
+        },
+        {
+          "title": "MidJourney --seed 2384004130",
+          "description": "A close-up of a young woman with dark short, wavy hair entwined with pale pink Phalaenopsis orchids with red patterns on the petals. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles\n--ow 200 --s 200 --p m7388410707710050331 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6",
+          "images": [
+            "8980596-1.png",
+            "8980596-2.png",
+            "8980596-3.png",
+            "8980596-4.png"
+          ],
+          "createdAt": "2025-11-18T05:03:19.217Z",
+          "updatedAt": "2025-11-19T02:39:28.592Z"
+        },
+        {
+          "title": "MidJourney --seed 2703479347",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 100 --chaos 20 --p m7388414598409355296 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6",
+          "images": [
+            "8980520-1.png",
+            "8980520-2.png",
+            "8980520-3.png",
+            "8980520-4.png"
+          ],
+          "createdAt": "2025-11-18T04:48:09.703Z",
+          "updatedAt": "2025-11-19T02:39:33.716Z"
+        },
+        {
+          "title": "MidJourney --seed 3231394229",
+          "description": "A close-up of a young woman with dark short, wavy hair entwined with pale pink Phalaenopsis orchids with red patterns on the petals. Soft lighting, airy hair and natural pose create a poetic atmosphere of artistic portrait photography. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles\n--ow 200 --sw 100 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6\n--sref https://dl.dropboxusercontent.com/scl/fi/5wq9fhbrbkzdquh5f8715/IMG_7967.JPG?rlkey=qqbe2bn8vu336h7zh6fs3bl5w&st=ji38k2ue&dl=0",
+          "images": [
+            "8980418-1.png",
+            "8980418-2.png",
+            "8980418-3.png",
+            "8980418-4.png"
+          ],
+          "createdAt": "2025-11-18T04:22:42.062Z",
+          "updatedAt": "2025-11-19T02:39:36.537Z"
+        },
+        {
+          "title": "MidJourney --seed 2960906335",
+          "description": "A close-up of a face partially obscured by pastel-colored flowers with green leaves. The background is pastel mint. Soft lighting and detailed petals lend a fine art photography style. The portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles\n--ow 200 --sw 100 --s 200 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6\n--sref https://dl.dropboxusercontent.com/scl/fi/1p9ae89zh69iuwwcp4fyk/IMG_7997.JPG?rlkey=eqknhz3gsddx8he3jci16td3s&st=k0bw092y&dl=0",
+          "images": [
+            "8980347-1.png",
+            "8980347-2.png",
+            "8980347-3.png",
+            "8980347-4.png"
+          ],
+          "createdAt": "2025-11-18T04:09:52.198Z",
+          "updatedAt": "2025-11-19T02:39:39.363Z"
+        },
+        {
+          "title": "MidJourney --seed 2326650887",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 200 --chaos 20 --sref 555346630  --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6",
+          "images": [
+            "8980214-1.png",
+            "8980214-2.png",
+            "8980214-3.png",
+            "8980214-4.png"
+          ],
+          "createdAt": "2025-11-18T04:09:27.948Z",
+          "updatedAt": "2025-11-19T02:39:41.237Z"
+        },
+        {
+          "title": "MidJourney --seed 2573403418",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 500 --chaos 20  --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6",
+          "images": [
+            "8980168-1.png",
+            "8980168-2.png",
+            "8980168-3.png",
+            "8980168-4.png"
+          ],
+          "createdAt": "2025-11-18T04:09:25.726Z",
+          "updatedAt": "2025-11-19T02:39:43.435Z"
+        },
+        {
+          "title": "MidJourney --seed 4048811696",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 500 --weird 500 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6",
+          "images": [
+            "8980145-1.png",
+            "8980145-2.png",
+            "8980145-3.png"
+          ],
+          "createdAt": "2025-11-18T04:09:23.091Z",
+          "updatedAt": "2025-11-19T02:39:46.180Z"
+        },
+        {
+          "title": "MidJourney --seed 2101818322",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --stylize 100 --sref 1212884454 --chaos 20 --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/jk77yeqjfobc41r0gbmih/2TM01508.jpg?rlkey=j8hwfn7mbax510jrag26rv7yq&st=pyb6",
+          "images": [
+            "8980087-1.png",
+            "8980087-2.png",
+            "8980087-3.png",
+            "8980087-4.png"
+          ],
+          "createdAt": "2025-11-18T04:09:19.664Z",
+          "updatedAt": "2025-11-19T02:39:48.830Z"
+        },
+        {
+          "title": "MidJourney orig",
+          "description": "high fashion look glamour portrait of a beautiful stylish a young woman with short dark hair and dark green eyes and freckles black clothes posing near a wall\n--s 200 --iw 2 --q 1 --style raw --v 7 --ar 4:5 ",
+          "images": [
+            "u1423292179_httpss.mj.rundvzrV2s1zfE_high_fashion_look_glamou_c551e9e4-9ebb-4419-a4fe-65c9321e7604_0.png",
+            "u1423292179_httpss.mj.rundvzrV2s1zfE_high_fashion_look_glamou_c551e9e4-9ebb-4419-a4fe-65c9321e7604_1.png",
+            "u1423292179_httpss.mj.rundvzrV2s1zfE_high_fashion_look_glamou_c551e9e4-9ebb-4419-a4fe-65c9321e7604_2.png",
+            "u1423292179_httpss.mj.rundvzrV2s1zfE_high_fashion_look_glamou_c551e9e4-9ebb-4419-a4fe-65c9321e7604_3.png"
+          ],
+          "createdAt": "2025-11-17T04:03:27.608Z",
+          "updatedAt": "2025-11-19T02:39:54.297Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "d3f09604dfd172303880860b033da3a0_banana_image_177890273_286f80cc_1763036986.png",
+            "78ce37b1d34ffa0a1afa685568f23a9f_banana_image_177890273_b49f157f_1763037072.png",
+            "00e5194a001b21c020550ecc4823febf_seedream_seedream-4_177890273_93a615ee_0_1762777557-2.jpg"
+          ],
+          "createdAt": "2025-11-13T13:01:34.985Z",
+          "updatedAt": "2025-11-13T13:02:12.730Z"
+        },
         {
           "title": "",
           "description": "",
@@ -768,7 +1064,7 @@
         },
         {
           "title": "",
-          "description": "",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 200 --weird 200 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
           "images": [
             "8743077-1.png",
             "8743077-2.png",
@@ -778,11 +1074,11 @@
             "8743077-1-2.jpg"
           ],
           "createdAt": "2025-11-10T12:33:52.086Z",
-          "updatedAt": "2025-11-10T12:55:18.222Z"
+          "updatedAt": "2025-11-12T12:24:04.479Z"
         },
         {
           "title": "",
-          "description": "",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. in a lace dress, in her hands is a luxurious bouquet of flowers in pastel colors, low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 200 --s 500 --weird 500 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
           "images": [
             "8742532-1.png",
             "8742532-2.png",
@@ -791,123 +1087,7 @@
             "00e5194a001b21c020550ecc4823febf_seedream_seedream-4_177890273_93a615ee_0_1762777557.jpg"
           ],
           "createdAt": "2025-11-10T12:33:48.987Z",
-          "updatedAt": "2025-11-10T12:57:48.264Z"
-        }
-      ]
-    },
-    {
-      "name": "test-2",
-      "batches": [
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\na story about a girl with a beautiful bouquet. Take her appearance from photos ",
-          "images": [
-            "c862348c-d971-4d5b-9b82-f2379a41d26f.png",
-            "a2f5683f-abd5-4e6b-ae21-2e22202f1ffb.png",
-            "0d37d7f6-7ccd-492a-a49e-f790e89cf46c.png",
-            "1c39a188-1d67-425d-9d88-6476113e626b.png"
-          ],
-          "createdAt": "2025-11-11T18:26:15.955Z",
-          "updatedAt": "2025-11-11T18:26:33.749Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
-          "images": [
-            "0c736eb1-4eab-47cf-8683-f4dc84727a8a.png",
-            "5e1af998-08d3-4b99-bfa2-aa9ec5a9277b.png",
-            "25d64910-db57-441a-9035-40141780d05c.png",
-            "73d4f9de-2dc3-47f6-a183-e4227e8fa341.png"
-          ],
-          "createdAt": "2025-11-11T16:19:14.511Z",
-          "updatedAt": "2025-11-11T16:19:29.431Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
-          "images": [
-            "05.png",
-            "06.png",
-            "07.png",
-            "08.png"
-          ],
-          "createdAt": "2025-11-10T12:39:41.858Z",
-          "updatedAt": "2025-11-11T16:20:50.473Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman she walking in nature. Take her appearance from photos 1, 2, 3 and from photo 4 take color, clothing, style, and lighting ",
-          "images": [
-            "01.png",
-            "02.png",
-            "03.png",
-            "04.png"
-          ],
-          "createdAt": "2025-11-10T12:39:38.288Z",
-          "updatedAt": "2025-11-11T16:20:56.384Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\nTake her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
-          "images": [
-            "06c2eb9c-89ce-44ba-b292-43a923706d2a-2.png",
-            "058de65f-6831-462e-b38a-3c42760a4576-2.png",
-            "768c7e17-83d6-49b3-ad1d-a6481d7a62c9-2.png",
-            "64428067-6950-4c1a-ad1a-d50f03d2a594-2.png"
-          ],
-          "createdAt": "2025-11-10T12:38:54.927Z",
-          "updatedAt": "2025-11-11T16:21:10.859Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
-          "images": [
-            "304e387f-e525-48a6-b25a-8bbc90fc1b4c.png",
-            "3769c02e-f74a-4e09-b5a1-9242ea3e89f5.png",
-            "d8f2f649-5ec0-4a6f-9899-3026e5753b18.png",
-            "7abd116c-322b-4eae-b0a4-985c11de8820.png"
-          ],
-          "createdAt": "2025-11-10T12:38:28.263Z",
-          "updatedAt": "2025-11-11T16:20:29.171Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
-          "images": [
-            "7fd25059-eb4d-440f-a8af-5685b787e957.png",
-            "34c74697-9e42-4fbb-88a6-f3985ef67f37.png",
-            "69accb3f-dcab-42dc-8221-8eeb56b68d1a.png",
-            "1818d0a9-9a68-4915-9cde-045f4a30abee.png",
-            "28019659-1d63-4409-a747-bdce09cecfba.png",
-            "a023d823-d323-4480-b0ec-903fda80082b.png",
-            "ae20f6f6-b386-4313-be66-148eb8074387.png"
-          ],
-          "createdAt": "2025-11-10T12:38:07.222Z",
-          "updatedAt": "2025-11-11T16:20:22.664Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
-          "images": [
-            "1ab4ea00-25d0-4dc9-982a-7a9e0d7e3e60.png",
-            "7c0909ab-dcc8-43e3-9a9c-75dedff21f89.png",
-            "92cc8e29-fa66-4329-80c7-40b6db139ea5.png",
-            "e979c590-b4c1-453c-b7d9-aca9db4ea25f.png"
-          ],
-          "createdAt": "2025-11-10T12:37:48.633Z",
-          "updatedAt": "2025-11-11T16:20:14.019Z"
-        },
-        {
-          "title": "Higgsfield",
-          "description": "Ultra-realistic photo shoot for the my character a young woman with short dark hair, dark green eyes and freckles\nA story about a young woman. Take her appearance from photos 1 and 2, and from photo 3 take color, clothing, style, and lighting ",
-          "images": [
-            "3e8e1686-2664-4bfd-ab73-a60eef61430d.png",
-            "4eb09ad4-5b10-451c-bdf0-cec210c11a07.png",
-            "708c84b4-7ef3-491b-8503-0a396edda5bf.png",
-            "d3be1b24-863a-413f-adb2-5f107de0a90a.png"
-          ],
-          "createdAt": "2025-11-10T12:37:37.167Z",
-          "updatedAt": "2025-11-11T16:20:08.665Z"
+          "updatedAt": "2025-11-12T12:24:13.572Z"
         }
       ]
     },
@@ -963,8 +1143,8 @@
           "updatedAt": "2025-11-11T16:41:01.673Z"
         },
         {
-          "title": "MidJourney",
-          "description": "Editorial photoshoot full length photo for the my character a young woman with short dark hair, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0\n\n🌱 Seed: 868364806\n🌱 Command: --seed 868364806",
+          "title": "MidJourney --seed 868364806",
+          "description": "Editorial photoshoot full length photo for the my character a young woman with short dark hair, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0",
           "images": [
             "8784490-1.png",
             "8784490-2.png",
@@ -972,11 +1152,11 @@
             "8784490-4.png"
           ],
           "createdAt": "2025-11-11T16:21:50.031Z",
-          "updatedAt": "2025-11-11T18:21:43.983Z"
+          "updatedAt": "2025-11-12T17:13:51.296Z"
         },
         {
-          "title": "MidJourney",
-          "description": "Editorial photoshoot for the my character a young woman with short dark hair, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0\n\n🌱 Seed: 1582803670\n🌱 Command: --seed 1582803670",
+          "title": "MidJourney --seed 1582803670",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a pink coat in pastel tones, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/hm47d204gk9ors7r36j91/200511_191707_079.jpg?rlkey=6wb3kp8tbo93b5mjwjypjpk1i&st=t7f2ay15&dl=0",
           "images": [
             "8784375-1.png",
             "8784375-2.png",
@@ -984,7 +1164,7 @@
             "8784375-4.png"
           ],
           "createdAt": "2025-11-11T16:15:51.612Z",
-          "updatedAt": "2025-11-11T16:48:31.861Z"
+          "updatedAt": "2025-11-12T17:14:00.818Z"
         },
         {
           "title": "MidJourney",
@@ -999,8 +1179,8 @@
           "updatedAt": "2025-11-11T16:18:53.335Z"
         },
         {
-          "title": "MidJourney",
-          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white long fluffy fur coat, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/2cpiomaejgpy1jeyawfc8/200511_192531_120.jpg?rlkey=cn1lkutbez2mzf9hp6de6gf56&st=0pvjyv14&dl=0\n\n🌱 Seed: 460215544\n🌱 Command: --seed 460215544",
+          "title": "MidJourney --seed 460215544",
+          "description": "Editorial photoshoot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture, she walks in a winter forest in a white long fluffy fur coat, she is wearing white boots, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/2cpiomaejgpy1jeyawfc8/200511_192531_120.jpg?rlkey=cn1lkutbez2mzf9hp6de6gf56&st=0pvjyv14&dl=0",
           "images": [
             "8783059-1.png",
             "8783059-2.png",
@@ -1008,7 +1188,7 @@
             "8783059-4.png"
           ],
           "createdAt": "2025-11-11T16:15:38.622Z",
-          "updatedAt": "2025-11-11T16:50:41.491Z"
+          "updatedAt": "2025-11-12T17:14:10.119Z"
         },
         {
           "title": "MidJourney",
@@ -1070,6 +1250,1059 @@
           ],
           "createdAt": "2025-11-11T16:15:09.405Z",
           "updatedAt": "2025-11-11T16:18:30.866Z"
+        }
+      ]
+    },
+    {
+      "name": "Kat",
+      "batches": [
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "1397588791a4a0168f9d46e45b490a90_seedream_seedream-4_177890273_5e909c86_0_1762951813-2.jpg",
+            "dfd4b51cca5089de4cc82477735457e0_seedream_seedream-4_177890273_34524a72_0_1762949837-3.jpg",
+            "f1d705dbde84cfd689dea16d511bab5d_seedream_seedream-4_177890273_20f91557_0_1762955031-2.jpg",
+            "8812077-4-2.jpg"
+          ],
+          "createdAt": "2025-11-12T14:04:41.673Z",
+          "updatedAt": "2025-11-12T16:12:48.015Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "dfd4b51cca5089de4cc82477735457e0_seedream_seedream-4_177890273_34524a72_0_1762949837-2.jpg"
+          ],
+          "createdAt": "2025-11-12T13:32:32.080Z",
+          "updatedAt": "2025-11-12T16:12:45.626Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "1397588791a4a0168f9d46e45b490a90_seedream_seedream-4_177890273_5e909c86_0_1762951813.jpg",
+            "photo_4_2025-11-09_19-23-34-3-2.jpg"
+          ],
+          "createdAt": "2025-11-12T13:02:16.020Z",
+          "updatedAt": "2025-11-12T13:02:28.551Z"
+        },
+        {
+          "title": "MidJourney --seed 173683052",
+          "description": "Editorial cinematic close-up portrait of a young woman light green eyes, long straight copper brown hair, prism-reflected rainbow streaks of light (red, orange, yellow, green, cyan, blue) on her\n--ow 200 --seed 173683052 --s 200 --chaos 50 --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/diivkieo35wwgqvcvrv2r/photo_4_2025-11-09_19-23-34-3.jpg?rlkey=841dnft7a58shr1f4smf7ielp&st=ulyheudt&dl=0",
+          "images": [
+            "8812077-1.png",
+            "8812077-2.png",
+            "8812077-3.png",
+            "8812077-4.png"
+          ],
+          "createdAt": "2025-11-12T12:39:34.878Z",
+          "updatedAt": "2025-11-12T14:11:59.745Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Editorial full-length photo shoot of a young woman light green eyes, long straight copper brown hair, A young woman in a long long cream-colored coat, a cream-colored wool suit and cream-colored flat boots,\nwarm earthy undertones, delicate facial texture, she walks in a winter forest, surrounded by snow-covered forest, low contrast, fine film grain. Hyper-realistic, high resolution, in the rays of the warm sun, natural expression with quiet strength.\n--ow 100 --seed 868364806 --s 100 --chaos 20 --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/diivkieo35wwgqvcvrv2r/photo_4_2025-11-09_19-23-34-3.jpg?rlkey=841dnft7a58shr1f4smf7ielp&st=ulyheudt&dl=0",
+          "images": [
+            "8811863-1.png",
+            "8811863-2.png",
+            "8811863-3.png",
+            "8811863-4.png"
+          ],
+          "createdAt": "2025-11-12T12:34:54.386Z",
+          "updatedAt": "2025-11-12T14:12:13.697Z"
+        },
+        {
+          "title": "MidJourney --seed 292638831",
+          "description": "Editorial cinematic close-up portrait of a young woman light green eyes, long straight copper brown hair, prism-reflected rainbow streaks of light (red, orange, yellow, green, cyan, blue) on her\n--ow 100 --seed 292638831 --s 100 --chaos 10 --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/diivkieo35wwgqvcvrv2r/photo_4_2025-11-09_19-23-34-3.jpg?rlkey=841dnft7a58shr1f4smf7ielp&st=ulyheudt&dl=0\n\nEditorial cinematic close-up portrait of a young woman light green eyes, long straight copper brown hair, prism-reflected rainbow streaks of light (red, orange, yellow, green, cyan, blue) on her\n--ow 200 --seed 292638831 --s 200 --chaos 50 --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/diivkieo35wwgqvcvrv2r/photo_4_2025-11-09_19-23-34-3.jpg?rlkey=841dnft7a58shr1f4smf7ielp&st=ulyheudt&dl=0",
+          "images": [
+            "8809457-1.png",
+            "8809457-2.png",
+            "8809457-3.png",
+            "8809457-4.png",
+            "8809751-1.png",
+            "8809751-2.png",
+            "8809751-3.png",
+            "8809751-4.png"
+          ],
+          "createdAt": "2025-11-12T12:31:33.508Z",
+          "updatedAt": "2025-11-12T14:13:32.005Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "90f51caeb8b9faad98bc64267da493b5_seedream_seedream-4_177890273_ad98b933_0_1762949165.jpg",
+            "dc3eebf7ea1f01a1494f47166048a311_seedream_seedream-4_177890273_563c1c4d_0_1762950597.jpg"
+          ],
+          "createdAt": "2025-11-12T12:30:54.905Z",
+          "updatedAt": "2025-11-12T12:31:05.882Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "dfd4b51cca5089de4cc82477735457e0_seedream_seedream-4_177890273_34524a72_0_1762949837.jpg",
+            "photo_4_2025-11-09_19-23-34-3.jpg"
+          ],
+          "createdAt": "2025-11-12T12:30:50.544Z",
+          "updatedAt": "2025-11-12T12:38:49.565Z"
+        }
+      ]
+    },
+    {
+      "name": "film",
+      "batches": [
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "9023258-1.png",
+            "9023258-2.png",
+            "9023258-3.png",
+            "9023258-4.png"
+          ],
+          "createdAt": "2025-11-19T15:00:58.717Z"
+        },
+        {
+          "title": "-seed 3269790521",
+          "description": "A portrait photo shoot for my heroine, she is a young woman with short dark hair and dark green eyes and freckles, a kind expression, warm earthy shades, and a delicate facial texture. She stands against a neutral background in a brown coat and a burgundy turtleneck. Hyper-realistic, high resolution, in the rays of the warm sun, natural facial expression with calm strength. Soft defocused background, emphasized sharpness in the eyes, muted and slightly unsaturated tones.\n--ow 100 --sref 2347691761 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/0ti3do73x997ag1f3a48c/2.jpg?rlkey=mrwcx4eyee3t7yt5tukz09q5k&st=pxamo2xy&dl=0",
+          "images": [
+            "9024051-1.png",
+            "9024051-2.png",
+            "9024051-3.png",
+            "9024051-4.png"
+          ],
+          "createdAt": "2025-11-19T15:00:37.116Z",
+          "updatedAt": "2025-11-19T15:01:23.968Z"
+        },
+        {
+          "title": "--seed 1452075548",
+          "description": "A portrait photo shoot for my heroine, she is a young woman with short dark hair and dark green eyes and freckles, a kind expression, warm earthy shades, and a delicate facial texture. She stands against a neutral background in a brown coat and a burgundy turtleneck. Hyper-realistic, high resolution, in the rays of the warm sun, natural facial expression with calm strength. Soft defocused background, emphasized sharpness in the eyes, muted and slightly unsaturated tones.\n--ow 100 --sref 2347691761 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8960614-1.png",
+            "8960614-2.png",
+            "8960614-3.png",
+            "8960614-4.png"
+          ],
+          "createdAt": "2025-11-17T12:39:58.000Z",
+          "updatedAt": "2025-11-19T14:48:46.948Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "37b7bf4463a4e95f930f96f060abe7d1_seedream_seedream-4_177890273_38b0965c_0_1762969495.jpg",
+            "8822610-2-2.png"
+          ],
+          "createdAt": "2025-11-12T17:48:02.191Z",
+          "updatedAt": "2025-11-12T17:48:24.293Z"
+        },
+        {
+          "title": "MidJourney --seed 2656924180",
+          "description": "High-fashion editorial photography, a young woman with short dark hair and dark green eyes and freckles standing confidently in front of a lamborghini car with neutral tones. The young woman  wears a flowing, asymmetrical black dress with a high-neck turtleneck, elegant and modern, paired with black pointed heels. Subtle windswept effect on the fabric, soft natural light, muted and slightly desaturated tones, sophisticated and avant-garde aesthetic. its interior of car has a reddish-brown tone visible\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/uqwza66kxy9s7i88zbqja/421042615_927928048686304_4149490397934661065_n.jpg?rlkey=znc7o3i1n5eqi6mnm4i7gzl06&st=4jegmuiv&dl=0",
+          "images": [
+            "8822610-1.png",
+            "8822610-2.png",
+            "8822610-3.png",
+            "8822610-4.png"
+          ],
+          "createdAt": "2025-11-12T17:41:44.564Z",
+          "updatedAt": "2025-11-12T17:42:28.647Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Keep image 1 without changes, but replace the face from photo 2 save freckles on the face",
+          "images": [
+            "ec060548764c6dd7143d5dab539a35ba_seedream_seedream-4_177890273_2c1ff6d0_0_1762969072.jpg",
+            "8821337-1-2.png"
+          ],
+          "createdAt": "2025-11-12T17:39:42.046Z",
+          "updatedAt": "2025-11-12T17:40:11.572Z"
+        },
+        {
+          "title": "MidJourney --seed 4140510505",
+          "description": "Vogue editorial, a young woman with short dark hair and dark green eyes and freckles, in a white pantsuit (trousers with a vest), by the sea, natural light, shot on film, shallow depth of field, stands against the background of the hood white range rover velar\n--ow 150 --s 150 --seed 4140510505 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8821959-1.png",
+            "8821959-2.png",
+            "8821959-3.png",
+            "8821959-4.png"
+          ],
+          "createdAt": "2025-11-12T17:24:29.868Z",
+          "updatedAt": "2025-11-12T17:28:45.801Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Keep image 1 without changes, but replace the face from photo 2 save freckles on the face",
+          "images": [
+            "dbd23dbc76173e6cc9787f4c35e02de0_seedream_seedream-4_177890273_a559adbf_0_1762967963.jpg",
+            "8821788-3-2.png"
+          ],
+          "createdAt": "2025-11-12T17:22:30.745Z",
+          "updatedAt": "2025-11-12T17:23:17.943Z"
+        },
+        {
+          "title": "MidJourney --seed 522275422",
+          "description": "Vogue editorial, a young woman with short dark hair and dark green eyes and freckles, in a white pantsuit (trousers with a vest), by the sea, natural light, shot on film, shallow depth of field, stands against the background of the hood white range rover velar\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/uqwza66kxy9s7i88zbqja/421042615_927928048686304_4149490397934661065_n.jpg?rlkey=znc7o3i1n5eqi6mnm4i7gzl06&st=4jegmuiv&dl=0",
+          "images": [
+            "8821788-1.png",
+            "8821788-2.png",
+            "8821788-3.png",
+            "8821788-4.png"
+          ],
+          "createdAt": "2025-11-12T17:13:20.677Z",
+          "updatedAt": "2025-11-12T17:14:41.820Z"
+        },
+        {
+          "title": "MidJourney --seed 4181587694",
+          "description": "Vogue editorial, a young woman with short dark hair and dark green eyes and freckles, in a white pantsuit (trousers with a vest), by the sea, natural light, shot on film, shallow depth of field\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/uqwza66kxy9s7i88zbqja/421042615_927928048686304_4149490397934661065_n.jpg?rlkey=znc7o3i1n5eqi6mnm4i7gzl06&st=4jegmuiv&dl=0",
+          "images": [
+            "8821547-1.png",
+            "8821547-2.png",
+            "8821547-3.png",
+            "8821547-4.png"
+          ],
+          "createdAt": "2025-11-12T17:06:59.338Z",
+          "updatedAt": "2025-11-12T17:08:52.236Z"
+        },
+        {
+          "title": "MidJourney --seed 1701164884",
+          "description": "Editorial full-body shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 50 --sw 100 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/uqwza66kxy9s7i88zbqja/421042615_927928048686304_4149490397934661065_n.jpg?rlkey=znc7o3i1n5eqi6mnm4i7gzl06&st=4jegmuiv&dl=0",
+          "images": [
+            "8821337-1.png",
+            "8821337-2.png",
+            "8821337-3.png",
+            "8821337-4.png"
+          ],
+          "createdAt": "2025-11-12T17:05:35.566Z",
+          "updatedAt": "2025-11-12T17:08:40.379Z"
+        },
+        {
+          "title": "MidJourney --seed 3117807372",
+          "description": "Editorial full-body shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a cream coat, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 300 --seed 3117807372 --s 150 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8820091-1.png",
+            "8820091-2.png",
+            "8820091-3.png",
+            "8820091-4.png"
+          ],
+          "createdAt": "2025-11-12T17:05:32.700Z",
+          "updatedAt": "2025-11-12T17:08:38.180Z"
+        },
+        {
+          "title": "MidJourney --seed 635973676",
+          "description": "Editorial full-body shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 50 --sw 100 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/cgfu5zreyphg40z13o7sk/476900833_18485136388017222_7801229654800827263_n.jpg?rlkey=6e8yra0dw4b3roz7yk7l0oyoy&st=xhd5sgz4&dl=0",
+          "images": [
+            "8819745-1.png",
+            "8819745-2.png",
+            "8819745-3.png",
+            "8819745-4.png"
+          ],
+          "createdAt": "2025-11-12T17:05:30.189Z",
+          "updatedAt": "2025-11-12T17:08:34.873Z"
+        },
+        {
+          "title": " MidJourney --seed 3117807372",
+          "description": "Editorial full-body shot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/cgfu5zreyphg40z13o7sk/476900833_18485136388017222_7801229654800827263_n.jpg?rlkey=6e8yra0dw4b3roz7yk7l0oyoy&st=xhd5sgz4&dl=0",
+          "images": [
+            "8819510-1.png",
+            "8819510-2.png",
+            "8819510-3.png",
+            "8819510-4.png"
+          ],
+          "createdAt": "2025-11-12T17:05:27.645Z",
+          "updatedAt": "2025-11-12T17:08:32.552Z"
+        },
+        {
+          "title": "MidJourney --seed 4140510505",
+          "description": "Editorial full-body shot for the my character a young woman with short dark hair and dark green eyes and freckles, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 500 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/29v49fdb4atmpsucgw9u7/532301769_18520183183017222_3332953526922844150_n.jpg?rlkey=hgyy3uuh5pers76w44pinjnum&st=odd8gw1y&dl=0",
+          "images": [
+            "8819360-1.png",
+            "8819360-2.png",
+            "8819360-3.png",
+            "8819360-4.png"
+          ],
+          "createdAt": "2025-11-12T17:05:24.859Z",
+          "updatedAt": "2025-11-12T17:08:30.009Z"
+        },
+        {
+          "title": "MidJourney --seed 1064226760",
+          "description": "Low-angle full-body for the my character a young woman with short dark hair and dark green eyes and freckles, editorial shot of the convertible speeding along the Amalfi Road, model in dynamic driving pose with one hand on the wheel, oversized cream blazer contrasting the deep blue sea, silk scarf flowing behind, dramatic sun flare and warm cinematic grain overlay, natural skin imperfections and realistic lighting, editorial magazine fashion photography vibe, 35 mm film look, fuji color c200 film\n--ow 300 --s 150 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8817794-1.png",
+            "8817794-2.png",
+            "8817794-3.png",
+            "8817794-4.png"
+          ],
+          "createdAt": "2025-11-12T15:43:57.131Z",
+          "updatedAt": "2025-11-12T15:44:50.070Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Keep image 1 without changes, but replace the face from photo 2 save freckles on the face",
+          "images": [
+            "17d9a3679968cea84188d54c7f286c0d_seedream_seedream-4_177890273_bb0283f8_0_1762959987.jpg",
+            "8816463-4-2.png",
+            "17d9a3679968cea84188d54c7f286c0d_seedream_seedream-4_177890273_bb0283f8_0_1762959987-2.jpg"
+          ],
+          "createdAt": "2025-11-12T15:17:46.963Z",
+          "updatedAt": "2025-11-12T17:39:10.071Z"
+        },
+        {
+          "title": "MidJourney --seed 703645993",
+          "description": "A fashion editorial photograph features for the my character a young woman with short dark hair and dark green eyes and freckles positioned at the driver’s seat of an open-top vintage Mercedes. The model wears cream linen trousers and a cropped chocolate brown top, accessorized with vintage cat-eye sunglasses. Her hands rest on the steering wheel as she leans against the car, photographed during golden hour with the sun creating backlit lighting. The scene unfolds on a coastal road with the ocean extending toward the horizon. The photograph exhibits film grain characteristics consistent with film kodak gold, capturing motion blur of the moving vehicle. Professional fashion photography with warm backlit lighting and shallow depth of field, shot on film with soft focus effects\n--ow 300 --s 150 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8816734-1.png",
+            "8816734-2.png",
+            "8816734-3.png",
+            "8816734-4.png"
+          ],
+          "createdAt": "2025-11-12T15:02:38.136Z",
+          "updatedAt": "2025-11-12T15:03:15.181Z"
+        },
+        {
+          "title": "MidJourney --seed 742156102",
+          "description": "A fashion editorial photograph features for the my character a young woman with short dark hair and dark green eyes and freckles positioned at the driver’s seat of an open-top vintage Mercedes. The model wears cream linen trousers and a cropped chocolate brown top, accessorized with vintage cat-eye sunglasses. Her hands rest on the steering wheel as she leans against the car, photographed during golden hour with the sun creating backlit lighting. The scene unfolds on a coastal road with the ocean extending toward the horizon. The photograph exhibits film grain characteristics consistent with Kodak Portra 160, capturing motion blur of the moving vehicle. Professional fashion photography with warm backlit lighting and shallow depth of field, shot on film with soft focus effects\n--ow 100 --s 100 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg",
+          "images": [
+            "8816463-1.png",
+            "8816463-2.png",
+            "8816463-3.png",
+            "8816463-4.png"
+          ],
+          "createdAt": "2025-11-12T15:02:35.384Z",
+          "updatedAt": "2025-11-12T15:03:42.889Z"
+        },
+        {
+          "title": "MidJourney --seed 1583513101",
+          "description": "Editorial portrait for the my character a young woman with short dark hair and dark green eyes and freckles, in a pink coat in pastel tones, she is wearing black boots and black jeans, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 500 --s 100 --sw 300 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/5ygbuus9cfjxdbvkrqoau/421054628_369661809009959_1231058754204392577_n.jpg?rlkey=kj0t91s8yqicd8943et1eom8g&st=q5tf6t01&dl=0",
+          "images": [
+            "8815872-1.png",
+            "8815872-2.png",
+            "8815872-3.png",
+            "8815872-4.png"
+          ],
+          "createdAt": "2025-11-12T15:02:32.506Z",
+          "updatedAt": "2025-11-12T15:04:31.302Z"
+        },
+        {
+          "title": "MidJourney --seed 3636168776",
+          "description": "Editorial medium-shot portrait shoot for the my character a young woman with short dark hair and dark green eyes and freckles, in a long dress, kind expression on the face, warm earthy undertones, delicate facial texture. low contrast, fine film grain. Hyper-realistic, high resolution, natural expression with quiet strength.\n--ow 100 --s 50 --sw 100 --no text --q 2 --style raw --v 7 --ar 2:3 \n--oref https://raw.githubusercontent.com/mm-user2/imgs_1/refs/heads/main/oref_2TM01537.jpg\n--sref https://dl.dropboxusercontent.com/scl/fi/29v49fdb4atmpsucgw9u7/532301769_18520183183017222_3332953526922844150_n.jpg?rlkey=hgyy3uuh5pers76w44pinjnum&st=lt53oo9o&dl=0",
+          "images": [
+            "8811073-1.png",
+            "8811073-2.png",
+            "8811073-3.png",
+            "8811073-4.png"
+          ],
+          "createdAt": "2025-11-12T15:02:25.299Z",
+          "updatedAt": "2025-11-12T15:04:33.447Z"
+        }
+      ]
+    },
+    {
+      "name": "Misha-test",
+      "batches": [
+        {
+          "title": "Nano Banana",
+          "description": "",
+          "images": [
+            "9e9ee17a1611838170a14ac1b3548173_banana_image_177890273_8813847f_1763435549.png",
+            "9f27e5403936d1021b8432f1c98f76ff_banana_image_177890273_25e14dc4_1763435772.png",
+            "36e80432938db6cb5b24297d16de7535_banana_image_177890273_ebe568b8_1763435951.png",
+            "60f3fa975dcba13131b0482d9bd202a1_banana_image_177890273_80540688_1763435606.png",
+            "719a861dd252e97417cf8b787ad8fcb5_banana_image_177890273_83d2e02c_1763435501.png"
+          ],
+          "createdAt": "2025-11-19T09:50:45.606Z",
+          "updatedAt": "2025-11-19T09:51:11.355Z"
+        },
+        {
+          "title": "Nano Banana",
+          "description": "",
+          "images": [
+            "14203cac05110e4cbdb30467591b68b4_banana_image_177890273_3dc1d2a5_1763132908-2.jpg",
+            "ad149e641f1f3e92ddd97eba89292bd1_banana_image_177890273_59829e34_1763133229.png",
+            "05a5d246943e6c6b8595df59df3210d3_banana_image_177890273_ab3d4f72_1763133694-2.jpg"
+          ],
+          "createdAt": "2025-11-14T15:21:09.320Z",
+          "updatedAt": "2025-11-14T15:47:47.908Z"
+        },
+        {
+          "title": "MidJourney --seed 1218838357",
+          "description": "Портрет молодого мужчины. Он одет в черный пиджак, черный свитере, черные брюки и черную кепку. У него карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон. Высокая детализация кожи, текстуры ткани одежды, кинематографическое освещение мягкий свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, короткие темные волосы, мужчина гуляет по городу, приглушенные и слегка ненасыщенные тона, угол съемки стандартный, камера на уровне груди, в руке мужчина держит фотоаппарат sony a7 iv \n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/0kolxsfsydpqxoqund4w6/448230459_821435746584352_7315142260435334419_n.jpg?rlkey=m28zr7qshyplfeeei4t2ffdn7&st=ukwz4qff&dl=0",
+          "images": [
+            "8885893-1.png",
+            "8885893-2.png",
+            "8885893-3.png",
+            "8885893-4.png"
+          ],
+          "createdAt": "2025-11-14T15:15:46.146Z",
+          "updatedAt": "2025-11-14T15:16:17.586Z"
+        },
+        {
+          "title": "MidJourney --seed 88142050",
+          "description": "Портрет молодого мужчины. Он одет в черный пиджак, черный свитере, черные брюки и черную кепку. У него карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон. Высокая детализация кожи, текстуры ткани одежды, кинематографическое освещение мягкий свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, короткие темные волосы, мужчина гуляет по городу, приглушенные и слегка ненасыщенные тона \n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/9rmnzgcit0z5k36affvtw/541451896_18522557176017222_157461300137077693_n.jpg?rlkey=v35q3chjf8sfzrlsohhdmoixp&st=hr8hj7r4&dl=0",
+          "images": [
+            "8885642-1.png",
+            "8885642-2.png",
+            "8885642-3.png",
+            "8885642-4.png"
+          ],
+          "createdAt": "2025-11-14T15:02:50.007Z",
+          "updatedAt": "2025-11-14T15:03:33.011Z"
+        },
+        {
+          "title": "MidJourney --seed 1894690548",
+          "description": "Портрет молодого мужчины. Он одет в черный пиджак, черный свитере, черные брюки и черную кепку. У него карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон. Высокая детализация кожи, текстуры ткани одежды, кинематографическое освещение мягкий свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, короткие темные волосы, мужчина гуляет по городу, приглушенные и слегка ненасыщенные тона \n--ow 100 --s 100 --seed 1894690548 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0",
+          "images": [
+            "8885502-1.png",
+            "8885502-2.png",
+            "8885502-3.png",
+            "8885502-4.png"
+          ],
+          "createdAt": "2025-11-14T15:01:21.572Z",
+          "updatedAt": "2025-11-14T15:03:18.780Z"
+        },
+        {
+          "title": "MidJourney --seed 1894690548",
+          "description": "Портрет молодого мужчины. Он одет в черный пиджак, черный свитере, черные брюки и черную кепку. У него карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон. Высокая детализация кожи, текстуры ткани одежды, кинематографическое освещение мягкий свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, короткие темные волосы, мужчина гуляет по городу, приглушенные и слегка ненасыщенные тона \n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/0kolxsfsydpqxoqund4w6/448230459_821435746584352_7315142260435334419_n.jpg?rlkey=m28zr7qshyplfeeei4t2ffdn7&st=ukwz4qff&dl=0",
+          "images": [
+            "8885415-1.png",
+            "8885415-2.png",
+            "8885415-3.png",
+            "8885415-4.png"
+          ],
+          "createdAt": "2025-11-14T15:01:19.148Z",
+          "updatedAt": "2025-11-14T15:03:20.695Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "428468bc41d762f6ee6fd91b59895d6f_seedream_seedream-4_177890273_79c820f5_0_1763131468.jpg"
+          ],
+          "createdAt": "2025-11-14T14:54:39.403Z",
+          "updatedAt": "2025-11-14T15:04:29.468Z"
+        },
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "0fd732549572dd6ecbe83d304728c44d_banana_image_177890273_90ba9bf3_1763131262.png"
+          ],
+          "createdAt": "2025-11-14T14:54:37.237Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "4fbd24963bddf2be834aab80669746a0_seedream_seedream-4_177890273_204176d8_0_1763127082.jpg"
+          ],
+          "createdAt": "2025-11-14T14:54:34.702Z",
+          "updatedAt": "2025-11-14T15:04:34.887Z"
+        },
+        {
+          "title": "Seedream + Nano Banana",
+          "description": "",
+          "images": [
+            "1675350888614e74eb4db088fbcad5ac_seedream_seedream-4_177890273_d8b2c166_0_1763125212-2.jpg",
+            "782210537e30984917c7b215b7a10649_banana_image_177890273_a492b72d_1763125545.png",
+            "08123e943db1745a11b72e5f16d13bc2_banana_image_177890273_7bce5e85_1763125842.png",
+            "a8fb88afcb016309a329213346e2215c_banana_image_177890273_546ab0c6_1763126221.png",
+            "00891f3b43b431d7a54d619620db0dac_banana_image_177890273_32e4107f_1763126370.png"
+          ],
+          "createdAt": "2025-11-14T14:54:31.096Z",
+          "updatedAt": "2025-11-14T15:04:47.727Z"
+        },
+        {
+          "title": "MidJourney --seed 2380417338",
+          "description": "Портрет молодого мужчины на зимой. Он одет в шерстяное черное пальто, коричневый вязанный свитер и вязанную черную шапку без козырька. Волосы не видны из под шапки. Снежинки кружатся в небе. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу, ненасыщенные тона, вокруг кружится очень много снега и заснеженные горы на фоне \n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/00jggxtextrqpagt5d4bk/532206635_18520183153017222_749802379363444573_n.jpg?rlkey=puhpldzt11kgwl9qikqr4nqjd&st=8xngaevm&dl=0",
+          "images": [
+            "8882251-1.png",
+            "8882251-2.png",
+            "8882251-3.png",
+            "8882251-4.png"
+          ],
+          "createdAt": "2025-11-14T13:16:05.269Z",
+          "updatedAt": "2025-11-14T15:14:13.741Z"
+        },
+        {
+          "title": "MidJourney --seed 1172025553",
+          "description": "Портрет молодого мужчины на зимой. Он одет в шерстяное черное пальто, коричневый вязанный свитер и вязанную черную шапку без козырька. Волосы не видны из под шапки. Снежинки кружатся в небе. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу, приглушенные и слегка ненасыщенные тона \n--ow 100 --s 100 --seed 1172025553 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0",
+          "images": [
+            "8881857-1.png",
+            "8881857-2.png",
+            "8881857-3.png",
+            "8881857-4.png"
+          ],
+          "createdAt": "2025-11-14T13:10:35.282Z",
+          "updatedAt": "2025-11-14T13:13:34.326Z"
+        },
+        {
+          "title": "MidJourney --seed 86730386",
+          "description": "Портрет молодого мужчины на зимой. Он одет в шерстяное черное пальто, коричневый вязанный свитер и вязанную черную шапку без козырька. Волосы не видны из под шапки. Снежинки кружатся в небе. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу, приглушенные и слегка ненасыщенные тона \n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/00jggxtextrqpagt5d4bk/532206635_18520183153017222_749802379363444573_n.jpg?rlkey=puhpldzt11kgwl9qikqr4nqjd&st=8xngaevm&dl=0",
+          "images": [
+            "8881488-1.png",
+            "8881488-2.png",
+            "8881488-3.png",
+            "8881488-4.png"
+          ],
+          "createdAt": "2025-11-14T13:10:32.969Z",
+          "updatedAt": "2025-11-14T13:13:32.578Z"
+        },
+        {
+          "title": "MidJourney --seed 2447282164",
+          "description": "Портрет молодого мужчины на зимой. Он одет в шерстяное черное пальто, коричневый вязанный свитер и вязанную черную шапку без козырька. Волосы не видны из под шапки. Снежинки кружатся в небе. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу, цвет как на пленочную камеру\n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/fi9qqmuwngyo377qxekbv/c9a7b631d7224818ade58ba5a36096bb_seedream_seedream-4_177890273_51587b20_0_1763122585-3.jpg?rlkey=ir5sde2s8zgg4mqpw4dps4oda&st=5ii23i16&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/0nd6eeaqk4re5kigbs42x/530824271_18520007470017222_7215520994553806353_n.jpg?rlkey=lhjybs6wjltecyim93rrdkau3&st=p1hlkwnr&dl=0",
+          "images": [
+            "8880770-1.png",
+            "8880770-2.png",
+            "8880770-3.png",
+            "8880770-4.png"
+          ],
+          "createdAt": "2025-11-14T12:52:41.136Z",
+          "updatedAt": "2025-11-14T12:54:15.556Z"
+        },
+        {
+          "title": "MidJourney --seed 1881101362",
+          "description": "Портрет молодого мужчины на зимой. Он одет в шерстяное черное пальто, коричневый вязанный свитер и вязанную черную шапку без козырька. Волосы не видны из под шапки. Снежинки кружатся в небе. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу, коричневые пленочные цвета, низкий контраст, ретро\n--ow 100 --s 100 -sw 100 --chaos 20 --no text blue --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/0ndlwunblb5y9g3tdymdg/IMG_7896.JPG?rlkey=j9dp4aeza00hsa384un1fc5y5&st=pr10rmw3&dl=0",
+          "images": [
+            "8880504-1.png",
+            "8880504-2.png",
+            "8880504-3.png",
+            "8880504-4.png"
+          ],
+          "createdAt": "2025-11-14T12:32:56.748Z",
+          "updatedAt": "2025-11-14T12:54:20.395Z"
+        },
+        {
+          "title": "MidJourney --seed 4100688962",
+          "description": "Портрет молодого мужчины на зимой. Он одет в шерстяное черное пальто, коричневый вязанный свитер и вязанную черную шапку без козырька. Волосы не видны из под шапки. Снежинки кружатся в небе. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу\n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/0nd6eeaqk4re5kigbs42x/530824271_18520007470017222_7215520994553806353_n.jpg?rlkey=lhjybs6wjltecyim93rrdkau3&st=p1hlkwnr&dl=0",
+          "images": [
+            "8880380-1.png",
+            "8880380-2.png",
+            "8880380-3.png",
+            "8880380-4.png"
+          ],
+          "createdAt": "2025-11-14T12:32:53.721Z",
+          "updatedAt": "2025-11-14T12:54:22.443Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "c3afee70a05a6e14254aca035639cf58_seedream_seedream-4_177890273_3b8046f1_0_1763117655.jpg",
+            "c3afee70a05a6e14254aca035639cf58_seedream_seedream-4_177890273_3b8046f1_0_1763117655-2.jpg",
+            "c3afee70a05a6e14254aca035639cf58_seedream_seedream-4_177890273_3b8046f1_0_1763117655-6.jpg"
+          ],
+          "createdAt": "2025-11-14T11:45:57.639Z",
+          "updatedAt": "2025-11-14T15:32:11.910Z"
+        },
+        {
+          "title": "MidJourney --seed 2588034576",
+          "description": "Портрет молодого мужчины с коричневыми глазами зимой . Он одет в шерстяное черное пальто, коричневый вязанный свитер и черную кепку. Волосы полностью скрыты кепкой. Снежинки кружатся в небе. Темно коричневые глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу\n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/0ndlwunblb5y9g3tdymdg/IMG_7896.JPG?rlkey=j9dp4aeza00hsa384un1fc5y5&st=pr10rmw3&dl=0",
+          "images": [
+            "8877368-1.png",
+            "8877368-2.png",
+            "8877368-3.png",
+            "8877368-4.png"
+          ],
+          "createdAt": "2025-11-14T11:45:30.719Z",
+          "updatedAt": "2025-11-14T12:54:25.926Z"
+        },
+        {
+          "title": "MidJourney --seed 1790964928",
+          "description": "Портрет молодого мужчины на зимой. Он одет в шерстяное черное пальто, коричневый вязанный свитер и вязанную черную шапку. Волосы не видны из под шапки. Снежинки кружатся в небе. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Мягкий расфокусированный фон, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение мягкий зимний свет, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф, мужчина гуляет по заснеженном лесу\n--ow 100 --s 100 -sw 100 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=m8sonmmr&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/0ndlwunblb5y9g3tdymdg/IMG_7896.JPG?rlkey=j9dp4aeza00hsa384un1fc5y5&st=pr10rmw3&dl=0",
+          "images": [
+            "8877135-1.png",
+            "8877135-2.png",
+            "8877135-3.png",
+            "8877135-4.png"
+          ],
+          "createdAt": "2025-11-14T11:45:27.551Z",
+          "updatedAt": "2025-11-14T12:54:28.255Z"
+        },
+        {
+          "title": "MidJourney --seed 4084154462",
+          "description": "Крупный портрет молодого мужчины на холоде. Его лицо и борода покрыты инеем и снежинками, на коже заметны поры. Карие глаза смотрят прямо в камеру, взгляд интенсивный и глубокий. Он одет в черную шапку. Мягкий расфокусированный фон в холодных тонах, снежная атмосфера. Высокая детализация кожи, текстуры снега и ткани одежды, кинематографическое освещение, реалистичный стиль, ультраширокая диафрагма, подчёркнутая резкость на глазах. У мужчины карие глаза, темная ухоженная, короткая борода, на шее шерстяной шарф\n--ow 150 --s 150 -sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/5t9i0mm2i1no060b956cp/3eda41b9ad4b60761f5c9e527957a50f_seedream_seedream-4_177890273_eb8b3b2e_0_1762787279-2.jpg?rlkey=5q62f4aogy7rxaptmjw0ger3u&st=nfs66ue5&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/6clm3qro9bgbdfdqt93wk/IMG_7924.JPG?rlkey=frv8hbwx303wc543p1w5aoihs&st=pjhi5394&dl=0",
+          "images": [
+            "8875709-1.png",
+            "8875709-2.png",
+            "8875709-3.png",
+            "8875709-4.png"
+          ],
+          "createdAt": "2025-11-14T10:04:30.578Z",
+          "updatedAt": "2025-11-14T12:54:30.317Z"
+        },
+        {
+          "title": "MidJourney --seed 2616547477",
+          "description": "Hyper-realistic portrait of a young man, close-up shot of young man, with short hair, with a well-groomed short dark beard and He is wearing his black cap,\nA man stands on a snowy urban street at sunset, snowflakes settle on his face and dark brown wool coat. He wears a black sweater, and his hands are partially in his coat pockets. The background features a softly blurred cityscape, dimly lit streetlights casting warm golden glows. The atmosphere is moody and cinematic, creating a nostalgic winter evening ambiance. Snowflakes are visible in the air, and bare trees line the street, enhancing the cold, serene urban setting\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/a37s2ytfa84rzt2yeb4vs/533149086_18520183135017222_2045677672963696646_n.jpg?rlkey=jd2es5urh26zzlwnx2mm3a0qo&st=be5fi7e9&dl=0",
+          "images": [
+            "8863531-1.png",
+            "8863531-2.png",
+            "8863531-3.png",
+            "8863531-4.png"
+          ],
+          "createdAt": "2025-11-14T09:59:21.576Z",
+          "updatedAt": "2025-11-14T12:54:31.944Z"
+        },
+        {
+          "title": "MidJourney --seed 2662336352",
+          "description": "editorial photography portrait of young man, with short hair, with a well-groomed short dark beard and He is wearing his black cap, walking in a city street under a snowfall during sunset, snowflakes in the sky. He is wearing a black wool coat, a brown sweater, and black straight pants. Urban background with snow-covered buildings and trees, soft golden-hour lighting, cinematic atmosphere, \nIn the background is a snow-covered city, in the background there is snowfall\nThe background is blurred in the soft bokeh of the 50mm lens with an aperture of 1.2\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/a37s2ytfa84rzt2yeb4vs/533149086_18520183135017222_2045677672963696646_n.jpg?rlkey=jd2es5urh26zzlwnx2mm3a0qo&st=be5fi7e9&dl=0",
+          "images": [
+            "8862846-1.png",
+            "8862846-2.png",
+            "8862846-3.png",
+            "8862846-4.png"
+          ],
+          "createdAt": "2025-11-14T09:59:18.506Z",
+          "updatedAt": "2025-11-14T12:54:33.687Z"
+        },
+        {
+          "title": "MidJourney --seed 2616547477",
+          "description": "Hyper-realistic portrait of a young man, close-up shot of young man, with short hair, with a well-groomed short dark beard and He is wearing his black cap,\nA man stands on a snowy urban street at sunset, snowflakes settle on his face and dark brown wool coat. He wears a black sweater, and his hands are partially in his coat pockets. The background features a softly blurred cityscape, dimly lit streetlights casting warm golden glows. The atmosphere is moody and cinematic, creating a nostalgic winter evening ambiance. Snowflakes are visible in the air, and bare trees line the street, enhancing the cold, serene urban setting\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/a37s2ytfa84rzt2yeb4vs/533149086_18520183135017222_2045677672963696646_n.jpg?rlkey=jd2es5urh26zzlwnx2mm3a0qo&st=be5fi7e9&dl=0",
+          "images": [
+            "8862552-1.png",
+            "8862552-2.png",
+            "8862552-3.png",
+            "8862552-4.png"
+          ],
+          "createdAt": "2025-11-14T09:59:15.907Z",
+          "updatedAt": "2025-11-14T12:54:36.171Z"
+        },
+        {
+          "title": "MidJourney --seed 4255391546",
+          "description": "editorial photography of young man, with short hair, with a well-groomed short dark beard and He is wearing his black cap, walking in a city street under a snowfall during sunset, snowflakes in the sky. He is wearing a black wool loose-fitting coat, a brown sweater, and black straight pants. Urban background with snow-covered buildings and trees, soft golden-hour lighting, cinematic atmosphere, photorealistic details\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/a37s2ytfa84rzt2yeb4vs/533149086_18520183135017222_2045677672963696646_n.jpg?rlkey=jd2es5urh26zzlwnx2mm3a0qo&st=be5fi7e9&dl=0",
+          "images": [
+            "8861940-1.png",
+            "8861940-2.png",
+            "8861940-3.png",
+            "8861940-4.png"
+          ],
+          "createdAt": "2025-11-14T09:59:13.344Z",
+          "updatedAt": "2025-11-14T12:54:52.602Z"
+        },
+        {
+          "title": "MidJourney --seed 2368774413",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards a young man stands in a snowy forest scene. he wears a in a beige coat, a brown sweater and dark gray trousers. snow is gently falling, and tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid golden hour\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/uqwza66kxy9s7i88zbqja/421042615_927928048686304_4149490397934661065_n.jpg?rlkey=znc7o3i1n5eqi6mnm4i7gzl06&st=1lftwxbo&dl=0",
+          "images": [
+            "8852426-1.png",
+            "8852426-2.png",
+            "8852426-3.png",
+            "8852426-4.png"
+          ],
+          "createdAt": "2025-11-14T09:59:06.730Z",
+          "updatedAt": "2025-11-14T12:54:54.931Z"
+        },
+        {
+          "title": "MidJourney --seed 3834725834",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards a young man stands in a snowy forest scene. he wears a in a beige coat, a brown sweater and dark gray trousers. tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid golden hour\n--ow 200 --s 150 --sw 150 --chaos 30 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/b2yhq17c8dpu43ik1sefv/561586412_18530463562017222_2868406367393940501_n.jpg?rlkey=9l6u7nfuwfxtjy5u69hmxw2x7&st=umqnnhzi&dl=0",
+          "images": [
+            "8851989-1.png",
+            "8851989-2.png",
+            "8851989-3.png",
+            "8851989-4.png"
+          ],
+          "createdAt": "2025-11-14T09:59:01.608Z",
+          "updatedAt": "2025-11-14T12:54:57.034Z"
+        },
+        {
+          "title": "MidJourney --seed 3265659300",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards a young man stands in a snowy forest scene. he wears a in a beige coat, a brown sweater and dark gray trousers. snow is gently falling, and tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid golden hour\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/2i5kzgr590s2bjzsd5czr/532206635_18520183153017222_749802379363444573_n.jpg?rlkey=0s413mvuis0vk55nygk8lhq6v&st=iowtufsx&dl=0",
+          "images": [
+            "8851321-1.png",
+            "8851321-2.png",
+            "8851321-3.png",
+            "8851321-4.png"
+          ],
+          "createdAt": "2025-11-14T09:58:54.709Z",
+          "updatedAt": "2025-11-14T12:54:59.251Z"
+        },
+        {
+          "title": "MidJourney --seed 1172025553",
+          "description": "editorial photography, young man, with short hair, with a well-groomed short dark beard, He is wearing his cap and black leather jacket over black t-shirt, in black jeans and black boots in rock and roll style, standing confidently in front of a lamborghini car with neutral tones. soft natural light, muted and slightly desaturated tones, its interior of car has a reddish-brown tone visible\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/a37s2ytfa84rzt2yeb4vs/533149086_18520183135017222_2045677672963696646_n.jpg?rlkey=jd2es5urh26zzlwnx2mm3a0qo&st=be5fi7e9&dl=0",
+          "images": [
+            "8854033-1.png",
+            "8854033-2.png",
+            "8854033-3.png",
+            "8854033-4.png"
+          ],
+          "createdAt": "2025-11-13T17:27:14.845Z",
+          "updatedAt": "2025-11-14T12:55:01.926Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "91e96431c3e0e802daab7c1d9c9012bc_seedream_seedream-4_177890273_acd25fd1_0_1763048712.jpg"
+          ],
+          "createdAt": "2025-11-13T15:45:44.867Z",
+          "updatedAt": "2025-11-14T12:55:32.192Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "",
+          "images": [
+            "ba677ed27cb844208bc72b2ce4e5b03e_seedream_seedream-4_177890273_5ad898fa_0_1763048546-2.jpg",
+            "8854033-4-2.png"
+          ],
+          "createdAt": "2025-11-13T15:45:29.941Z",
+          "updatedAt": "2025-11-14T12:55:33.703Z"
+        },
+        {
+          "title": "MidJourney --seed 851461328",
+          "description": "editorial photography, young man, with short hair, with a well-groomed short dark beard, He is wearing his cap and black leather jacket over black t-shirt and in black jeans, standing confidently in front of a lamborghini car with neutral tones. soft natural light, muted and slightly desaturated tones, sophisticated and avant-garde aesthetic. its interior of car has a reddish-brown tone visible\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/uqwza66kxy9s7i88zbqja/421042615_927928048686304_4149490397934661065_n.jpg?rlkey=znc7o3i1n5eqi6mnm4i7gzl06&st=4jegmuiv&dl=0",
+          "images": [
+            "8853581-1.png",
+            "8853581-2.png",
+            "8853581-3.png",
+            "8853581-4.png"
+          ],
+          "createdAt": "2025-11-13T15:26:10.716Z",
+          "updatedAt": "2025-11-14T12:55:07.851Z"
+        },
+        {
+          "title": "MidJourney --seed 2656924180",
+          "description": "Hyper-realistic portrait of a handsome young man, close-up shot, slightly unbuttoned white shirt, short dark hair falling, cinematic details. He stands outdoors, blurred background, warm Italian atmosphere, sunlight filtered through tree branches casting dramatic shadows across his face and body. Deep brown eyes, long eyelashes, subtle smile. Professional studio-quality photography, natural soft light, sharp focus on face, photorealism, timeless elegance\n--ow 300 --stylize 200 --seed 2656924180 --style raw --ar 4:5 --quality 2 --v 7 \n--oref https://dl.dropboxusercontent.com/scl/fi/vbbam2bv4ildtrqhsp3tq/4fed1a93558c5cd619c89b24780b5402_seedream_seedream-4_177890273_38a798e9_0_1762428731-2.jpg?rlkey=37s6m52vr7j5md6lc24zstvfi&st=yigst8r7&dl=0",
+          "images": [
+            "8852570-1.png",
+            "8852570-2.png",
+            "8852570-3.png",
+            "8852570-4.png"
+          ],
+          "createdAt": "2025-11-13T15:08:02.208Z",
+          "updatedAt": "2025-11-13T15:08:34.338Z"
+        },
+        {
+          "title": "Seedream",
+          "description": "Keep image 1 without changes, but replace the cloth from photo 2 and black cap\n",
+          "images": [
+            "1175361588f24e5600a1c5dc4897484a_seedream_seedream-4_177890273_c5ca7334_0_1763044863.jpg",
+            "76d8619c630895c18919da9821c74009_seedream_seedream-4_177890273_147e7766_0_1763043774.jpg",
+            "6c2a4bf65742095d6d8eac21bf3556af_seedream_seedream-4_177890273_8976f9d5_0_1763044009.jpg",
+            "471857fbc1ddfded3cbd938708f19f36_seedream_seedream-4_177890273_b97003bb_0_1763044360.jpg",
+            "067d295cf94b27587f8273163ef26574_seedream_seedream-4_177890273_98456c2a_0_1763044620.jpg"
+          ],
+          "createdAt": "2025-11-13T14:48:28.611Z",
+          "updatedAt": "2025-11-13T14:49:28.335Z"
+        },
+        {
+          "title": "MidJourney --seed 3704069400",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards a young man stands in a snowy forest scene. he wears a in a gray coat, a brown sweater and dark gray jeans. snow is gently falling, and tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid golden hour\n--ow 150 --s 150 --sw 150 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/13kyxh61h44fj630jfjmn/532301769_18520183183017222_3332953526922844150_n.jpg?rlkey=hzha9aj5835ecgp92gs2ecuac&st=7j71cy26&dl=0",
+          "images": [
+            "8850762-1.png",
+            "8850762-2.png",
+            "8850762-3.png",
+            "8850762-4.png"
+          ],
+          "createdAt": "2025-11-13T14:06:32.226Z",
+          "updatedAt": "2025-11-13T14:07:17.952Z"
+        },
+        {
+          "title": "MidJourney --seed 3636168776",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards\na stylish young man stands confidently in a snowy forest scene. he wears a black pants and a long black coat. his pose is relaxed, snow is gently falling, and tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid golden hour\n--ow 100 --s 100 --seed 3636168776 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0",
+          "images": [
+            "8849576-1.png",
+            "8849576-2.png",
+            "8849576-3.png",
+            "8849576-4.png"
+          ],
+          "createdAt": "2025-11-13T14:06:30.203Z",
+          "updatedAt": "2025-11-13T14:07:16.008Z"
+        },
+        {
+          "title": "MidJourney --seed 2656924180",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards\na stylish young man stands confidently in a snowy forest scene. he wears a black pants, black boots, and a long black coat. his pose is relaxed, one leg crossed over the other. snow is gently falling, and tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid golden hour\n--ow 150 --s 150 --seed 2656924180 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0",
+          "images": [
+            "8849131-1.png",
+            "8849131-2.png",
+            "8849131-3.png",
+            "8849131-4.png"
+          ],
+          "createdAt": "2025-11-13T13:20:53.828Z",
+          "updatedAt": "2025-11-13T13:31:35.471Z"
+        },
+        {
+          "title": "MidJourney --seed 4140510505",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards\na stylish young man stands confidently in a snowy forest scene. he wears a plain black t-shirt, black pants, black boots, and a long black coat. his pose is relaxed, one leg crossed over the other, with one hand in the coat pocket. snow is gently falling, and tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid\n--ow 150 --s 150 --seed 4140510505 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/5t9i0mm2i1no060b956cp/3eda41b9ad4b60761f5c9e527957a50f_seedream_seedream-4_177890273_eb8b3b2e_0_1762787279-2.jpg?rlkey=5q62f4aogy7rxaptmjw0ger3u&st=nfs66ue5&dl=0",
+          "images": [
+            "8848590-1.png",
+            "8848590-2.png",
+            "8848590-3.png",
+            "8848590-4.png"
+          ],
+          "createdAt": "2025-11-13T13:09:02.693Z",
+          "updatedAt": "2025-11-13T13:12:17.293Z"
+        },
+        {
+          "title": "MidJourney --seed 4140510505",
+          "description": "High-fashion editorial photography of a young man with short hair, with a well-groomed short dark beard. He is wearing his cap backwards\na stylish young man stands confidently in a snowy forest scene, leaning against a black mercedes g wagon. he wears a plain black t-shirt, black pants, black boots, and a long black coat. his pose is relaxed, one leg crossed over the other, with one hand in the coat pocket. snow is gently falling, and tall pine trees covered in snow create a beautiful winter background. the lighting is soft, casting perfect shadows and highlights, adding moody, cinematic atmosphere. scene feels natural and candid\n--ow 150 --s 150 --seed 4140510505 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/5t9i0mm2i1no060b956cp/3eda41b9ad4b60761f5c9e527957a50f_seedream_seedream-4_177890273_eb8b3b2e_0_1762787279-2.jpg?rlkey=5q62f4aogy7rxaptmjw0ger3u&st=nfs66ue5&dl=0",
+          "images": [
+            "8848392-1.png",
+            "8848392-2.png",
+            "8848392-3.png",
+            "8848392-4.png"
+          ],
+          "createdAt": "2025-11-13T13:08:59.890Z",
+          "updatedAt": "2025-11-13T13:12:14.804Z"
+        },
+        {
+          "title": "MidJourney --seed 4140510505",
+          "description": "create a hyper-realistic, ultra-dramatic cinematic portrait of a stylish young man, with short hair, with a well-groomed short dark beard. He is wearing his cap backwards, the photo is taken from the backseat of a luxury convertible with the roof open, capturing the man in the driver's seat looking to his right, directly toward the camera. he is wearing a rugged black leather jacket over black t-shirt, paired with black jeans. the car has a cream-colored interior with elegant wooden accents on the dashboard, and sunlight reflects dynamically off the surfaces, creating cinematic highlights and shadows. the background shows a scenic outdoor environment with a winding road, lush green trees, and a clear blue sky, suggesting he is on a road trip. subtle motion is captured: wind gently moving his jacket\n--ow 150 --s 150 --seed 4140510505 --chaos 20 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0",
+          "images": [
+            "8848285-1.png",
+            "8848285-2.png",
+            "8848285-3.png",
+            "8848285-4.png"
+          ],
+          "createdAt": "2025-11-13T13:08:57.173Z",
+          "updatedAt": "2025-11-13T13:12:10.620Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Hyper-realistic portrait of a handsome young man, close-up shot, slightly unbuttoned white shirt, short dark hair falling, cinematic details. He stands outdoors, blurred background, warm Italian atmosphere, sunlight filtered through tree branches casting dramatic shadows across his face and body. Deep brown eyes, long eyelashes, subtle smile. Professional studio-quality photography, natural soft light, sharp focus on face, photorealism, timeless elegance\n--ow 300 --stylize 250 --style raw --ar 4:5 --quality 2 --v 7 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0",
+          "images": [
+            "8747606-1.png",
+            "8747606-2.png",
+            "8747606-3.png",
+            "8747606-4.png"
+          ],
+          "createdAt": "2025-11-13T13:08:27.351Z",
+          "updatedAt": "2025-11-13T13:12:08.401Z"
+        },
+        {
+          "title": "MidJourney",
+          "description": "Commercial photography, of a young man with short hair, with a well-groomed short dark beard, intense gaze, reminiscent of the Vogue magazine aesthetic, an attractive man in the style wearing Jil Sander standing in the green field \n--ow 100 --stylize 250 --style raw --ar 4:5 --quality 2 --v 7 \n--oref https://dl.dropboxusercontent.com/scl/fi/hxbl69c2lnf990yw8bizu/251026_104340_044-2.jpg?rlkey=tvj7l1obmbolyyxitcu0r5w19&st=domzyfws&dl=0",
+          "images": [
+            "8747468-1.png",
+            "8747468-2.png",
+            "8747468-3.png",
+            "8747468-4.png"
+          ],
+          "createdAt": "2025-11-13T13:08:24.495Z",
+          "updatedAt": "2025-11-13T13:12:12.116Z"
+        }
+      ]
+    },
+    {
+      "name": "Lena",
+      "batches": [
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "01.jpg",
+            "02.jpg",
+            "03.png",
+            "04.jpg",
+            "05.png",
+            "06.png",
+            "07.jpg",
+            "08.jpg",
+            "09.jpg",
+            "10.jpg",
+            "11.jpg"
+          ],
+          "createdAt": "2025-11-17T13:06:19.047Z"
+        },
+        {
+          "title": "Nano Banana",
+          "description": "Keep image 1 without changes, but make a full-length photo in fashion pose, save color, style, clothing",
+          "images": [
+            "84e884b1abac78c88fd336611ed9e1c8_banana_image_177890273_7b973d44_1763382759-2.jpg"
+          ],
+          "createdAt": "2025-11-17T12:37:12.077Z",
+          "updatedAt": "2025-11-17T12:37:45.872Z"
+        },
+        {
+          "title": "Nano Banana",
+          "description": "Keep image 1 without changes, but make a full-length photo in fashion pose, save color, style, clothing",
+          "images": [
+            "ed65314d4bf1248f3974d233d5a1ae34_banana_image_177890273_2c9a2b3b_1763382513-2.jpg"
+          ],
+          "createdAt": "2025-11-17T12:33:42.638Z",
+          "updatedAt": "2025-11-17T12:38:00.637Z"
+        },
+        {
+          "title": "Seedream 4",
+          "description": "Сохрани персонажа с фото 1, а фон, одежду используй с фото 2",
+          "images": [
+            "653c0c1e5906a4bce1c81411e507acfb_seedream_seedream-4_177890273_a6af813b_0_1763381895-2.jpg"
+          ],
+          "createdAt": "2025-11-17T12:33:38.773Z",
+          "updatedAt": "2025-11-17T12:38:08.888Z"
+        },
+        {
+          "title": "MidJourney --seed 2121529669 https://www.midjourney.com/styles/0_1697984578",
+          "description": "Night urban landscape with an emphasis on portrait photography. In the foreground is a young woman with long brown, wavy hair, dark brown eyes, a kind expression, warm earthy shades, delicate facial texture, she is wearing an olive jacket with a collar. The lighting creates a contrast: the soft side light highlights the facial features, and the background is filled with blurred neon lights (red and green) with a side effect. The atmosphere is gloomy and cinematic, with a predominance of cold tones (greenish-gray shades). The depth of field is high: the face and hair are sharp, the background is heavily blurred, which enhances the focus on the character. The style is reminiscent of retro-futuristic or cyberpunk, with an emphasis on the contrast between shadows and bright neon light sources in the distance.\n--ow 100 --sref 1697984578 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/fobhqw4cwgvoeilr3pvy7/220701_057.jpg?rlkey=x1w4a2dq0ris80l9zyz2rpwea&st=ybs5vko4&dl=0",
+          "images": [
+            "8959546-1.png",
+            "8959546-2.png",
+            "8959546-3.png",
+            "8959546-4.png"
+          ],
+          "createdAt": "2025-11-17T12:05:36.127Z",
+          "updatedAt": "2025-11-17T12:15:16.094Z"
+        },
+        {
+          "title": "MidJourney --seed 2101280873 https://www.midjourney.com/styles/0_2347691761",
+          "description": "A portrait photo shoot for my heroine, she is a young woman with long blonde, wavy hair, dark brown eyes, a kind expression, warm earthy shades, and a delicate facial texture. She stands against a neutral background in a brown coat and a burgundy turtleneck. Hyper-realistic, high resolution, in the rays of the warm sun, natural facial expression with calm strength. Soft defocused background, emphasized sharpness in the eyes, muted and slightly unsaturated tones.\n--ow 100 --sref 2347691761 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/fobhqw4cwgvoeilr3pvy7/220701_057.jpg?rlkey=x1w4a2dq0ris80l9zyz2rpwea&st=ybs5vko4&dl=0",
+          "images": [
+            "8958344-1.png",
+            "8958344-2.png",
+            "8958344-3.png",
+            "8958344-4.png"
+          ],
+          "createdAt": "2025-11-17T12:03:17.802Z",
+          "updatedAt": "2025-11-17T12:15:02.562Z"
+        },
+        {
+          "title": "MidJourney --seed 2932582805",
+          "description": "A portrait photo shoot for my heroine, she is a young woman with long blonde, wavy hair, dark brown eyes, a kind expression, warm earthy shades, and a delicate facial texture. She is holding a large black Maine Coon cat in her arms, the cat has green eyes, and the young woman is wearing a beige sweater. Hyper-realistic, high resolution, in the rays of the warm sun, natural facial expression with calm strength. Soft defocused background, emphasized sharpness in the eyes, muted and slightly unsaturated tones\n--ow 100 --sw 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/fobhqw4cwgvoeilr3pvy7/220701_057.jpg?rlkey=x1w4a2dq0ris80l9zyz2rpwea&st=ybs5vko4&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/a37s2ytfa84rzt2yeb4vs/533149086_18520183135017222_2045677672963696646_n.jpg?rlkey=jd2es5urh26zzlwnx2mm3a0qo&st=gbszmx27&dl=0",
+          "images": [
+            "8956824-1.png",
+            "8956824-2.png",
+            "8956824-3.png",
+            "8956824-4.png"
+          ],
+          "createdAt": "2025-11-17T12:03:14.864Z",
+          "updatedAt": "2025-11-17T12:05:03.426Z"
+        },
+        {
+          "title": "Seedream 4",
+          "description": "",
+          "images": [
+            "u1423292179__________________________._________________.______ab70485f-b957-4718-ae42-5ca2e1a8a5fd_3-sd1-1.jpg"
+          ],
+          "createdAt": "2025-11-17T11:04:00.028Z",
+          "updatedAt": "2025-11-17T12:04:49.202Z"
+        },
+        {
+          "title": "Seedream 4",
+          "description": "",
+          "images": [
+            "18e52fd888e4cc1d53175c432e6a032b_seedream_seedream-4_177890273_8639e5ee_0_1763178113.jpg"
+          ],
+          "createdAt": "2025-11-15T06:14:21.806Z",
+          "updatedAt": "2025-11-17T12:04:47.978Z"
+        },
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "u1423292179_Editorial_shoot_portrait_for_my_character_a_young_8e88ef7e-2823-4ac7-a381-c660e1c6ef75_1.png",
+            "u1423292179_Editorial_shoot_portrait_for_my_character_a_young_8e88ef7e-2823-4ac7-a381-c660e1c6ef75_2.png",
+            "u1423292179_Editorial_shoot_portrait_for_my_character_a_young_8e88ef7e-2823-4ac7-a381-c660e1c6ef75_3.png"
+          ],
+          "createdAt": "2025-11-15T06:14:17.803Z",
+          "updatedAt": "2025-11-15T06:15:40.906Z"
+        },
+        {
+          "title": "",
+          "description": "",
+          "images": [
+            "u1423292179__________________________._________________.______ab70485f-b957-4718-ae42-5ca2e1a8a5fd_0.png",
+            "u1423292179__________________________._________________.______ab70485f-b957-4718-ae42-5ca2e1a8a5fd_1.png",
+            "u1423292179__________________________._________________.______ab70485f-b957-4718-ae42-5ca2e1a8a5fd_2.png",
+            "u1423292179__________________________._________________.______ab70485f-b957-4718-ae42-5ca2e1a8a5fd_3.png"
+          ],
+          "createdAt": "2025-11-15T06:14:09.554Z"
+        },
+        {
+          "title": "Nano Banana",
+          "description": "",
+          "images": [
+            "5054946255cc5e907ed4cb92ab406817_banana_image_177890273_c7835475_1763136847.png",
+            "cd6e869e74478b9024dcecd1f1867a52_banana_image_177890273_4aa2dd71_1763136414.png"
+          ],
+          "createdAt": "2025-11-14T17:12:13.044Z",
+          "updatedAt": "2025-11-17T12:34:16.560Z"
+        },
+        {
+          "title": "Nano Banana",
+          "description": "",
+          "images": [
+            "ccec5e251a59141fa3c383d3d005ac91_banana_image_177890273_d06eacbf_1763138609.png",
+            "0cb110e06122d1161b6bc57dd7e29dea_banana_image_177890273_321e4de1_1763138746.png",
+            "ae2c1844d36d8b30d03f04a1080bc751_banana_image_177890273_d77455b1_1763138875.png"
+          ],
+          "createdAt": "2025-11-14T16:47:33.058Z",
+          "updatedAt": "2025-11-14T16:49:50.762Z"
+        },
+        {
+          "title": "Seedream 4",
+          "description": "Оставь изображение 1 без изменений, но замени лицо, возьми лицо с фотографии 2.",
+          "images": [
+            "d258f0c2f91e2cd2aa41066abfe807b2_seedream_seedream-4_177890273_3f3fef1e_0_1763138117.jpg"
+          ],
+          "createdAt": "2025-11-14T16:35:41.028Z",
+          "updatedAt": "2025-11-14T16:35:49.992Z"
+        },
+        {
+          "title": "MidJourney --seed 191238693",
+          "description": "Фотосессия портрет для моей героини зимой: она молодая женщина с длинными русыми, волнистыми волосами, темно коричневыми глазами, добрым выражением лица, тёплыми землистыми оттенками, нежной текстурой лица. Она идёт по зимнему лесу в бежевом пальто пастельных тонов, вокруг заснеженный лес. Низкий контраст, мелкое зерно плёнки. Гиперреалистично, высокое разрешение, в лучах тёплого солнца, естественное выражение лица со спокойной силой. Мягкий расфокусированный фон, снежная атмосфера, подчёркнутая резкость на глазах, Снежинки кружатся в небе и повсюду. приглушенные и слегка ненасыщенные тона \n--ow 100 --sw 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/fobhqw4cwgvoeilr3pvy7/220701_057.jpg?rlkey=x1w4a2dq0ris80l9zyz2rpwea&st=ybs5vko4&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/a37s2ytfa84rzt2yeb4vs/533149086_18520183135017222_2045677672963696646_n.jpg?rlkey=jd2es5urh26zzlwnx2mm3a0qo&st=gbszmx27&dl=0",
+          "images": [
+            "8887952-1.png",
+            "8887952-2.png",
+            "8887952-3.png",
+            "8887952-4.png"
+          ],
+          "createdAt": "2025-11-14T16:34:22.715Z",
+          "updatedAt": "2025-11-14T16:34:50.296Z"
+        },
+        {
+          "title": "Seedream 4",
+          "description": "Оставь изображение 1 без изменений, но замени лицо, возьми лицо с фотографии 2.",
+          "images": [
+            "95cb0437cfd5cb5bed90a5277387df6b_seedream_seedream-4_177890273_f46d40f1_0_1763137800.jpg"
+          ],
+          "createdAt": "2025-11-14T16:33:38.730Z",
+          "updatedAt": "2025-11-14T16:35:24.961Z"
+        },
+        {
+          "title": "MidJourney --seed 1094876632",
+          "description": "Фотосессия портрет для моей героини зимой: она молодая женщина с длинными русыми, волнистыми волосами, темно коричневыми глазами, добрым выражением лица, тёплыми землистыми оттенками, нежной текстурой лица. Она идёт по зимнему лесу в бежевом пальто пастельных тонов, на ней бежевые сапоги, вокруг заснеженный лес. Низкий контраст, мелкое зерно плёнки. Гиперреалистично, высокое разрешение, в лучах тёплого солнца, естественное выражение лица со спокойной силой. Мягкий расфокусированный фон, снежная атмосфера, подчёркнутая резкость на глазах, Снежинки кружатся в небе и повсюду. \n--ow 100 --s 50 --sw 100 --no text --q 2 --style raw --v 7 --ar 4:5 \n--oref https://dl.dropboxusercontent.com/scl/fi/fobhqw4cwgvoeilr3pvy7/220701_057.jpg?rlkey=x1w4a2dq0ris80l9zyz2rpwea&st=ybs5vko4&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/uqwza66kxy9s7i88zbqja/421042615_927928048686304_4149490397934661065_n.jpg?rlkey=znc7o3i1n5eqi6mnm4i7gzl06&st=4jegmuiv&dl=0",
+          "images": [
+            "8887741-1.png",
+            "8887741-2.png",
+            "8887741-3.png",
+            "8887741-4.png"
+          ],
+          "createdAt": "2025-11-14T16:19:58.010Z",
+          "updatedAt": "2025-11-14T16:21:48.703Z"
+        },
+        {
+          "title": "MidJourney --seed 4070433738",
+          "description": "Фотосессия портрет для моей героини зимой: она молодая женщина с длинными русыми, волнистыми волосами, темно коричневыми глазами, добрым выражением лица, тёплыми землистыми оттенками, нежной текстурой лица. Она идёт по зимнему лесу в бежевом пальто пастельных тонов, на ней бежевые сапоги, вокруг заснеженный лес. Низкий контраст, мелкое зерно плёнки. Гиперреалистично, высокое разрешение, в лучах тёплого солнца, естественное выражение лица со спокойной силой. Мягкий расфокусированный фон, снежная атмосфера, подчёркнутая резкость на глазах, Снежинки кружатся в небе и повсюду. \n--ow 100 --sw 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/fobhqw4cwgvoeilr3pvy7/220701_057.jpg?rlkey=x1w4a2dq0ris80l9zyz2rpwea&st=ybs5vko4&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/2i5kzgr590s2bjzsd5czr/532206635_18520183153017222_749802379363444573_n.jpg?rlkey=0s413mvuis0vk55nygk8lhq6v&st=ndb7kvyc&dl=0",
+          "images": [
+            "8887581-1.png",
+            "8887581-2.png",
+            "8887581-3.png",
+            "8887581-4.png"
+          ],
+          "createdAt": "2025-11-14T16:19:37.195Z",
+          "updatedAt": "2025-11-14T16:21:47.106Z"
+        },
+        {
+          "title": "MidJourney --seed 897291850",
+          "description": "Фотосессия портрет для моей героини зимой: она молодая женщина с длинными русыми, волнистыми волосами, темно коричневыми глазами, добрым выражением лица, тёплыми землистыми оттенками, нежной текстурой лица. Она идёт по зимнему лесу в бежевом пальто пастельных тонов, на ней бежевые сапоги, вокруг заснеженный лес. Низкий контраст, мелкое зерно плёнки. Гиперреалистично, высокое разрешение, в лучах тёплого солнца, естественное выражение лица со спокойной силой. Мягкий расфокусированный фон, снежная атмосфера, подчёркнутая резкость на глазах, Снежинки кружатся в небе и повсюду. \n--ow 100 --sw 100 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/k76axqgkmml9dcw55fr23/8887185-2.png?rlkey=utr9jjxo2bw7fcfwbng4zx6tg&st=drovefy5&dl=0\n--sref https://dl.dropboxusercontent.com/scl/fi/2i5kzgr590s2bjzsd5czr/532206635_18520183153017222_749802379363444573_n.jpg?rlkey=0s413mvuis0vk55nygk8lhq6v&st=ndb7kvyc&dl=0",
+          "images": [
+            "8887394-1.png",
+            "8887394-2.png",
+            "8887394-3.png",
+            "8887394-4.png"
+          ],
+          "createdAt": "2025-11-14T16:19:33.066Z",
+          "updatedAt": "2025-11-14T16:21:45.371Z"
+        },
+        {
+          "title": "MidJourney --seed 868364806",
+          "description": "Фотосессия портрет для моей героини зимой: она молодая женщина с длинными русыми, волнистыми волосами, темно коричневыми глазами, добрым выражением лица, тёплыми землистыми оттенками, нежной текстурой лица. Она идёт по зимнему лесу в бежевом пальто пастельных тонов, на ней бежевые сапоги, вокруг заснеженный лес. Низкий контраст, мелкое зерно плёнки. Гиперреалистично, высокое разрешение, в лучах тёплого солнца, естественное выражение лица со спокойной силой. Мягкий расфокусированный фон, снежная атмосфера, подчёркнутая резкость на глазах, Снежинки кружатся в небе и повсюду. \n--ow 100 --seed 868364806 --chaos 20 --stylize 100 --style raw --v 7 --ar 4:5 --quality 2 \n--oref https://dl.dropboxusercontent.com/scl/fi/fobhqw4cwgvoeilr3pvy7/220701_057.jpg?rlkey=x1w4a2dq0ris80l9zyz2rpwea&st=ybs5vko4&dl=0",
+          "images": [
+            "8887185-1.png",
+            "8887185-2.png",
+            "8887185-3.png",
+            "8887185-4.png"
+          ],
+          "createdAt": "2025-11-14T15:59:13.881Z",
+          "updatedAt": "2025-11-14T16:03:30.036Z"
         }
       ]
     }
