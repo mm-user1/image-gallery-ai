@@ -261,7 +261,7 @@ async function safeUnlink(filePath) {
 
     for (const name of directories) {
       if (!metadata.tabs.some((tab) => tab.name === name)) {
-        metadata.tabs.push({ name, batches: [] });
+        metadata.tabs.unshift({ name, batches: [] });
       }
     }
 
@@ -307,7 +307,7 @@ async function safeUnlink(filePath) {
         return res.status(409).json({ message: 'Tab already exists.' });
       }
 
-      metadata.tabs.push({ name, batches: [] });
+      metadata.tabs.unshift({ name, batches: [] });
       await ensureDir(path.join(dataDir, name));
       await writeMetadata(metadataPath, metadata);
       log(`Created tab ${name}`);
