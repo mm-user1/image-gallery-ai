@@ -1139,6 +1139,7 @@
 
         this.pruneBatchDropZones(activeTab.name, Array.isArray(activeTab.batches) ? activeTab.batches.length : 0);
 
+        const totalBatches = activeTab.batches.length;
         activeTab.batches.forEach((batch, batchIndex) => {
           const batchEl = document.createElement('section');
           batchEl.className = 'batch';
@@ -1151,7 +1152,8 @@
 
           const title = document.createElement('div');
           title.className = 'batch-title';
-          title.textContent = batch.createdAt ? `Batch ${batchIndex + 1} · ${new Date(batch.createdAt).toLocaleString()}` : `Batch ${batchIndex + 1}`;
+          const batchNumber = totalBatches - batchIndex;
+          title.textContent = batch.createdAt ? `Batch ${batchNumber} · ${new Date(batch.createdAt).toLocaleString()}` : `Batch ${batchNumber}`;
 
           const controls = document.createElement('div');
           controls.className = 'batch-controls';
