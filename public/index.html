@@ -788,6 +788,23 @@
           }
           throw new Error(message);
         }
+      },
+      async deleteImages(tab, batchIndex, filenames) {
+        const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${batchIndex}/images`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filenames })
+        });
+        if (!res.ok) {
+          let message = 'Unable to delete images';
+          try {
+            const data = await res.json();
+            if (data?.message) message = data.message;
+          } catch (_) {
+            // ignore
+          }
+          throw new Error(message);
+        }
       }
     };
 
@@ -1666,11 +1683,14 @@
         if (!confirm('Delete all selected images?')) return;
 
         try {
-          const tasks = [];
+          const byBatch = new Map();
           this.state.selectedImages.forEach(({ batchIndex, filename }) => {
-            tasks.push(api.deleteImage(this.state.activeTab, batchIndex, filename));
+            if (!byBatch.has(batchIndex)) byBatch.set(batchIndex, []);
+            byBatch.get(batchIndex).push(filename);
           });
-          await Promise.all(tasks);
+          for (const [batchIndex, filenames] of byBatch) {
+            await api.deleteImages(this.state.activeTab, batchIndex, filenames);
+          }
           this.clearSelection();
           await this.refreshMetadata(true);
         } catch (error) {
