@@ -3,7 +3,6 @@
 
 const DND_TYPES = {
   IMAGE: 'application/x-gallery-image',
-  BATCH: 'application/x-gallery-batch',
   TAB: 'application/x-gallery-tab'
 };
 
@@ -141,6 +140,24 @@ const api = {
     });
     if (!res.ok) throw new Error(await parseErrorMessage(res, 'Unable to move batch'));
     return res.json();
+  },
+  async toggleLike(tab, batchIndex, payload) {
+    const res = await fetch(`/api/tabs/${encodeURIComponent(tab)}/batches/${batchIndex}/like`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error(await parseErrorMessage(res, 'Unable to update like'));
+    return res.json();
+  },
+  async exportLiked(tab) {
+    const res = await fetch('/api/export-liked', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tab })
+    });
+    if (!res.ok) throw new Error(await parseErrorMessage(res, 'Unable to export liked images'));
+    return res.json();
   }
 };
 
@@ -248,7 +265,17 @@ class GalleryApp {
     this.state = {
       metadata: { tabs: [] },
       activeTab: null,
-      viewer: { tab: null, globalImageIndex: 0 },
+      viewer: { source: null, tabName: null, items: [], index: -1 },
+      favoritesFilterActive: false,
+      search: {
+        inputValue: '',
+        query: '',
+        debounceTimer: null
+      },
+      clipboardUploadInProgress: false,
+      pendingPasteCapture: null,
+      exportInProgress: false,
+      pendingLikeRequests: new Set(),
       selectedImages: new Map(),
       pollingTimer: null,
       lastMetadataHash: null,
@@ -257,12 +284,15 @@ class GalleryApp {
       pendingBatchRefresh: new Set(),
       pendingRemoteRender: false,
       openMoveDropdownBatchId: null,
+      keyboardBatchMove: {
+        activeBatchId: null,
+        inFlight: false
+      },
       drag: {
         inProgress: false,
         type: null,
         payload: null,
         tabInsertIndex: null,
-        batchInsertIndex: null,
         imageTarget: null,
         cleanupTimer: null,
         dragGhost: null
@@ -274,9 +304,15 @@ class GalleryApp {
       createTabBtn: document.getElementById('createTab'),
       toggleEdit: document.getElementById('toggleEdit'),
       batchList: document.getElementById('batchList'),
+      mainDropzoneCard: document.getElementById('mainDropzoneCard'),
       dropZone: document.getElementById('dropZone'),
       filePickerBtn: document.getElementById('filePickerBtn'),
+      pasteImageBtn: document.getElementById('pasteImageBtn'),
       fileInput: document.getElementById('fileInput'),
+      searchInput: document.getElementById('searchInput'),
+      searchClear: document.getElementById('searchClear'),
+      favoritesFilter: document.getElementById('favoritesFilter'),
+      exportLiked: document.getElementById('exportLiked'),
       uploadProgress: document.getElementById('uploadProgress'),
       uploadProgressBar: document.getElementById('uploadProgressBar'),
       selectionActions: document.getElementById('selectionActions'),
@@ -288,18 +324,55 @@ class GalleryApp {
       viewerImage: document.getElementById('viewerImage'),
       viewerPrev: document.getElementById('viewerPrev'),
       viewerNext: document.getElementById('viewerNext'),
-      viewerClose: document.getElementById('viewerClose')
+      viewerClose: document.getElementById('viewerClose'),
+      viewerLike: document.getElementById('viewerLike')
     };
   }
 
   async init() {
     this.bindGlobalEvents();
+    this.updateHeaderControls();
     await this.refreshMetadata(true);
     this.startPolling();
   }
 
   isEditMode() {
     return document.body.classList.contains('edit-mode');
+  }
+
+  isSearchMode() {
+    return Boolean(this.state.search.query);
+  }
+
+  isViewerOpen() {
+    return this.elements.viewer.classList.contains('show');
+  }
+
+  setEditMode(enabled, options = {}) {
+    const shouldEnable = Boolean(enabled);
+    if (shouldEnable && this.isSearchMode()) {
+      return;
+    }
+    const currentlyEnabled = this.isEditMode();
+    if (shouldEnable === currentlyEnabled) {
+      this.updateHeaderControls();
+      return;
+    }
+
+    document.body.classList.toggle('edit-mode', shouldEnable);
+    if (!shouldEnable) {
+      this.state.activeBatchDropZones.clear();
+      this.state.openMoveDropdownBatchId = null;
+      this.deactivateKeyboardBatchMove({ render: false });
+      this.clearSelection(false);
+    }
+    this.clearAllDragIndicators();
+    if (options.render === false) {
+      this.updateHeaderControls();
+      return;
+    }
+    this.renderTabs();
+    this.renderBatches();
   }
 
   getActiveTabEntry() {
@@ -322,6 +395,141 @@ class GalleryApp {
 
   getBatchIndexById(tabName, batchId) {
     return this.getBatchById(tabName, batchId).index;
+  }
+
+  isKeyboardBatchMoveActive() {
+    return Boolean(this.state.keyboardBatchMove.activeBatchId) && this.isEditMode();
+  }
+
+  deactivateKeyboardBatchMove(options = {}) {
+    const { render = true } = options;
+    const hadActive = Boolean(this.state.keyboardBatchMove.activeBatchId);
+    this.state.keyboardBatchMove.activeBatchId = null;
+    if (render && hadActive) {
+      this.renderBatches();
+    }
+  }
+
+  activateKeyboardBatchMove(batchId) {
+    if (!this.isEditMode()) return;
+    if (!batchId) return;
+    if (this.state.keyboardBatchMove.activeBatchId === batchId) {
+      this.deactivateKeyboardBatchMove();
+      return;
+    }
+    this.state.keyboardBatchMove.activeBatchId = batchId;
+    this.renderBatches();
+    this.scrollBatchIntoView(batchId);
+    this.focusBatchMoveButton(batchId);
+  }
+
+  ensureKeyboardBatchMoveIsValid(options = {}) {
+    const { render = false } = options;
+    if (!this.state.keyboardBatchMove.activeBatchId) return;
+    if (!this.isEditMode()) {
+      this.deactivateKeyboardBatchMove({ render });
+      return;
+    }
+    const index = this.getBatchIndexById(this.state.activeTab, this.state.keyboardBatchMove.activeBatchId);
+    if (index === -1) {
+      this.deactivateKeyboardBatchMove({ render });
+    }
+  }
+
+  focusBatchMoveButton(batchId) {
+    if (!batchId) return;
+    requestAnimationFrame(() => {
+      const selector = `.batch-move-btn[data-batch-id="${escapeSelector(batchId)}"]`;
+      const button = this.elements.batchList.querySelector(selector);
+      if (button && typeof button.focus === 'function') {
+        button.focus({ preventScroll: true });
+      }
+    });
+  }
+
+  scrollBatchIntoView(batchId) {
+    if (!batchId) return;
+    requestAnimationFrame(() => {
+      const selector = `.batch[data-batch-id="${escapeSelector(batchId)}"]`;
+      const batchEl = this.elements.batchList.querySelector(selector);
+      if (batchEl && typeof batchEl.scrollIntoView === 'function') {
+        batchEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    });
+  }
+
+  getBatchMoveActionByKey(key) {
+    if (key === 'ArrowUp') return { type: 'delta', value: -1 };
+    if (key === 'ArrowDown') return { type: 'delta', value: 1 };
+    if (key === 'PageUp') return { type: 'delta', value: -5 };
+    if (key === 'PageDown') return { type: 'delta', value: 5 };
+    if (key === 'Home') return { type: 'absolute', value: 0 };
+    if (key === 'End') return { type: 'end' };
+    return null;
+  }
+
+  async handleKeyboardBatchMove(action) {
+    const moveState = this.state.keyboardBatchMove;
+    if (!moveState.activeBatchId || moveState.inFlight) return;
+
+    const tab = this.getActiveTabEntry();
+    if (!tab || !Array.isArray(tab.batches) || !tab.batches.length) return;
+
+    const activeBatchId = moveState.activeBatchId;
+    const sourceIndex = this.getBatchIndexById(this.state.activeTab, activeBatchId);
+    if (sourceIndex === -1) {
+      this.deactivateKeyboardBatchMove();
+      return;
+    }
+
+    let targetIndex = sourceIndex;
+    if (action.type === 'delta') {
+      targetIndex = clamp(sourceIndex + action.value, 0, tab.batches.length - 1);
+    } else if (action.type === 'absolute') {
+      targetIndex = clamp(action.value, 0, tab.batches.length - 1);
+    } else if (action.type === 'end') {
+      targetIndex = tab.batches.length - 1;
+    }
+
+    if (targetIndex === sourceIndex) {
+      this.scrollBatchIntoView(activeBatchId);
+      return;
+    }
+
+    moveState.inFlight = true;
+    try {
+      await this.flushPendingBatchUpdates();
+      const order = tab.batches.map((batch, idx) => normalizeBatchId(batch, `${tab.name}-${idx}`));
+      const currentSource = order.indexOf(activeBatchId);
+      if (currentSource === -1) {
+        this.deactivateKeyboardBatchMove();
+        return;
+      }
+
+      const [moved] = order.splice(currentSource, 1);
+      order.splice(targetIndex, 0, moved);
+
+      const response = await api.reorderBatches(this.state.activeTab, order);
+      if (response?.tab) {
+        const tabIndex = this.state.metadata.tabs.findIndex((item) => item.name === this.state.activeTab);
+        if (tabIndex !== -1) {
+          this.state.metadata.tabs[tabIndex] = response.tab;
+        }
+      } else {
+        await this.refreshMetadata(true, { forceRender: true });
+        return;
+      }
+
+      this.state.lastMetadataHash = JSON.stringify(this.state.metadata);
+      this.renderBatches();
+      this.scrollBatchIntoView(activeBatchId);
+      this.focusBatchMoveButton(activeBatchId);
+    } catch (error) {
+      alert(error.message);
+      await this.refreshMetadata(true, { forceRender: true });
+    } finally {
+      moveState.inFlight = false;
+    }
   }
 
   pruneBatchDropZones() {
@@ -380,18 +588,17 @@ class GalleryApp {
     this.elements.createTabBtn.addEventListener('click', () => this.promptCreateTab());
 
     this.elements.toggleEdit.addEventListener('click', () => {
-      const enabled = document.body.classList.toggle('edit-mode');
-      if (!enabled) {
-        this.state.activeBatchDropZones.clear();
-        this.state.openMoveDropdownBatchId = null;
-        this.clearSelection(false);
-      }
-      this.clearAllDragIndicators();
-      this.renderTabs();
-      this.renderBatches();
+      if (this.isSearchMode()) return;
+      this.setEditMode(!this.isEditMode());
     });
 
+    this.elements.searchInput.addEventListener('input', () => this.handleSearchInput());
+    this.elements.searchClear.addEventListener('click', () => this.clearSearch({ focusInput: true }));
+    this.elements.favoritesFilter.addEventListener('click', () => this.toggleFavoritesFilter());
+    this.elements.exportLiked.addEventListener('click', () => this.handleExportLiked());
+
     this.elements.filePickerBtn.addEventListener('click', () => this.elements.fileInput.click());
+    this.elements.pasteImageBtn.addEventListener('click', () => this.handleClipboardPaste({ triggerButton: this.elements.pasteImageBtn }));
     this.elements.fileInput.addEventListener('change', (e) => {
       const files = Array.from(e.target.files || []);
       if (files.length) this.handleUpload(files);
@@ -427,6 +634,10 @@ class GalleryApp {
     this.elements.viewerPrev.addEventListener('click', () => this.navigateViewer(-1));
     this.elements.viewerNext.addEventListener('click', () => this.navigateViewer(1));
     this.elements.viewerClose.addEventListener('click', () => this.closeViewer());
+    this.elements.viewerLike.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleViewerLike();
+    });
     this.elements.viewer.addEventListener('click', (e) => {
       if (e.target === this.elements.viewer || e.target === this.elements.viewerContent) {
         this.closeViewer();
@@ -434,10 +645,38 @@ class GalleryApp {
     });
 
     document.addEventListener('keydown', (e) => {
-      if (!this.elements.viewer.classList.contains('show')) return;
-      if (e.key === 'ArrowLeft') this.navigateViewer(-1);
-      if (e.key === 'ArrowRight') this.navigateViewer(1);
-      if (e.key === 'Escape') this.closeViewer();
+      if (this.isViewerOpen()) {
+        if (e.key === 'ArrowLeft') this.navigateViewer(-1);
+        if (e.key === 'ArrowRight') this.navigateViewer(1);
+        if (e.key === 'Escape') this.closeViewer();
+        if (!e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey && e.code === 'KeyF') {
+          e.preventDefault();
+          this.toggleViewerLike();
+        }
+        return;
+      }
+
+      if (this.isKeyboardBatchMoveActive()) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          this.deactivateKeyboardBatchMove();
+          return;
+        }
+
+        const editingText = isTextInput(document.activeElement) || Boolean(document.activeElement?.isContentEditable);
+        if (!editingText && !e.repeat) {
+          const moveAction = this.getBatchMoveActionByKey(e.key);
+          if (moveAction) {
+            e.preventDefault();
+            this.handleKeyboardBatchMove(moveAction);
+            return;
+          }
+        }
+      }
+
+      if (e.key === 'Escape' && this.isEditMode()) {
+        this.setEditMode(false);
+      }
     });
 
     let touchStartX = 0;
@@ -475,19 +714,36 @@ class GalleryApp {
 
     this.elements.tabList.addEventListener('dragover', (e) => this.handleTabListDragOver(e));
     this.elements.tabList.addEventListener('drop', (e) => this.handleTabListDrop(e));
-
-    this.elements.batchList.addEventListener('dragover', (e) => this.handleBatchListDragOver(e));
-    this.elements.batchList.addEventListener('drop', (e) => this.handleBatchListDrop(e));
   }
 
   async refreshMetadata(initial = false, options = {}) {
     try {
       const metadata = await api.getMetadata();
-      this.state.metadata = metadata && Array.isArray(metadata.tabs) ? metadata : { tabs: [] };
-      this.state.metadata.tabs = this.state.metadata.tabs.map((tab) => ({
-        ...tab,
-        batches: Array.isArray(tab?.batches) ? tab.batches : []
-      }));
+      const tabs = Array.isArray(metadata?.tabs) ? metadata.tabs : [];
+      this.state.metadata = {
+        ...(metadata || {}),
+        tabs: tabs
+          .filter((tab) => tab && typeof tab.name === 'string' && tab.name !== '+EXPORT')
+          .map((tab) => ({
+            ...tab,
+            batches: Array.isArray(tab?.batches)
+              ? tab.batches.map((batch) => {
+                const images = Array.isArray(batch?.images)
+                  ? batch.images.filter((name) => typeof name === 'string' && name)
+                  : [];
+                const imageSet = new Set(images);
+                const liked = Array.isArray(batch?.liked)
+                  ? batch.liked.filter((name) => typeof name === 'string' && imageSet.has(name))
+                  : [];
+                return {
+                  ...batch,
+                  images,
+                  liked
+                };
+              })
+              : []
+          }))
+      };
 
       if (!this.state.activeTab || !this.state.metadata.tabs.find((tab) => tab.name === this.state.activeTab)) {
         this.state.activeTab = this.state.metadata.tabs[0]?.name || null;
@@ -495,15 +751,22 @@ class GalleryApp {
 
       this.pruneBatchDropZones();
       this.pruneSelection();
+      this.ensureKeyboardBatchMoveIsValid({ render: false });
 
       const hash = JSON.stringify(this.state.metadata);
-      if (!initial && hash === this.state.lastMetadataHash) return;
+      if (!initial && hash === this.state.lastMetadataHash) {
+        this.updateHeaderControls();
+        return;
+      }
       this.state.lastMetadataHash = hash;
 
       if (this.state.drag.inProgress && !options.forceRender) {
         this.state.pendingRemoteRender = true;
+        this.updateHeaderControls();
         return;
       }
+
+      this.syncViewerAfterDataChange();
 
       this.renderTabs();
       if (isTextInput(document.activeElement)) {
@@ -511,6 +774,7 @@ class GalleryApp {
       } else {
         this.renderBatches();
       }
+      this.updateHeaderControls();
     } catch (error) {
       console.error(error);
       if (initial || options.forceRender) {
@@ -522,6 +786,361 @@ class GalleryApp {
   startPolling() {
     if (this.state.pollingTimer) clearInterval(this.state.pollingTimer);
     this.state.pollingTimer = setInterval(() => this.refreshMetadata(false), 5000);
+  }
+
+  handleSearchInput() {
+    const raw = this.elements.searchInput.value || '';
+    this.state.search.inputValue = raw;
+    if (this.state.search.debounceTimer) {
+      clearTimeout(this.state.search.debounceTimer);
+    }
+    this.state.search.debounceTimer = setTimeout(() => this.applySearchQuery(raw), 300);
+    this.updateHeaderControls();
+  }
+
+  applySearchQuery(rawValue) {
+    const query = String(rawValue || '').trim().toLowerCase();
+    if (query === this.state.search.query) {
+      this.updateHeaderControls();
+      return;
+    }
+    this.state.search.query = query;
+    if (query && this.isEditMode()) {
+      this.setEditMode(false, { render: false });
+    }
+    this.renderTabs();
+    this.renderBatches();
+    this.syncViewerAfterDataChange();
+    this.updateHeaderControls();
+  }
+
+  clearSearch(options = {}) {
+    const { render = true, focusInput = false } = options;
+    if (this.state.search.debounceTimer) {
+      clearTimeout(this.state.search.debounceTimer);
+      this.state.search.debounceTimer = null;
+    }
+    this.state.search.inputValue = '';
+    this.state.search.query = '';
+    this.elements.searchInput.value = '';
+    if (render) {
+      this.renderTabs();
+      this.renderBatches();
+      this.syncViewerAfterDataChange();
+    }
+    this.updateHeaderControls();
+    if (focusInput) this.elements.searchInput.focus();
+  }
+
+  toggleFavoritesFilter() {
+    this.state.favoritesFilterActive = !this.state.favoritesFilterActive;
+    this.syncViewerAfterDataChange();
+    this.updateHeaderControls();
+  }
+
+  getLikedCountInTab(tabName) {
+    if (!tabName) return 0;
+    const tab = this.state.metadata.tabs.find((item) => item.name === tabName);
+    if (!tab || !Array.isArray(tab.batches)) return 0;
+    let total = 0;
+    for (const batch of tab.batches) {
+      if (Array.isArray(batch?.liked)) {
+        total += batch.liked.length;
+      }
+    }
+    return total;
+  }
+
+  updateHeaderControls() {
+    const rawSearch = this.elements.searchInput.value || '';
+    this.elements.searchClear.classList.toggle('visible', rawSearch.trim().length > 0);
+
+    const hasActiveTab = Boolean(this.state.activeTab);
+    const likedCount = this.getLikedCountInTab(this.state.activeTab);
+    const favoritesText = likedCount > 0
+      ? `${this.state.favoritesFilterActive ? '♥' : '♡'} ${likedCount}`
+      : (this.state.favoritesFilterActive ? '♥' : '♡');
+    this.elements.favoritesFilter.textContent = favoritesText;
+    this.elements.favoritesFilter.classList.toggle('active', this.state.favoritesFilterActive);
+    this.elements.favoritesFilter.setAttribute('aria-pressed', this.state.favoritesFilterActive ? 'true' : 'false');
+    this.elements.favoritesFilter.disabled = !hasActiveTab;
+
+    const showExport = this.state.favoritesFilterActive && likedCount > 0 && hasActiveTab;
+    this.elements.exportLiked.classList.toggle('is-hidden', !showExport);
+    this.elements.exportLiked.disabled = this.state.exportInProgress;
+
+    this.elements.toggleEdit.disabled = this.isSearchMode();
+  }
+
+  async handleExportLiked() {
+    if (!this.state.activeTab || this.state.exportInProgress) return;
+    this.state.exportInProgress = true;
+    this.updateHeaderControls();
+    try {
+      await api.exportLiked(this.state.activeTab);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      this.state.exportInProgress = false;
+      this.updateHeaderControls();
+    }
+  }
+
+  batchMatchesSearch(batch, query) {
+    if (!query) return false;
+    const title = typeof batch?.title === 'string' ? batch.title.toLowerCase() : '';
+    const description = typeof batch?.description === 'string' ? batch.description.toLowerCase() : '';
+    return title.includes(query) || description.includes(query);
+  }
+
+  getSearchResults() {
+    const query = this.state.search.query;
+    if (!query) return [];
+    const groups = [];
+    for (const tab of this.state.metadata.tabs) {
+      const batches = [];
+      const tabBatches = Array.isArray(tab?.batches) ? tab.batches : [];
+      for (let batchIndex = 0; batchIndex < tabBatches.length; batchIndex += 1) {
+        const batch = tabBatches[batchIndex];
+        if (!this.batchMatchesSearch(batch, query)) continue;
+        const batchId = normalizeBatchId(batch, `${tab.name}-${batchIndex}`);
+        batches.push({ batch, batchId, batchIndex });
+      }
+      if (batches.length) {
+        groups.push({
+          tabName: tab.name,
+          totalBatches: tabBatches.length,
+          batches
+        });
+      }
+    }
+    return groups;
+  }
+
+  createHighlightedFragment(text, query) {
+    const source = typeof text === 'string' ? text : '';
+    const fragment = document.createDocumentFragment();
+    if (!query) {
+      fragment.appendChild(document.createTextNode(source));
+      return fragment;
+    }
+
+    const lowered = source.toLowerCase();
+    let cursor = 0;
+    while (cursor < source.length) {
+      const foundAt = lowered.indexOf(query, cursor);
+      if (foundAt === -1) {
+        fragment.appendChild(document.createTextNode(source.slice(cursor)));
+        break;
+      }
+      if (foundAt > cursor) {
+        fragment.appendChild(document.createTextNode(source.slice(cursor, foundAt)));
+      }
+      const mark = document.createElement('mark');
+      mark.textContent = source.slice(foundAt, foundAt + query.length);
+      fragment.appendChild(mark);
+      cursor = foundAt + query.length;
+    }
+
+    return fragment;
+  }
+
+  createSearchMetaRow(label, value, query) {
+    const wrap = document.createElement('div');
+    wrap.className = 'search-meta';
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'search-meta-label';
+    labelEl.textContent = label;
+    wrap.appendChild(labelEl);
+
+    const valueEl = document.createElement('div');
+    valueEl.className = 'search-meta-value';
+    valueEl.appendChild(this.createHighlightedFragment(value || '', query));
+    wrap.appendChild(valueEl);
+    return wrap;
+  }
+
+  renderSearchResults() {
+    const list = this.elements.batchList;
+    list.innerHTML = '';
+    const query = this.state.search.query;
+    const groups = this.getSearchResults();
+    if (!groups.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = `No results for "${this.elements.searchInput.value || query}"`;
+      list.appendChild(empty);
+      return;
+    }
+
+    groups.forEach((group) => {
+      const groupEl = document.createElement('section');
+      groupEl.className = 'search-tab-group';
+
+      const groupTitle = document.createElement('div');
+      groupTitle.className = 'search-tab-header';
+      groupTitle.textContent = `Tab: ${group.tabName}`;
+      groupEl.appendChild(groupTitle);
+
+      group.batches.forEach(({ batch, batchIndex, batchId }) => {
+        const batchEl = document.createElement('section');
+        batchEl.className = 'batch search-result-batch';
+        batchEl.dataset.batchId = batchId;
+        batchEl.dataset.tab = group.tabName;
+
+        const title = document.createElement('div');
+        title.className = 'batch-title';
+        title.textContent = this.formatBatchLabel(batch, batchIndex, group.totalBatches);
+        batchEl.appendChild(title);
+
+        const thumbRow = document.createElement('div');
+        thumbRow.className = 'thumbnail-row';
+        (batch.images || []).forEach((filename, imageIndex) => {
+          const thumb = document.createElement('div');
+          thumb.className = 'thumbnail';
+          thumb.dataset.filename = filename;
+          thumb.dataset.batchIndex = String(batchIndex);
+          thumb.dataset.batchId = batchId;
+
+          const img = document.createElement('img');
+          img.src = `/api/images/${encodeURIComponent(group.tabName)}/${encodeURIComponent(filename)}`;
+          img.alt = filename;
+          img.loading = 'lazy';
+
+          const likeBtn = this.createLikeButton({
+            tabName: group.tabName,
+            batchIndex,
+            batchId,
+            filename
+          });
+
+          thumb.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.openViewerFromSearch(group.tabName, batchIndex, imageIndex, batchId);
+          });
+
+          thumb.appendChild(img);
+          thumb.appendChild(likeBtn);
+          thumbRow.appendChild(thumb);
+        });
+        batchEl.appendChild(thumbRow);
+
+        batchEl.appendChild(this.createSearchMetaRow('Title', batch.title || '', query));
+        batchEl.appendChild(this.createSearchMetaRow('Description', batch.description || '', query));
+
+        groupEl.appendChild(batchEl);
+      });
+
+      list.appendChild(groupEl);
+    });
+  }
+
+  createLikeButton({ tabName, batchIndex, batchId, filename }) {
+    const button = document.createElement('button');
+    button.className = 'thumb-like';
+    button.type = 'button';
+    button.draggable = false;
+    button.dataset.tab = tabName;
+    button.dataset.batchIndex = String(batchIndex);
+    button.dataset.batchId = batchId;
+    button.dataset.filename = filename;
+    button.title = 'Toggle favorite';
+    this.setLikeButtonVisual(button, this.isBatchLiked(tabName, batchId, filename));
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.toggleLikeForImage({ tabName, batchIndex, batchId, filename });
+    });
+    return button;
+  }
+
+  setLikeButtonVisual(button, liked) {
+    if (!button) return;
+    button.classList.toggle('liked', liked);
+    button.textContent = liked ? '♥' : '♡';
+    button.setAttribute('aria-pressed', liked ? 'true' : 'false');
+  }
+
+  getLikeRequestKey(tabName, batchId, filename) {
+    return `${tabName || ''}:${batchId || ''}:${filename || ''}`;
+  }
+
+  isBatchLiked(tabName, batchId, filename) {
+    const { batch } = this.getBatchById(tabName, batchId);
+    return Boolean(Array.isArray(batch?.liked) && batch.liked.includes(filename));
+  }
+
+  setBatchLikedState(tabName, batchId, filename, liked) {
+    const { batch } = this.getBatchById(tabName, batchId);
+    if (!batch) return;
+    if (!Array.isArray(batch.liked)) batch.liked = [];
+    const likeSet = new Set(batch.liked);
+    if (liked) {
+      likeSet.add(filename);
+    } else {
+      likeSet.delete(filename);
+    }
+    batch.liked = Array.from(likeSet);
+  }
+
+  refreshLikeButtonsForImage(tabName, batchId, filename) {
+    const liked = this.isBatchLiked(tabName, batchId, filename);
+    const selector = `.thumb-like[data-tab="${escapeSelector(tabName)}"][data-batch-id="${escapeSelector(batchId)}"][data-filename="${escapeSelector(filename)}"]`;
+    this.elements.batchList.querySelectorAll(selector).forEach((button) => {
+      this.setLikeButtonVisual(button, liked);
+    });
+
+    const current = this.state.viewer.items[this.state.viewer.index] || null;
+    const sameAsViewer = current
+      && current.tabName === tabName
+      && current.batchId === batchId
+      && current.filename === filename;
+    if (sameAsViewer) {
+      this.setLikeButtonVisual(this.elements.viewerLike, liked);
+    }
+  }
+
+  async toggleLikeForImage({ tabName, batchIndex, batchId, filename }) {
+    if (!tabName || !batchId || !filename) return;
+
+    const requestKey = this.getLikeRequestKey(tabName, batchId, filename);
+    if (this.state.pendingLikeRequests.has(requestKey)) return;
+
+    const resolvedIndex = Number.isInteger(batchIndex) ? batchIndex : this.getBatchIndexById(tabName, batchId);
+    if (resolvedIndex === -1) return;
+
+    const previousLiked = this.isBatchLiked(tabName, batchId, filename);
+    const optimisticLiked = !previousLiked;
+    this.setBatchLikedState(tabName, batchId, filename, optimisticLiked);
+    this.refreshLikeButtonsForImage(tabName, batchId, filename);
+    this.updateHeaderControls();
+    this.syncViewerAfterDataChange();
+
+    this.state.pendingLikeRequests.add(requestKey);
+    try {
+      const response = await api.toggleLike(tabName, resolvedIndex, { filename, batchId });
+      if (typeof response?.liked === 'boolean' && response.liked !== optimisticLiked) {
+        this.setBatchLikedState(tabName, batchId, filename, response.liked);
+        this.refreshLikeButtonsForImage(tabName, batchId, filename);
+        this.syncViewerAfterDataChange();
+      }
+      this.state.lastMetadataHash = JSON.stringify(this.state.metadata);
+    } catch (error) {
+      this.setBatchLikedState(tabName, batchId, filename, previousLiked);
+      this.refreshLikeButtonsForImage(tabName, batchId, filename);
+      this.syncViewerAfterDataChange();
+      alert(error.message);
+    } finally {
+      this.state.pendingLikeRequests.delete(requestKey);
+      this.updateHeaderControls();
+    }
+  }
+
+  toggleViewerLike() {
+    const current = this.state.viewer.items[this.state.viewer.index] || null;
+    if (!current) return;
+    this.toggleLikeForImage(current);
   }
 
   async promptCreateTab() {
@@ -569,7 +1188,6 @@ class GalleryApp {
     this.state.drag.type = type;
     this.state.drag.payload = payload || null;
     this.state.drag.tabInsertIndex = null;
-    this.state.drag.batchInsertIndex = null;
     this.state.drag.imageTarget = null;
   }
 
@@ -596,7 +1214,6 @@ class GalleryApp {
     this.state.drag.type = null;
     this.state.drag.payload = null;
     this.state.drag.tabInsertIndex = null;
-    this.state.drag.batchInsertIndex = null;
     this.state.drag.imageTarget = null;
     this.clearAllDragIndicators();
 
@@ -637,46 +1254,6 @@ class GalleryApp {
       tabs[tabs.length - 1].classList.add('drop-after');
     } else {
       tabs[insertIndex].classList.add('drop-before');
-    }
-  }
-
-  clearBatchDragIndicators() {
-    this.elements.batchList.querySelectorAll('.batch').forEach((el) => {
-      el.classList.remove('drop-before', 'drop-after', 'dragging', 'drag-over');
-    });
-  }
-
-  applyBatchDragIndicators() {
-    this.elements.batchList.querySelectorAll('.batch').forEach((el) => {
-      el.classList.remove('drop-before', 'drop-after');
-      if (this.state.drag.type !== DND_TYPES.IMAGE) {
-        el.classList.remove('drag-over');
-      }
-      if (this.state.drag.type !== DND_TYPES.BATCH) {
-        el.classList.remove('dragging');
-      }
-    });
-
-    if (!this.state.drag.inProgress) return;
-    if (this.state.drag.type !== DND_TYPES.BATCH) return;
-
-    const batches = Array.from(this.elements.batchList.querySelectorAll('.batch'));
-    if (!batches.length) return;
-
-    const draggedBatchId = this.state.drag.payload?.batchId;
-    if (draggedBatchId) {
-      const dragged = this.elements.batchList.querySelector(`.batch[data-batch-id="${escapeSelector(draggedBatchId)}"]`);
-      if (dragged) dragged.classList.add('dragging');
-    }
-
-    if (this.state.drag.batchInsertIndex === null || this.state.drag.batchInsertIndex === undefined) return;
-    const insertIndex = clamp(this.state.drag.batchInsertIndex, 0, batches.length);
-    if (insertIndex <= 0) {
-      batches[0].classList.add('drop-before');
-    } else if (insertIndex >= batches.length) {
-      batches[batches.length - 1].classList.add('drop-after');
-    } else {
-      batches[insertIndex].classList.add('drop-before');
     }
   }
 
@@ -868,7 +1445,9 @@ class GalleryApp {
 
   clearAllDragIndicators() {
     this.clearTabDragIndicators();
-    this.clearBatchDragIndicators();
+    this.elements.batchList.querySelectorAll('.batch').forEach((el) => {
+      el.classList.remove('dragging', 'drop-before', 'drop-after');
+    });
     this.clearImageDragIndicators();
   }
 
@@ -946,88 +1525,6 @@ class GalleryApp {
     }
   }
 
-  handleBatchDragStart(event, batchId, batchEl) {
-    if (!this.isEditMode()) {
-      event.preventDefault();
-      return;
-    }
-    const payload = { tabName: this.state.activeTab, batchId };
-    this.beginDrag(DND_TYPES.BATCH, payload);
-    if (event.dataTransfer) {
-      event.dataTransfer.effectAllowed = 'move';
-      setDragPayload(event.dataTransfer, DND_TYPES.BATCH, payload);
-    }
-    batchEl.classList.add('dragging');
-  }
-
-  calculateBatchInsertIndex(clientY) {
-    const batches = Array.from(this.elements.batchList.querySelectorAll('.batch'));
-    if (!batches.length) return 0;
-    for (let idx = 0; idx < batches.length; idx += 1) {
-      const rect = batches[idx].getBoundingClientRect();
-      if (clientY < rect.top + rect.height / 2) return idx;
-    }
-    return batches.length;
-  }
-
-  handleBatchListDragOver(event) {
-    if (!this.isEditMode()) return;
-    if (!hasDragType(event, DND_TYPES.BATCH)) return;
-    const payload = this.state.drag.payload || getDragPayload(event, DND_TYPES.BATCH);
-    if (!payload?.batchId || payload.tabName !== this.state.activeTab) return;
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-    this.state.drag.batchInsertIndex = this.calculateBatchInsertIndex(event.clientY);
-    this.applyBatchDragIndicators();
-  }
-
-  async handleBatchListDrop(event) {
-    if (!this.isEditMode()) return;
-    if (!hasDragType(event, DND_TYPES.BATCH)) return;
-    event.preventDefault();
-    event.stopPropagation();
-    const payload = getDragPayload(event, DND_TYPES.BATCH) || this.state.drag.payload;
-    if (!payload?.batchId || payload.tabName !== this.state.activeTab) return;
-    const insertIndex = this.state.drag.batchInsertIndex ?? this.calculateBatchInsertIndex(event.clientY);
-    await this.reorderBatchesByDrag(payload, insertIndex);
-  }
-
-  async reorderBatchesByDrag(payload, insertIndexRaw) {
-    try {
-      await this.flushPendingBatchUpdates();
-      const tab = this.getActiveTabEntry();
-      if (!tab) return;
-      const batches = Array.isArray(tab.batches) ? tab.batches : [];
-      const sourceIndex = batches.findIndex((batch, idx) => normalizeBatchId(batch, `${tab.name}-${idx}`) === payload.batchId);
-      if (sourceIndex === -1) return;
-
-      let insertIndex = clamp(insertIndexRaw, 0, batches.length);
-      if (insertIndex > sourceIndex) insertIndex -= 1;
-      if (insertIndex === sourceIndex) return;
-
-      const order = batches.map((batch, idx) => normalizeBatchId(batch, `${tab.name}-${idx}`));
-      const [moved] = order.splice(sourceIndex, 1);
-      order.splice(insertIndex, 0, moved);
-
-      const response = await api.reorderBatches(this.state.activeTab, order);
-      if (response?.tab) {
-        const tabIndex = this.state.metadata.tabs.findIndex((item) => item.name === this.state.activeTab);
-        if (tabIndex !== -1) {
-          this.state.metadata.tabs[tabIndex] = response.tab;
-        }
-      } else {
-        await this.refreshMetadata(true, { forceRender: true });
-        return;
-      }
-      this.state.lastMetadataHash = JSON.stringify(this.state.metadata);
-      this.renderBatches();
-    } catch (error) {
-      alert(error.message);
-      await this.refreshMetadata(true, { forceRender: true });
-    } finally {
-      this.scheduleDragCleanup();
-    }
-  }
   collectDraggedSelection(batchId, filename) {
     const tab = this.getActiveTabEntry();
     if (!tab) {
@@ -1244,12 +1741,14 @@ class GalleryApp {
       empty.textContent = 'Create a tab to get started.';
       this.elements.batchList.innerHTML = '';
       this.elements.batchList.appendChild(empty);
+      this.updateHeaderControls();
       return;
     }
 
     tabs.forEach((tab) => {
       const tabEl = document.createElement('div');
-      tabEl.className = `tab${tab.name === this.state.activeTab ? ' active' : ''}`;
+      const isActive = !this.isSearchMode() && tab.name === this.state.activeTab;
+      tabEl.className = `tab${isActive ? ' active' : ''}`;
       tabEl.dataset.tab = tab.name;
 
       const titleEl = document.createElement('span');
@@ -1276,9 +1775,11 @@ class GalleryApp {
       titleEl.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
+          e.stopPropagation();
           titleEl.blur();
         }
         if (e.key === 'Escape') {
+          e.stopPropagation();
           titleEl.textContent = tab.name;
           titleEl.blur();
         }
@@ -1297,10 +1798,21 @@ class GalleryApp {
       tabEl.appendChild(titleEl);
       tabEl.appendChild(removeBtn);
       tabEl.addEventListener('click', () => {
-        if (this.state.activeTab === tab.name) return;
+        const wasSearchMode = this.isSearchMode();
+        if (wasSearchMode) {
+          this.clearSearch({ render: false });
+        }
+        if (this.state.activeTab === tab.name) {
+          if (wasSearchMode) {
+            this.renderTabs();
+            this.renderBatches();
+          }
+          return;
+        }
         this.state.activeTab = tab.name;
         this.state.activeBatchDropZones.clear();
         this.state.openMoveDropdownBatchId = null;
+        this.deactivateKeyboardBatchMove({ render: false });
         this.clearSelection(false);
         this.renderTabs();
         this.renderBatches();
@@ -1313,6 +1825,7 @@ class GalleryApp {
     });
 
     this.applyTabDragIndicators();
+    this.updateHeaderControls();
   }
 
   formatBatchLabel(batch, batchIndex, totalBatches) {
@@ -1326,12 +1839,24 @@ class GalleryApp {
   renderBatches() {
     const list = this.elements.batchList;
     list.innerHTML = '';
+    if (this.elements.mainDropzoneCard) {
+      this.elements.mainDropzoneCard.classList.toggle('is-hidden', this.isSearchMode());
+    }
+
+    if (this.isSearchMode()) {
+      this.renderSearchResults();
+      this.updateSelectionUI();
+      this.updateHeaderControls();
+      return;
+    }
+
     const activeTab = this.getActiveTabEntry();
     if (!activeTab) {
       const empty = document.createElement('div');
       empty.className = 'empty-state';
       empty.textContent = 'Create a tab to start uploading batches.';
       list.appendChild(empty);
+      this.updateHeaderControls();
       return;
     }
 
@@ -1341,10 +1866,12 @@ class GalleryApp {
       empty.textContent = 'No batches yet. Upload images to create a batch.';
       list.appendChild(empty);
       this.updateSelectionUI();
+      this.updateHeaderControls();
       return;
     }
 
     const editMode = this.isEditMode();
+    const keyboardMoveActiveId = this.state.keyboardBatchMove.activeBatchId;
     this.pruneBatchDropZones();
     this.pruneSelection();
 
@@ -1357,6 +1884,9 @@ class GalleryApp {
       batchEl.className = 'batch';
       batchEl.dataset.batchIndex = String(batchIndex);
       batchEl.dataset.batchId = batchId;
+      if (editMode && keyboardMoveActiveId === batchId) {
+        batchEl.classList.add('keyboard-moving');
+      }
 
       const header = document.createElement('div');
       header.className = 'batch-header';
@@ -1368,11 +1898,19 @@ class GalleryApp {
         const moveHandle = document.createElement('button');
         moveHandle.className = 'copy-btn batch-move-btn batch-edit-only';
         moveHandle.type = 'button';
-        moveHandle.textContent = 'Move';
-        moveHandle.title = 'Drag to reorder batches';
-        moveHandle.draggable = true;
-        moveHandle.addEventListener('dragstart', (e) => this.handleBatchDragStart(e, batchId, batchEl));
-        moveHandle.addEventListener('dragend', () => this.scheduleDragCleanup());
+        const isKeyboardMoveActive = keyboardMoveActiveId === batchId;
+        moveHandle.textContent = isKeyboardMoveActive ? 'Moving' : 'Move';
+        moveHandle.title = 'Keyboard move: Arrow Up/Down, PgUp/PgDown, Home/End, Esc to cancel';
+        moveHandle.dataset.batchId = batchId;
+        moveHandle.setAttribute('aria-pressed', isKeyboardMoveActive ? 'true' : 'false');
+        if (isKeyboardMoveActive) {
+          moveHandle.classList.add('active');
+        }
+        moveHandle.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.activateKeyboardBatchMove(batchId);
+        });
         titleWrap.appendChild(moveHandle);
       }
 
@@ -1485,6 +2023,13 @@ class GalleryApp {
       thumbRow.className = 'thumbnail-row';
       thumbRow.addEventListener('dragover', (e) => this.handleThumbnailRowDragOver(e, batchId, thumbRow));
       thumbRow.addEventListener('drop', (e) => this.handleThumbnailRowDrop(e, batchId, thumbRow));
+      if (editMode && (!batch.images || !batch.images.length)) {
+        thumbRow.classList.add('empty-drop-target');
+        const emptyHint = document.createElement('div');
+        emptyHint.className = 'thumbnail-row-empty-hint';
+        emptyHint.textContent = 'Drop images here';
+        thumbRow.appendChild(emptyHint);
+      }
 
       (batch.images || []).forEach((filename, imageIndex) => {
         const thumb = document.createElement('div');
@@ -1507,6 +2052,13 @@ class GalleryApp {
         img.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
         img.alt = filename;
         img.loading = 'lazy';
+
+        const likeBtn = this.createLikeButton({
+          tabName: this.state.activeTab,
+          batchIndex,
+          batchId,
+          filename
+        });
 
         thumb.addEventListener('click', (e) => {
           e.preventDefault();
@@ -1533,6 +2085,7 @@ class GalleryApp {
         actions.appendChild(remove);
 
         thumb.appendChild(img);
+        thumb.appendChild(likeBtn);
         thumb.appendChild(actions);
         thumbRow.appendChild(thumb);
       });
@@ -1568,8 +2121,8 @@ class GalleryApp {
     });
 
     this.updateSelectionUI();
-    this.applyBatchDragIndicators();
     this.applyImageDragIndicators();
+    this.updateHeaderControls();
   }
 
   async copyTextWithFeedback(button, text, baseLabel) {
@@ -1786,10 +2339,20 @@ class GalleryApp {
     title.textContent = 'Drop images here to add to this batch';
     dropZone.appendChild(title);
 
+    const actions = document.createElement('div');
+    actions.className = 'drop-zone-actions';
+
     const selectBtn = document.createElement('button');
     selectBtn.type = 'button';
     selectBtn.textContent = 'Select files';
-    dropZone.appendChild(selectBtn);
+    actions.appendChild(selectBtn);
+
+    const pasteBtn = document.createElement('button');
+    pasteBtn.type = 'button';
+    pasteBtn.textContent = 'Paste image';
+    actions.appendChild(pasteBtn);
+
+    dropZone.appendChild(actions);
 
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -1804,6 +2367,7 @@ class GalleryApp {
     };
 
     selectBtn.addEventListener('click', () => fileInput.click());
+    pasteBtn.addEventListener('click', () => this.handleClipboardPaste({ batchIndex, batchId, triggerButton: pasteBtn }));
     fileInput.addEventListener('change', (e) => {
       handleFiles(e.target.files);
       fileInput.value = '';
@@ -1834,6 +2398,226 @@ class GalleryApp {
     });
 
     return dropZone;
+  }
+
+  padDatePart(value) {
+    return String(value).padStart(2, '0');
+  }
+
+  createClipboardFilename() {
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${this.padDatePart(now.getMonth() + 1)}${this.padDatePart(now.getDate())}-${this.padDatePart(now.getHours())}${this.padDatePart(now.getMinutes())}${this.padDatePart(now.getSeconds())}`;
+    return `clipboard-${timestamp}.png`;
+  }
+
+  flashButtonLabel(button, label, duration = 1200) {
+    if (!button) return;
+    const previous = button.dataset.prevLabel || button.textContent;
+    button.dataset.prevLabel = previous;
+    button.textContent = label;
+    button.disabled = true;
+    setTimeout(() => {
+      button.textContent = previous;
+      delete button.dataset.prevLabel;
+      button.disabled = false;
+    }, duration);
+  }
+
+  getPasteShortcutHint() {
+    const platform = String(navigator.userAgentData?.platform || navigator.platform || '').toLowerCase();
+    return platform.includes('mac') ? 'Cmd+V' : 'Ctrl+V';
+  }
+
+  setPasteButtonWaiting(button, waiting) {
+    if (!button) return;
+    if (waiting) {
+      if (!button.dataset.defaultLabel) {
+        button.dataset.defaultLabel = button.textContent || 'Paste image';
+      }
+      button.textContent = `Press ${this.getPasteShortcutHint()}`;
+      button.disabled = true;
+      return;
+    }
+    button.textContent = button.dataset.defaultLabel || 'Paste image';
+    delete button.dataset.defaultLabel;
+    button.disabled = false;
+  }
+
+  clearPendingPasteCapture() {
+    const pending = this.state.pendingPasteCapture;
+    this.state.pendingPasteCapture = null;
+    if (pending && typeof pending.cleanup === 'function') {
+      pending.cleanup();
+    }
+  }
+
+  extractImageFromClipboardData(clipboardData) {
+    if (!clipboardData) return null;
+
+    const files = Array.from(clipboardData.files || []);
+    const imageFile = files.find((file) => file && typeof file.type === 'string' && file.type.startsWith('image/'));
+    if (imageFile) {
+      return imageFile;
+    }
+
+    const items = Array.from(clipboardData.items || []);
+    for (const item of items) {
+      if (!item || item.kind !== 'file') continue;
+      if (typeof item.type !== 'string' || !item.type.startsWith('image/')) continue;
+      const file = item.getAsFile();
+      if (file) return file;
+    }
+
+    return null;
+  }
+
+  createPasteCancelledError() {
+    const error = new Error('Paste cancelled.');
+    error.code = 'PASTE_CANCELLED';
+    return error;
+  }
+
+  waitForPastedImageBlob(options = {}) {
+    const timeoutMs = Number.isFinite(options.timeoutMs) ? options.timeoutMs : 15000;
+    const shortcut = this.getPasteShortcutHint();
+
+    return new Promise((resolve, reject) => {
+      let settled = false;
+      let cleanup = () => {};
+      const previousActive = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+      const pasteTrap = document.createElement('textarea');
+      pasteTrap.setAttribute('aria-hidden', 'true');
+      pasteTrap.setAttribute('tabindex', '-1');
+      pasteTrap.style.position = 'fixed';
+      pasteTrap.style.left = '-9999px';
+      pasteTrap.style.top = '-9999px';
+      pasteTrap.style.width = '1px';
+      pasteTrap.style.height = '1px';
+      pasteTrap.style.opacity = '0';
+      pasteTrap.style.pointerEvents = 'none';
+      document.body.appendChild(pasteTrap);
+
+      const finish = (handler, value) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        handler(value);
+      };
+
+      const onPaste = (event) => {
+        const blob = this.extractImageFromClipboardData(event.clipboardData);
+        if (!blob) {
+          event.preventDefault();
+          event.stopPropagation();
+          finish(reject, new Error('Clipboard does not contain an image. Copy an image and try again.'));
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        finish(resolve, blob);
+      };
+
+      const onKeyDown = (event) => {
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        event.stopPropagation();
+        finish(reject, this.createPasteCancelledError());
+      };
+
+      const timeoutId = setTimeout(() => {
+        finish(reject, new Error(`Paste timed out. Click "Paste image" and press ${shortcut}.`));
+      }, timeoutMs);
+
+      cleanup = () => {
+        clearTimeout(timeoutId);
+        document.removeEventListener('paste', onPaste, true);
+        pasteTrap.removeEventListener('paste', onPaste, true);
+        document.removeEventListener('keydown', onKeyDown, true);
+        if (pasteTrap.parentNode) {
+          pasteTrap.parentNode.removeChild(pasteTrap);
+        }
+        if (
+          previousActive
+          && previousActive !== pasteTrap
+          && document.contains(previousActive)
+          && typeof previousActive.focus === 'function'
+        ) {
+          try {
+            previousActive.focus({ preventScroll: true });
+          } catch (_) {
+            // Ignore focus restore failures.
+          }
+        }
+        if (this.state.pendingPasteCapture?.cleanup === cleanup) {
+          this.state.pendingPasteCapture = null;
+        }
+      };
+
+      this.state.pendingPasteCapture = { cleanup };
+      document.addEventListener('paste', onPaste, true);
+      pasteTrap.addEventListener('paste', onPaste, true);
+      document.addEventListener('keydown', onKeyDown, true);
+
+      requestAnimationFrame(() => {
+        try {
+          pasteTrap.focus({ preventScroll: true });
+          pasteTrap.select();
+        } catch (_) {
+          // Ignore focus failures.
+        }
+      });
+    });
+  }
+
+  async handleClipboardPaste(options = {}) {
+    const { batchIndex, batchId, triggerButton } = options;
+    if (!this.state.activeTab) {
+      alert('Create a tab first.');
+      return;
+    }
+    if (this.state.clipboardUploadInProgress) return;
+
+    this.clearPendingPasteCapture();
+    this.state.clipboardUploadInProgress = true;
+    this.setPasteButtonWaiting(triggerButton, true);
+
+    try {
+      const blob = await this.waitForPastedImageBlob();
+
+      const file = new File([blob], this.createClipboardFilename(), {
+        type: blob.type || 'image/png'
+      });
+      const formData = new FormData();
+      formData.append('files', file);
+      formData.append('tab', this.state.activeTab);
+
+      const filenames = await this.uploadWithProgress(formData);
+      if (!filenames.length) return;
+
+      if (typeof batchIndex === 'number' && batchId) {
+        await api.appendBatchImages(this.state.activeTab, batchIndex, { images: filenames, batchId });
+      } else {
+        await api.createBatch(this.state.activeTab, {
+          title: '',
+          description: '',
+          images: filenames
+        });
+      }
+
+      await this.refreshMetadata(true, { forceRender: true });
+    } catch (error) {
+      if (error?.code !== 'PASTE_CANCELLED') {
+        console.error(error);
+        alert(error.message || 'Failed to paste image from clipboard.');
+      }
+    } finally {
+      this.clearPendingPasteCapture();
+      this.state.clipboardUploadInProgress = false;
+      this.setPasteButtonWaiting(triggerButton, false);
+      this.hideProgress();
+    }
   }
 
   async handleBatchUpload(batchIndex, batchId, files) {
@@ -2017,93 +2801,172 @@ class GalleryApp {
     }
   }
 
-  getGlobalImageIndex(tabName, batchIndex, imageIndex) {
+  buildTabViewerItems(tabName) {
     const tab = this.state.metadata.tabs.find((item) => item.name === tabName);
-    if (!tab || !Array.isArray(tab.batches)) return -1;
-
-    let globalIndex = 0;
-    for (let i = 0; i < batchIndex; i += 1) {
-      const batch = tab.batches[i];
-      if (batch && Array.isArray(batch.images)) {
-        globalIndex += batch.images.length;
-      }
-    }
-    globalIndex += imageIndex;
-    return globalIndex;
+    if (!tab || !Array.isArray(tab.batches)) return [];
+    const onlyLiked = this.state.favoritesFilterActive;
+    const items = [];
+    tab.batches.forEach((batch, batchIndex) => {
+      const batchId = normalizeBatchId(batch, `${tab.name}-${batchIndex}`);
+      const likedSet = new Set(Array.isArray(batch?.liked) ? batch.liked : []);
+      (batch.images || []).forEach((filename, imageIndex) => {
+        if (onlyLiked && !likedSet.has(filename)) return;
+        items.push({
+          tabName: tab.name,
+          batchIndex,
+          batchId,
+          imageIndex,
+          filename
+        });
+      });
+    });
+    return items;
   }
 
-  getImageByGlobalIndex(tabName, globalIndex) {
-    const tab = this.state.metadata.tabs.find((item) => item.name === tabName);
-    if (!tab || !Array.isArray(tab.batches)) return null;
-
-    let currentIndex = 0;
-    for (let batchIndex = 0; batchIndex < tab.batches.length; batchIndex += 1) {
-      const batch = tab.batches[batchIndex];
-      if (!batch || !Array.isArray(batch.images)) continue;
-
-      if (currentIndex + batch.images.length > globalIndex) {
-        const imageIndex = globalIndex - currentIndex;
-        const filename = batch.images[imageIndex];
-        if (filename) {
-          return { batchIndex, imageIndex, filename };
-        }
-      }
-      currentIndex += batch.images.length;
-    }
-    return null;
+  buildSearchViewerItems() {
+    const groups = this.getSearchResults();
+    const onlyLiked = this.state.favoritesFilterActive;
+    const items = [];
+    groups.forEach((group) => {
+      group.batches.forEach(({ batch, batchIndex, batchId }) => {
+        const likedSet = new Set(Array.isArray(batch?.liked) ? batch.liked : []);
+        (batch.images || []).forEach((filename, imageIndex) => {
+          if (onlyLiked && !likedSet.has(filename)) return;
+          items.push({
+            tabName: group.tabName,
+            batchIndex,
+            batchId,
+            imageIndex,
+            filename
+          });
+        });
+      });
+    });
+    return items;
   }
 
-  getTotalImagesInTab(tabName) {
-    const tab = this.state.metadata.tabs.find((item) => item.name === tabName);
-    if (!tab || !Array.isArray(tab.batches)) return 0;
+  sameViewerItem(a, b) {
+    if (!a || !b) return false;
+    return a.tabName === b.tabName
+      && a.batchId === b.batchId
+      && a.filename === b.filename
+      && a.imageIndex === b.imageIndex;
+  }
 
-    let total = 0;
-    for (const batch of tab.batches) {
-      if (batch && Array.isArray(batch.images)) {
-        total += batch.images.length;
-      }
+  openViewerFromItemList(items, preferredItem, source, tabName = null) {
+    if (!Array.isArray(items) || !items.length) return;
+    let index = -1;
+    if (preferredItem) {
+      index = items.findIndex((item) => this.sameViewerItem(item, preferredItem));
     }
-    return total;
+    if (index === -1) {
+      index = 0;
+    }
+    this.state.viewer = {
+      source,
+      tabName,
+      items,
+      index
+    };
+    this.renderViewerCurrentItem();
+    this.elements.viewer.classList.add('show');
+    document.body.classList.add('viewer-open');
   }
 
   openViewer(batchIndex, imageIndex) {
-    const tab = this.state.metadata.tabs.find((item) => item.name === this.state.activeTab);
-    if (!tab) return;
+    const tabName = this.state.activeTab;
+    if (!tabName) return;
+    const tab = this.state.metadata.tabs.find((item) => item.name === tabName);
+    if (!tab || !Array.isArray(tab.batches)) return;
     const batch = tab.batches[batchIndex];
     if (!batch) return;
-    const filename = batch.images[imageIndex];
-    if (!filename) return;
+    const filename = batch.images?.[imageIndex];
+    const items = this.buildTabViewerItems(tabName);
+    if (!items.length) return;
+    const preferred = {
+      tabName,
+      batchIndex,
+      batchId: normalizeBatchId(batch, `${tabName}-${batchIndex}`),
+      imageIndex,
+      filename
+    };
+    this.openViewerFromItemList(items, preferred, 'tab', tabName);
+  }
 
-    const globalImageIndex = this.getGlobalImageIndex(this.state.activeTab, batchIndex, imageIndex);
-    if (globalImageIndex === -1) return;
+  openViewerFromSearch(tabName, batchIndex, imageIndex, batchId) {
+    const items = this.buildSearchViewerItems();
+    if (!items.length) return;
+    const tab = this.state.metadata.tabs.find((item) => item.name === tabName);
+    const filename = tab?.batches?.[batchIndex]?.images?.[imageIndex];
+    const preferred = {
+      tabName,
+      batchIndex,
+      batchId,
+      imageIndex,
+      filename
+    };
+    this.openViewerFromItemList(items, preferred, 'search', null);
+  }
 
-    this.state.viewer = { tab: this.state.activeTab, globalImageIndex };
-    this.elements.viewerImage.src = `/api/images/${encodeURIComponent(this.state.activeTab)}/${encodeURIComponent(filename)}`;
-    this.elements.viewer.classList.add('show');
-    document.body.classList.add('viewer-open');
+  renderViewerCurrentItem() {
+    const current = this.state.viewer.items[this.state.viewer.index];
+    if (!current) {
+      this.closeViewer();
+      return;
+    }
+    this.elements.viewerImage.src = `/api/images/${encodeURIComponent(current.tabName)}/${encodeURIComponent(current.filename)}`;
+    this.setLikeButtonVisual(this.elements.viewerLike, this.isBatchLiked(current.tabName, current.batchId, current.filename));
+  }
+
+  syncViewerAfterDataChange() {
+    if (!this.isViewerOpen()) return;
+    const current = this.state.viewer.items[this.state.viewer.index] || null;
+    let nextItems = [];
+    if (this.state.viewer.source === 'search') {
+      nextItems = this.buildSearchViewerItems();
+    } else if (this.state.viewer.source === 'tab') {
+      nextItems = this.buildTabViewerItems(this.state.viewer.tabName || this.state.activeTab);
+    }
+
+    if (!nextItems.length) {
+      this.closeViewer();
+      return;
+    }
+
+    let nextIndex = current ? nextItems.findIndex((item) => this.sameViewerItem(item, current)) : -1;
+    if (nextIndex === -1) {
+      nextIndex = Math.min(this.state.viewer.index, nextItems.length - 1);
+      if (nextIndex < 0) nextIndex = 0;
+    }
+
+    this.state.viewer.items = nextItems;
+    this.state.viewer.index = nextIndex;
+    this.renderViewerCurrentItem();
   }
 
   closeViewer() {
     this.elements.viewer.classList.remove('show');
     document.body.classList.remove('viewer-open');
-    this.state.viewer = { tab: null, globalImageIndex: 0 };
+    this.state.viewer = { source: null, tabName: null, items: [], index: -1 };
+    this.setLikeButtonVisual(this.elements.viewerLike, false);
   }
 
   navigateViewer(delta) {
-    const { tab, globalImageIndex } = this.state.viewer;
-    if (!tab) return;
+    if (!this.isViewerOpen()) return;
+    const total = this.state.viewer.items.length;
+    if (!total) return;
 
-    const totalImages = this.getTotalImagesInTab(tab);
-    if (totalImages === 0) return;
+    if (this.state.favoritesFilterActive) {
+      const wrapped = ((this.state.viewer.index + delta) % total + total) % total;
+      this.state.viewer.index = wrapped;
+      this.renderViewerCurrentItem();
+      return;
+    }
 
-    const nextGlobalIndex = globalImageIndex + delta;
-    if (nextGlobalIndex < 0 || nextGlobalIndex >= totalImages) return;
-
-    const imageData = this.getImageByGlobalIndex(tab, nextGlobalIndex);
-    if (!imageData) return;
-
-    this.state.viewer.globalImageIndex = nextGlobalIndex;
-    this.elements.viewerImage.src = `/api/images/${encodeURIComponent(tab)}/${encodeURIComponent(imageData.filename)}`;
+    const nextIndex = this.state.viewer.index + delta;
+    if (nextIndex < 0 || nextIndex >= total) return;
+    this.state.viewer.index = nextIndex;
+    this.renderViewerCurrentItem();
   }
 
   handleSwipe(startX, startY, endX, endY) {

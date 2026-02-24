@@ -19,6 +19,7 @@ const DEFAULT_CONFIG = {
 };
 const CONFIG_PATH = path.join(APP_ROOT, 'config.json');
 const UPLOADS_DIR = path.join(APP_ROOT, 'uploads');
+const EXPORT_DIR_NAME = '+EXPORT';
 
 /**
  * Utility logger with timestamp.
@@ -171,6 +172,64 @@ function ensureBatchIds(metadata) {
 }
 
 /**
+ * Ensures each batch has a normalized liked[] array that references existing images only.
+ * Returns true if any batch liked state changed.
+ */
+function ensureBatchLikes(metadata) {
+  let changed = false;
+  for (const tab of metadata.tabs || []) {
+    const batches = Array.isArray(tab?.batches) ? tab.batches : [];
+    for (const batch of batches) {
+      if (!batch || typeof batch !== 'object') continue;
+      const images = Array.isArray(batch.images)
+        ? batch.images
+          .map((name) => normalizeStoredFilename(name))
+          .filter((name) => name)
+        : [];
+      const imageSet = new Set(images);
+
+      const rawLiked = Array.isArray(batch.liked) ? batch.liked : [];
+      const nextLiked = [];
+      const seen = new Set();
+      for (const raw of rawLiked) {
+        const filename = normalizeStoredFilename(raw);
+        if (!filename || !imageSet.has(filename) || seen.has(filename)) {
+          changed = true;
+          continue;
+        }
+        seen.add(filename);
+        nextLiked.push(filename);
+      }
+
+      if (!Array.isArray(batch.liked)) {
+        batch.liked = [];
+        changed = true;
+      }
+
+      if (
+        !Array.isArray(batch.liked) ||
+        batch.liked.length !== nextLiked.length ||
+        batch.liked.some((name, idx) => name !== nextLiked[idx])
+      ) {
+        batch.liked = nextLiked;
+        changed = true;
+      }
+    }
+  }
+  return changed;
+}
+
+/**
+ * Ensures all batch-level metadata invariants.
+ */
+function ensureBatchMetadata(metadata) {
+  let changed = false;
+  if (ensureBatchIds(metadata)) changed = true;
+  if (ensureBatchLikes(metadata)) changed = true;
+  return changed;
+}
+
+/**
  * Resolve a batch index from optional index + optional batchId.
  * batchId wins if provided.
  */
@@ -316,6 +375,25 @@ async function ensureUniqueFilename(dir, filename) {
 }
 
 /**
+ * Creates a unique export filename using "name (1).ext" convention.
+ */
+async function ensureUniqueExportFilename(dir, filename) {
+  let target = filename;
+  let counter = 1;
+  const ext = path.extname(filename);
+  const basename = path.basename(filename, ext);
+  while (true) {
+    try {
+      await fsp.access(path.join(dir, target));
+      target = `${basename} (${counter})${ext}`;
+      counter += 1;
+    } catch (_) {
+      return target;
+    }
+  }
+}
+
+/**
  * Deletes a file if it exists. Ignores errors.
  */
 async function safeUnlink(filePath) {
@@ -381,6 +459,7 @@ async function safeUnlink(filePath) {
     const metadata = await readMetadata(metadataPath);
     metadata.tabs = metadata.tabs.reduce((acc, tab) => {
       const safeName = sanitizeTabName(tab.name);
+      if (safeName === EXPORT_DIR_NAME) return acc;
       if (!safeName) return acc;
       acc.push({
         name: safeName,
@@ -392,7 +471,11 @@ async function safeUnlink(filePath) {
     const directories = entries
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
-      .filter((name) => !name.startsWith('.'));
+      .filter((name) => {
+        if (name.startsWith('.')) return false;
+        if (name === EXPORT_DIR_NAME) return false;
+        return Boolean(sanitizeTabName(name));
+      });
 
     for (const name of directories) {
       if (!metadata.tabs.some((tab) => tab.name === name)) {
@@ -408,7 +491,7 @@ async function safeUnlink(filePath) {
       }
     }
 
-    ensureBatchIds(metadata);
+    ensureBatchMetadata(metadata);
 
     await writeMetadata(metadataPath, metadata);
     return metadata;
@@ -422,7 +505,10 @@ async function safeUnlink(filePath) {
   app.get('/api/tabs', async (_req, res, next) => {
     try {
       const metadata = await readMetadata(metadataPath);
-      res.json({ tabs: metadata.tabs.map((tab) => ({ name: tab.name, batches: tab.batches.length })) });
+      const tabs = (metadata.tabs || [])
+        .filter((tab) => tab?.name !== EXPORT_DIR_NAME)
+        .map((tab) => ({ name: tab.name, batches: (tab.batches || []).length }));
+      res.json({ tabs });
     } catch (error) {
       next(error);
     }
@@ -605,7 +691,7 @@ async function safeUnlink(filePath) {
         if (!tab) {
           return res.status(404).json({ message: 'Tab not found.' });
         }
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
 
         const tabDir = path.join(dataDir, name);
         const safeImages = [];
@@ -630,6 +716,7 @@ async function safeUnlink(filePath) {
           title: typeof title === 'string' ? title : '',
           description: typeof description === 'string' ? description : '',
           images: safeImages,
+          liked: [],
           createdAt: new Date().toISOString()
         };
         tab.batches = tab.batches || [];
@@ -657,7 +744,7 @@ async function safeUnlink(filePath) {
         const { description, title, batchId } = req.body || {};
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { tab } = findTab(metadata, name);
         if (!tab) {
           return res.status(404).json({ message: 'Tab not found.' });
@@ -698,6 +785,59 @@ async function safeUnlink(filePath) {
   });
 
   /**
+   * PUT /api/tabs/:name/batches/:index/like - toggle liked state for one image in batch.
+   * Body: { filename: string, batchId?: string }
+   */
+  app.put('/api/tabs/:name/batches/:index/like', async (req, res, next) => {
+    try {
+      await withMetadataLock(async () => {
+        const name = sanitizeTabName(req.params.name);
+        const filename = normalizeStoredFilename(req.body?.filename);
+        const batchId = typeof req.body?.batchId === 'string' ? req.body.batchId : '';
+        if (!name || !filename) {
+          return res.status(400).json({ message: 'Invalid like target.' });
+        }
+
+        const metadata = await readMetadata(metadataPath);
+        ensureBatchMetadata(metadata);
+        const { tab } = findTab(metadata, name);
+        if (!tab || !Array.isArray(tab.batches)) {
+          return res.status(404).json({ message: 'Tab not found.' });
+        }
+
+        const idx = resolveBatchIndex(tab, req.params.index, batchId);
+        if (idx === -1 || !tab.batches[idx]) {
+          return res.status(404).json({ message: 'Batch not found.' });
+        }
+
+        const batch = tab.batches[idx];
+        if (!Array.isArray(batch.images) || !batch.images.includes(filename)) {
+          return res.status(404).json({ message: 'Image not found in batch.' });
+        }
+        if (!Array.isArray(batch.liked)) {
+          batch.liked = [];
+        }
+
+        let liked = false;
+        const likeIdx = batch.liked.findIndex((name) => name === filename);
+        if (likeIdx === -1) {
+          batch.liked.push(filename);
+          liked = true;
+        } else {
+          batch.liked.splice(likeIdx, 1);
+          liked = false;
+        }
+
+        batch.updatedAt = new Date().toISOString();
+        await writeMetadata(metadataPath, metadata);
+        res.json({ liked });
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /**
    * PUT /api/tabs/:name/reorder-batches - reorder batches inside a tab.
    * Supports order by old indices or by batch IDs.
    */
@@ -715,7 +855,7 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { index: tabIndex, tab } = findTab(metadata, name);
         if (!tab || !Array.isArray(tab.batches)) {
           return res.status(404).json({ message: 'Tab not found.' });
@@ -780,7 +920,7 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { index: tabIndex, tab } = findTab(metadata, name);
         if (!tab || !Array.isArray(tab.batches)) {
           return res.status(404).json({ message: 'Tab not found.' });
@@ -802,6 +942,8 @@ async function safeUnlink(filePath) {
           const targetBatch = tab.batches[targetIdx];
           if (!Array.isArray(sourceBatch.images)) sourceBatch.images = [];
           if (!Array.isArray(targetBatch.images)) targetBatch.images = [];
+          if (!Array.isArray(sourceBatch.liked)) sourceBatch.liked = [];
+          if (!Array.isArray(targetBatch.liked)) targetBatch.liked = [];
 
           const requestedRaw = Array.isArray(operation.images) ? operation.images : [];
           const requested = requestedRaw
@@ -816,8 +958,11 @@ async function safeUnlink(filePath) {
           if (!moving.length) {
             continue;
           }
+          const movingSet = new Set(moving);
+          const movingLiked = sourceBatch.liked.filter((filename) => movingSet.has(filename));
 
           sourceBatch.images = sourceBatch.images.filter((filename) => !requestedSet.has(filename));
+          sourceBatch.liked = sourceBatch.liked.filter((filename) => !movingSet.has(filename));
 
           const parsedInsert = parseInt(operation.insertIndex, 10);
           if (sourceIdx === targetIdx) {
@@ -827,15 +972,24 @@ async function safeUnlink(filePath) {
               sourceBatch.images.length
             );
             sourceBatch.images.splice(insertIndex, 0, ...moving);
+            const sourceLikedSet = new Set(sourceBatch.liked || []);
+            for (const filename of movingLiked) {
+              sourceLikedSet.add(filename);
+            }
+            sourceBatch.liked = Array.from(sourceLikedSet).filter((filename) => sourceBatch.images.includes(filename));
           } else {
-            const movingSet = new Set(moving);
             targetBatch.images = targetBatch.images.filter((filename) => !movingSet.has(filename));
+            const targetLikedSet = new Set(targetBatch.liked || []);
+            for (const filename of movingLiked) {
+              targetLikedSet.add(filename);
+            }
             const insertIndex = clamp(
               Number.isNaN(parsedInsert) ? targetBatch.images.length : parsedInsert,
               0,
               targetBatch.images.length
             );
             targetBatch.images.splice(insertIndex, 0, ...moving);
+            targetBatch.liked = Array.from(targetLikedSet).filter((filename) => targetBatch.images.includes(filename));
           }
 
           touchedBatchIds.add(sourceBatch.id);
@@ -877,7 +1031,7 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { index: sourceTabIndex, tab: sourceTab } = findTab(metadata, sourceTabName);
         const { index: targetTabIndex, tab: targetTab } = findTab(metadata, targetTabName);
         if (!sourceTab || !targetTab) {
@@ -907,6 +1061,7 @@ async function safeUnlink(filePath) {
         const copiedTargets = [];
         const exclusiveSources = new Set();
         const movedImages = [];
+        const movedNameMap = new Map();
         try {
           for (const originalRaw of sourceBatch.images || []) {
             const originalName = normalizeStoredFilename(originalRaw);
@@ -919,12 +1074,14 @@ async function safeUnlink(filePath) {
               await fsp.access(sourcePath, fs.constants.F_OK);
             } catch (_) {
               log(`Missing image during batch move: ${sourcePath}`, 'WARN');
+              movedNameMap.set(originalName, originalName);
               movedImages.push(originalName);
               continue;
             }
 
             await fsp.copyFile(sourcePath, targetPath);
             copiedTargets.push(targetPath);
+            movedNameMap.set(originalName, targetName);
             movedImages.push(targetName);
             if ((sourceUsage.get(originalName) || 0) === 0) {
               exclusiveSources.add(sourcePath);
@@ -937,9 +1094,21 @@ async function safeUnlink(filePath) {
           throw error;
         }
 
+        const movedLiked = [];
+        const movedLikedSeen = new Set();
+        for (const rawLiked of sourceBatch.liked || []) {
+          const sourceLikedName = normalizeStoredFilename(rawLiked);
+          if (!sourceLikedName) continue;
+          const targetLikedName = movedNameMap.get(sourceLikedName) || sourceLikedName;
+          if (movedLikedSeen.has(targetLikedName)) continue;
+          movedLikedSeen.add(targetLikedName);
+          movedLiked.push(targetLikedName);
+        }
+
         const movedBatch = {
           ...sourceBatch,
           images: movedImages,
+          liked: movedLiked,
           updatedAt: new Date().toISOString()
         };
 
@@ -989,7 +1158,7 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { tab } = findTab(metadata, name);
         const idx = resolveBatchIndex(tab, req.params.index, req.body?.batchId);
         if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
@@ -1043,7 +1212,7 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { tab } = findTab(metadata, name);
         const idx = resolveBatchIndex(tab, req.params.index, req.body?.batchId || req.query?.batchId);
         if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
@@ -1080,7 +1249,7 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { tab } = findTab(metadata, name);
         const idx = resolveBatchIndex(tab, req.params.batchIndex, req.body?.batchId || req.query?.batchId);
         if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
@@ -1089,12 +1258,16 @@ async function safeUnlink(filePath) {
         const batch = tab.batches[idx];
         const usageInOtherBatches = buildTabImageUsage(tab, idx);
         const deleted = [];
+        if (!Array.isArray(batch.liked)) {
+          batch.liked = [];
+        }
         for (const raw of filenames) {
           const filename = normalizeStoredFilename(raw);
           if (!filename) continue;
           const imageIdx = batch.images.findIndex((img) => img === filename);
           if (imageIdx === -1) continue;
           batch.images.splice(imageIdx, 1);
+          batch.liked = batch.liked.filter((name) => name !== filename);
           if ((usageInOtherBatches.get(filename) || 0) === 0 && !batch.images.includes(filename)) {
             await safeUnlink(path.join(dataDir, name, filename));
           }
@@ -1125,7 +1298,7 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
-        ensureBatchIds(metadata);
+        ensureBatchMetadata(metadata);
         const { tab } = findTab(metadata, name);
         const idx = resolveBatchIndex(tab, req.params.batchIndex, req.body?.batchId || req.query?.batchId);
         if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
@@ -1136,8 +1309,12 @@ async function safeUnlink(filePath) {
         if (imageIdx === -1) {
           return res.status(404).json({ message: 'Image not found.' });
         }
+        if (!Array.isArray(batch.liked)) {
+          batch.liked = [];
+        }
         const usageInOtherBatches = buildTabImageUsage(tab, idx);
         batch.images.splice(imageIdx, 1);
+        batch.liked = batch.liked.filter((name) => name !== filename);
         if ((usageInOtherBatches.get(filename) || 0) === 0 && !batch.images.includes(filename)) {
           await safeUnlink(path.join(dataDir, name, filename));
         }
@@ -1202,6 +1379,64 @@ async function safeUnlink(filePath) {
   });
 
   /**
+   * POST /api/export-liked - export liked images from a tab into data/+EXPORT.
+   * Body: { tab: string }
+   */
+  app.post('/api/export-liked', async (req, res, next) => {
+    try {
+      const tabName = sanitizeTabName(req.body?.tab || '');
+      if (!tabName) {
+        return res.status(400).json({ message: 'Invalid tab name.' });
+      }
+
+      const metadata = await readMetadata(metadataPath);
+      const { tab } = findTab(metadata, tabName);
+      if (!tab || !Array.isArray(tab.batches)) {
+        return res.status(404).json({ message: 'Tab not found.' });
+      }
+
+      const likedFilenames = new Set();
+      for (const batch of tab.batches) {
+        const images = new Set(Array.isArray(batch?.images) ? batch.images : []);
+        for (const raw of batch?.liked || []) {
+          const filename = normalizeStoredFilename(raw);
+          if (!filename || !images.has(filename)) continue;
+          likedFilenames.add(filename);
+        }
+      }
+
+      if (!likedFilenames.size) {
+        return res.json({ exported: 0 });
+      }
+
+      const sourceDir = path.join(dataDir, tabName);
+      const exportDir = path.join(dataDir, EXPORT_DIR_NAME);
+      await ensureDir(exportDir);
+
+      let exported = 0;
+      for (const filename of likedFilenames) {
+        const sourcePath = path.join(sourceDir, filename);
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await fsp.access(sourcePath, fs.constants.F_OK);
+        } catch (_) {
+          log(`Missing image during export-liked: ${sourcePath}`, 'WARN');
+          continue;
+        }
+        const targetName = await ensureUniqueExportFilename(exportDir, filename);
+        const targetPath = path.join(exportDir, targetName);
+        // eslint-disable-next-line no-await-in-loop
+        await fsp.copyFile(sourcePath, targetPath);
+        exported += 1;
+      }
+
+      res.json({ exported });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /**
    * GET /api/images/:tab/:filename - serve image.
    */
   app.get('/api/images/:tab/:filename', async (req, res, next) => {
@@ -1226,6 +1461,7 @@ async function safeUnlink(filePath) {
   app.get('/api/metadata', async (_req, res, next) => {
     try {
       const metadata = await readMetadata(metadataPath);
+      metadata.tabs = (metadata.tabs || []).filter((tab) => tab?.name !== EXPORT_DIR_NAME);
       res.json(metadata);
     } catch (error) {
       next(error);
