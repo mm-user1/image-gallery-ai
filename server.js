@@ -104,7 +104,7 @@ function sanitizeTabName(name) {
   if (typeof name !== 'string') return null;
   const trimmed = name.trim();
   if (!trimmed) return null;
-  if (!/^[A-Za-z0-9-]+$/.test(trimmed)) {
+  if (!/^[A-Za-z0-9_-]+$/.test(trimmed)) {
     return null;
   }
   return trimmed;
@@ -118,6 +118,100 @@ function sanitizeFilename(filename) {
   if (typeof filename !== 'string') return null;
   const base = path.basename(filename).replace(/[\\/]/g, '');
   return base.replace(/[^A-Za-z0-9._-]/g, '-');
+}
+
+/**
+ * Preserve filesystem filename while preventing directory traversal.
+ * Unlike sanitizeFilename, this keeps non-ASCII characters intact.
+ * @param {string} filename
+ */
+function normalizeStoredFilename(filename) {
+  if (typeof filename !== 'string') return null;
+  const base = path.basename(filename).replace(/[\\/]/g, '').trim();
+  return base || null;
+}
+
+/**
+ * Creates a compact batch id.
+ */
+function createBatchId() {
+  return `b_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+}
+
+/**
+ * Ensures all batches have unique stable IDs.
+ * Returns true if any IDs were added or replaced.
+ */
+function ensureBatchIds(metadata) {
+  let changed = false;
+  const seen = new Set();
+  for (const tab of metadata.tabs || []) {
+    if (!Array.isArray(tab.batches)) {
+      tab.batches = [];
+      changed = true;
+      continue;
+    }
+    tab.batches = tab.batches.map((batch) => {
+      const next = batch && typeof batch === 'object' ? batch : {};
+      let id = typeof next.id === 'string' ? next.id.trim() : '';
+      if (!id || seen.has(id)) {
+        do {
+          id = createBatchId();
+        } while (seen.has(id));
+        changed = true;
+      }
+      seen.add(id);
+      if (next.id !== id) {
+        return { ...next, id };
+      }
+      return next;
+    });
+  }
+  return changed;
+}
+
+/**
+ * Resolve a batch index from optional index + optional batchId.
+ * batchId wins if provided.
+ */
+function resolveBatchIndex(tab, indexRaw, batchIdRaw) {
+  const batches = Array.isArray(tab?.batches) ? tab.batches : [];
+  const batchId = typeof batchIdRaw === 'string' ? batchIdRaw.trim() : '';
+  if (batchId) {
+    return batches.findIndex((batch) => batch?.id === batchId);
+  }
+  const idx = typeof indexRaw === 'number' ? indexRaw : parseInt(indexRaw, 10);
+  if (Number.isNaN(idx) || idx < 0 || idx >= batches.length) {
+    return -1;
+  }
+  return idx;
+}
+
+/**
+ * Clamp numeric value to [min, max].
+ */
+function clamp(value, min, max) {
+  if (Number.isNaN(value)) return min;
+  return Math.max(min, Math.min(max, value));
+}
+
+/**
+ * Count image references inside a tab.
+ * Optionally skip one batch index.
+ */
+function buildTabImageUsage(tab, skipBatchIndex = -1) {
+  const usage = new Map();
+  const batches = Array.isArray(tab?.batches) ? tab.batches : [];
+  for (let idx = 0; idx < batches.length; idx += 1) {
+    if (idx === skipBatchIndex) continue;
+    const images = Array.isArray(batches[idx]?.images) ? batches[idx].images : [];
+    for (const raw of images) {
+      const filename = normalizeStoredFilename(raw);
+      if (!filename) continue;
+      usage.set(filename, (usage.get(filename) || 0) + 1);
+    }
+  }
+  return usage;
 }
 
 /**
@@ -314,6 +408,8 @@ async function safeUnlink(filePath) {
       }
     }
 
+    ensureBatchIds(metadata);
+
     await writeMetadata(metadataPath, metadata);
     return metadata;
   }
@@ -354,6 +450,49 @@ async function safeUnlink(filePath) {
         await writeMetadata(metadataPath, metadata);
         log(`Created tab ${name}`);
         res.status(201).json({ name });
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /**
+   * PUT /api/tabs/reorder - reorder tabs by name.
+   */
+  app.put('/api/tabs/reorder', async (req, res, next) => {
+    try {
+      await withMetadataLock(async () => {
+        const order = Array.isArray(req.body?.order) ? req.body.order : null;
+        if (!order || !order.length || !order.every((name) => typeof name === 'string')) {
+          return res.status(400).json({ message: 'Provide tab order as an array of tab names.' });
+        }
+
+        const metadata = await readMetadata(metadataPath);
+        const currentNames = metadata.tabs.map((tab) => tab.name);
+        if (order.length !== currentNames.length) {
+          return res.status(400).json({ message: 'Tab order length mismatch.' });
+        }
+
+        const safeOrder = order.map((name) => sanitizeTabName(name || ''));
+        if (safeOrder.some((name) => !name)) {
+          return res.status(400).json({ message: 'Tab order contains invalid names.' });
+        }
+
+        const unique = new Set(safeOrder);
+        if (unique.size !== safeOrder.length) {
+          return res.status(400).json({ message: 'Tab order must not contain duplicates.' });
+        }
+
+        const currentSet = new Set(currentNames);
+        for (const name of safeOrder) {
+          if (!currentSet.has(name)) {
+            return res.status(400).json({ message: `Unknown tab in order: ${name}` });
+          }
+        }
+
+        metadata.tabs = safeOrder.map((name) => metadata.tabs.find((tab) => tab.name === name));
+        await writeMetadata(metadataPath, metadata);
+        res.json(metadata);
       });
     } catch (error) {
       next(error);
@@ -466,6 +605,7 @@ async function safeUnlink(filePath) {
         if (!tab) {
           return res.status(404).json({ message: 'Tab not found.' });
         }
+        ensureBatchIds(metadata);
 
         const tabDir = path.join(dataDir, name);
         const safeImages = [];
@@ -486,6 +626,7 @@ async function safeUnlink(filePath) {
         }
 
         const batch = {
+          id: createBatchId(),
           title: typeof title === 'string' ? title : '',
           description: typeof description === 'string' ? description : '',
           images: safeImages,
@@ -510,18 +651,19 @@ async function safeUnlink(filePath) {
     try {
       await withMetadataLock(async () => {
         const name = sanitizeTabName(req.params.name);
-        const idx = parseInt(req.params.index, 10);
-        if (!name || Number.isNaN(idx) || idx < 0) {
+        if (!name) {
           return res.status(400).json({ message: 'Invalid batch reference.' });
         }
-        const { description, title } = req.body || {};
+        const { description, title, batchId } = req.body || {};
 
         const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
         const { tab } = findTab(metadata, name);
         if (!tab) {
           return res.status(404).json({ message: 'Tab not found.' });
         }
-        if (!Array.isArray(tab.batches) || !tab.batches[idx]) {
+        const idx = resolveBatchIndex(tab, req.params.index, batchId);
+        if (!Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
           return res.status(404).json({ message: 'Batch not found.' });
         }
         const batch = tab.batches[idx];
@@ -548,7 +690,282 @@ async function safeUnlink(filePath) {
           await writeMetadata(metadataPath, metadata);
         }
 
-        res.json({ batch });
+        res.json({ index: idx, batch });
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /**
+   * PUT /api/tabs/:name/reorder-batches - reorder batches inside a tab.
+   * Supports order by old indices or by batch IDs.
+   */
+  app.put('/api/tabs/:name/reorder-batches', async (req, res, next) => {
+    try {
+      await withMetadataLock(async () => {
+        const name = sanitizeTabName(req.params.name);
+        if (!name) {
+          return res.status(400).json({ message: 'Invalid tab name.' });
+        }
+
+        const order = Array.isArray(req.body?.order) ? req.body.order : null;
+        if (!order || !order.length) {
+          return res.status(400).json({ message: 'Provide the new batch order.' });
+        }
+
+        const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
+        const { index: tabIndex, tab } = findTab(metadata, name);
+        if (!tab || !Array.isArray(tab.batches)) {
+          return res.status(404).json({ message: 'Tab not found.' });
+        }
+
+        const batchCount = tab.batches.length;
+        if (order.length !== batchCount) {
+          return res.status(400).json({ message: 'Batch order length mismatch.' });
+        }
+
+        let reordered = null;
+        if (order.every((value) => Number.isInteger(value))) {
+          const unique = new Set(order);
+          if (unique.size !== order.length) {
+            return res.status(400).json({ message: 'Batch order contains duplicates.' });
+          }
+          if (order.some((idx) => idx < 0 || idx >= batchCount)) {
+            return res.status(400).json({ message: 'Batch order contains invalid indices.' });
+          }
+          reordered = order.map((idx) => tab.batches[idx]);
+        } else if (order.every((value) => typeof value === 'string')) {
+          const unique = new Set(order);
+          if (unique.size !== order.length) {
+            return res.status(400).json({ message: 'Batch order contains duplicates.' });
+          }
+          const existing = new Set(tab.batches.map((batch) => batch.id));
+          for (const batchId of order) {
+            if (!existing.has(batchId)) {
+              return res.status(400).json({ message: `Unknown batch id: ${batchId}` });
+            }
+          }
+          reordered = order.map((batchId) => tab.batches.find((batch) => batch.id === batchId));
+        } else {
+          return res.status(400).json({ message: 'Batch order must be all indices or all batch IDs.' });
+        }
+
+        tab.batches = reordered;
+        metadata.tabs[tabIndex] = tab;
+        await writeMetadata(metadataPath, metadata);
+        res.json({ tab });
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /**
+   * PUT /api/tabs/:name/reorder-images - move/reorder images within and between batches.
+   * Supports one or many operations in one request.
+   */
+  app.put('/api/tabs/:name/reorder-images', async (req, res, next) => {
+    try {
+      await withMetadataLock(async () => {
+        const name = sanitizeTabName(req.params.name);
+        if (!name) {
+          return res.status(400).json({ message: 'Invalid tab name.' });
+        }
+
+        const operations = Array.isArray(req.body?.operations) ? req.body.operations : null;
+        if (!operations || !operations.length) {
+          return res.status(400).json({ message: 'Provide at least one reorder operation.' });
+        }
+
+        const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
+        const { index: tabIndex, tab } = findTab(metadata, name);
+        if (!tab || !Array.isArray(tab.batches)) {
+          return res.status(404).json({ message: 'Tab not found.' });
+        }
+
+        const touchedBatchIds = new Set();
+        for (const operation of operations) {
+          if (!operation || typeof operation !== 'object') {
+            return res.status(400).json({ message: 'Each operation must be an object.' });
+          }
+
+          const sourceIdx = resolveBatchIndex(tab, operation.sourceBatch, operation.sourceBatchId);
+          const targetIdx = resolveBatchIndex(tab, operation.targetBatch, operation.targetBatchId);
+          if (sourceIdx === -1 || targetIdx === -1) {
+            return res.status(400).json({ message: 'Operation contains an invalid source or target batch.' });
+          }
+
+          const sourceBatch = tab.batches[sourceIdx];
+          const targetBatch = tab.batches[targetIdx];
+          if (!Array.isArray(sourceBatch.images)) sourceBatch.images = [];
+          if (!Array.isArray(targetBatch.images)) targetBatch.images = [];
+
+          const requestedRaw = Array.isArray(operation.images) ? operation.images : [];
+          const requested = requestedRaw
+            .map((value) => (typeof value === 'string' ? normalizeStoredFilename(value) : null))
+            .filter((value) => value);
+          if (!requested.length) {
+            continue;
+          }
+
+          const requestedSet = new Set(requested);
+          const moving = sourceBatch.images.filter((filename) => requestedSet.has(filename));
+          if (!moving.length) {
+            continue;
+          }
+
+          sourceBatch.images = sourceBatch.images.filter((filename) => !requestedSet.has(filename));
+
+          const parsedInsert = parseInt(operation.insertIndex, 10);
+          if (sourceIdx === targetIdx) {
+            const insertIndex = clamp(
+              Number.isNaN(parsedInsert) ? sourceBatch.images.length : parsedInsert,
+              0,
+              sourceBatch.images.length
+            );
+            sourceBatch.images.splice(insertIndex, 0, ...moving);
+          } else {
+            const movingSet = new Set(moving);
+            targetBatch.images = targetBatch.images.filter((filename) => !movingSet.has(filename));
+            const insertIndex = clamp(
+              Number.isNaN(parsedInsert) ? targetBatch.images.length : parsedInsert,
+              0,
+              targetBatch.images.length
+            );
+            targetBatch.images.splice(insertIndex, 0, ...moving);
+          }
+
+          touchedBatchIds.add(sourceBatch.id);
+          touchedBatchIds.add(targetBatch.id);
+        }
+
+        if (touchedBatchIds.size) {
+          const now = new Date().toISOString();
+          for (const batch of tab.batches) {
+            if (touchedBatchIds.has(batch.id)) {
+              batch.updatedAt = now;
+            }
+          }
+          metadata.tabs[tabIndex] = tab;
+          await writeMetadata(metadataPath, metadata);
+        }
+
+        res.json({ tab });
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  /**
+   * POST /api/tabs/:sourceTab/batches/:batchIndex/move - move a batch to another tab.
+   * Body: { targetTab: string, batchId?: string }
+   */
+  app.post('/api/tabs/:sourceTab/batches/:batchIndex/move', async (req, res, next) => {
+    try {
+      await withMetadataLock(async () => {
+        const sourceTabName = sanitizeTabName(req.params.sourceTab);
+        const targetTabName = sanitizeTabName(req.body?.targetTab || '');
+        if (!sourceTabName || !targetTabName) {
+          return res.status(400).json({ message: 'Invalid source or target tab.' });
+        }
+        if (sourceTabName === targetTabName) {
+          return res.status(400).json({ message: 'Source and target tabs must differ.' });
+        }
+
+        const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
+        const { index: sourceTabIndex, tab: sourceTab } = findTab(metadata, sourceTabName);
+        const { index: targetTabIndex, tab: targetTab } = findTab(metadata, targetTabName);
+        if (!sourceTab || !targetTab) {
+          return res.status(404).json({ message: 'Source or target tab not found.' });
+        }
+
+        const batchIndex = resolveBatchIndex(sourceTab, req.params.batchIndex, req.body?.batchId);
+        if (batchIndex === -1) {
+          return res.status(404).json({ message: 'Batch not found.' });
+        }
+
+        const sourceBatch = sourceTab.batches[batchIndex];
+        const sourceDir = path.join(dataDir, sourceTabName);
+        const targetDir = path.join(dataDir, targetTabName);
+        await ensureDir(targetDir);
+
+        const sourceUsage = new Map();
+        for (let idx = 0; idx < sourceTab.batches.length; idx += 1) {
+          if (idx === batchIndex) continue;
+          for (const file of sourceTab.batches[idx].images || []) {
+            const normalized = normalizeStoredFilename(file);
+            if (!normalized) continue;
+            sourceUsage.set(normalized, (sourceUsage.get(normalized) || 0) + 1);
+          }
+        }
+
+        const copiedTargets = [];
+        const exclusiveSources = new Set();
+        const movedImages = [];
+        try {
+          for (const originalRaw of sourceBatch.images || []) {
+            const originalName = normalizeStoredFilename(originalRaw);
+            if (!originalName) continue;
+            const sourcePath = path.join(sourceDir, originalName);
+            const targetName = await ensureUniqueFilename(targetDir, originalName);
+            const targetPath = path.join(targetDir, targetName);
+
+            try {
+              await fsp.access(sourcePath, fs.constants.F_OK);
+            } catch (_) {
+              log(`Missing image during batch move: ${sourcePath}`, 'WARN');
+              movedImages.push(originalName);
+              continue;
+            }
+
+            await fsp.copyFile(sourcePath, targetPath);
+            copiedTargets.push(targetPath);
+            movedImages.push(targetName);
+            if ((sourceUsage.get(originalName) || 0) === 0) {
+              exclusiveSources.add(sourcePath);
+            }
+          }
+        } catch (error) {
+          for (const copiedPath of copiedTargets) {
+            await safeUnlink(copiedPath);
+          }
+          throw error;
+        }
+
+        const movedBatch = {
+          ...sourceBatch,
+          images: movedImages,
+          updatedAt: new Date().toISOString()
+        };
+
+        sourceTab.batches.splice(batchIndex, 1);
+        targetTab.batches.unshift(movedBatch);
+        metadata.tabs[sourceTabIndex] = sourceTab;
+        metadata.tabs[targetTabIndex] = targetTab;
+
+        try {
+          await writeMetadata(metadataPath, metadata);
+        } catch (error) {
+          for (const copiedPath of copiedTargets) {
+            await safeUnlink(copiedPath);
+          }
+          throw error;
+        }
+
+        for (const sourcePath of exclusiveSources) {
+          try {
+            await fsp.unlink(sourcePath);
+          } catch (error) {
+            log(`Failed to remove source image after move: ${sourcePath} (${error.message})`, 'WARN');
+          }
+        }
+
+        res.json(metadata);
       });
     } catch (error) {
       next(error);
@@ -562,8 +979,7 @@ async function safeUnlink(filePath) {
     try {
       await withMetadataLock(async () => {
         const name = sanitizeTabName(req.params.name);
-        const idx = parseInt(req.params.index, 10);
-        if (!name || Number.isNaN(idx) || idx < 0) {
+        if (!name) {
           return res.status(400).json({ message: 'Invalid batch reference.' });
         }
 
@@ -573,8 +989,10 @@ async function safeUnlink(filePath) {
         }
 
         const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
         const { tab } = findTab(metadata, name);
-        if (!tab || !Array.isArray(tab.batches) || !tab.batches[idx]) {
+        const idx = resolveBatchIndex(tab, req.params.index, req.body?.batchId);
+        if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
           return res.status(404).json({ message: 'Batch not found.' });
         }
 
@@ -606,7 +1024,7 @@ async function safeUnlink(filePath) {
 
         batch.updatedAt = new Date().toISOString();
         await writeMetadata(metadataPath, metadata);
-        res.json({ batch, appended });
+        res.json({ index: idx, batch, appended });
       });
     } catch (error) {
       next(error);
@@ -620,21 +1038,26 @@ async function safeUnlink(filePath) {
     try {
       await withMetadataLock(async () => {
         const name = sanitizeTabName(req.params.name);
-        const idx = parseInt(req.params.index, 10);
-        if (!name || Number.isNaN(idx) || idx < 0) {
+        if (!name) {
           return res.status(400).json({ message: 'Invalid batch reference.' });
         }
 
         const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
         const { tab } = findTab(metadata, name);
-        if (!tab || !Array.isArray(tab.batches) || !tab.batches[idx]) {
+        const idx = resolveBatchIndex(tab, req.params.index, req.body?.batchId || req.query?.batchId);
+        if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
           return res.status(404).json({ message: 'Batch not found.' });
         }
+        const usage = buildTabImageUsage(tab, idx);
         const removed = tab.batches.splice(idx, 1)[0];
         await writeMetadata(metadataPath, metadata);
         const tabDir = path.join(dataDir, name);
-        for (const filename of removed.images || []) {
-          await safeUnlink(path.join(tabDir, sanitizeFilename(filename)));
+        for (const raw of removed.images || []) {
+          const filename = normalizeStoredFilename(raw);
+          if (!filename) continue;
+          if ((usage.get(filename) || 0) > 0) continue;
+          await safeUnlink(path.join(tabDir, filename));
         }
         log(`Deleted batch ${idx} from tab ${name}`);
         res.status(204).end();
@@ -651,26 +1074,30 @@ async function safeUnlink(filePath) {
     try {
       await withMetadataLock(async () => {
         const name = sanitizeTabName(req.params.name);
-        const idx = parseInt(req.params.batchIndex, 10);
         const filenames = Array.isArray(req.body?.filenames) ? req.body.filenames : [];
-        if (!name || Number.isNaN(idx) || idx < 0 || !filenames.length) {
+        if (!name || !filenames.length) {
           return res.status(400).json({ message: 'Invalid reference.' });
         }
 
         const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
         const { tab } = findTab(metadata, name);
-        if (!tab || !Array.isArray(tab.batches) || !tab.batches[idx]) {
+        const idx = resolveBatchIndex(tab, req.params.batchIndex, req.body?.batchId || req.query?.batchId);
+        if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
           return res.status(404).json({ message: 'Batch not found.' });
         }
         const batch = tab.batches[idx];
+        const usageInOtherBatches = buildTabImageUsage(tab, idx);
         const deleted = [];
         for (const raw of filenames) {
-          const filename = sanitizeFilename(raw);
+          const filename = normalizeStoredFilename(raw);
           if (!filename) continue;
           const imageIdx = batch.images.findIndex((img) => img === filename);
           if (imageIdx === -1) continue;
           batch.images.splice(imageIdx, 1);
-          await safeUnlink(path.join(dataDir, name, filename));
+          if ((usageInOtherBatches.get(filename) || 0) === 0 && !batch.images.includes(filename)) {
+            await safeUnlink(path.join(dataDir, name, filename));
+          }
           deleted.push(filename);
         }
 
@@ -692,15 +1119,16 @@ async function safeUnlink(filePath) {
     try {
       await withMetadataLock(async () => {
         const name = sanitizeTabName(req.params.name);
-        const idx = parseInt(req.params.batchIndex, 10);
-        const filename = sanitizeFilename(req.params.filename);
-        if (!name || Number.isNaN(idx) || idx < 0 || !filename) {
+        const filename = normalizeStoredFilename(req.params.filename);
+        if (!name || !filename) {
           return res.status(400).json({ message: 'Invalid reference.' });
         }
 
         const metadata = await readMetadata(metadataPath);
+        ensureBatchIds(metadata);
         const { tab } = findTab(metadata, name);
-        if (!tab || !Array.isArray(tab.batches) || !tab.batches[idx]) {
+        const idx = resolveBatchIndex(tab, req.params.batchIndex, req.body?.batchId || req.query?.batchId);
+        if (!tab || !Array.isArray(tab.batches) || idx === -1 || !tab.batches[idx]) {
           return res.status(404).json({ message: 'Batch not found.' });
         }
         const batch = tab.batches[idx];
@@ -708,8 +1136,11 @@ async function safeUnlink(filePath) {
         if (imageIdx === -1) {
           return res.status(404).json({ message: 'Image not found.' });
         }
+        const usageInOtherBatches = buildTabImageUsage(tab, idx);
         batch.images.splice(imageIdx, 1);
-        await safeUnlink(path.join(dataDir, name, filename));
+        if ((usageInOtherBatches.get(filename) || 0) === 0 && !batch.images.includes(filename)) {
+          await safeUnlink(path.join(dataDir, name, filename));
+        }
         await writeMetadata(metadataPath, metadata);
         log(`Deleted image ${filename} from batch ${idx} in tab ${name}`);
         res.status(204).end();
@@ -776,7 +1207,7 @@ async function safeUnlink(filePath) {
   app.get('/api/images/:tab/:filename', async (req, res, next) => {
     try {
       const tab = sanitizeTabName(req.params.tab);
-      const filename = sanitizeFilename(req.params.filename);
+      const filename = normalizeStoredFilename(req.params.filename);
       if (!tab || !filename) {
         return res.status(400).json({ message: 'Invalid path.' });
       }

@@ -39,10 +39,31 @@ Override settings with CLI arguments:
 node server.js --port 8080 --data "D:/AI Gallery" --auto-open false
 ```
 
+## Project structure
+
+```
+image-gallery-ai/
+├── server.js              # Express backend (~1300 lines): REST API, file management,
+│                          #   metadata locking, atomic writes, batch ID system
+├── public/
+│   ├── index.html         # HTML layout + CSS (~825 lines): page structure, styling,
+│   │                      #   drag indicators, responsive media queries, light theme
+│   └── app.js             # Frontend logic (~2120 lines): GalleryApp class, API client,
+│                          #   drag-and-drop (tabs/batches/images), viewer, polling,
+│                          #   edit mode, selection, debounced batch updates
+├── config.json            # Runtime settings: port, dataPath, autoOpenBrowser
+├── package.json           # Dependencies: express, cors, multer, nodemon
+├── data/
+│   ├── metadata.json      # Central data store: tabs → batches → image references
+│   └── <tab-folders>/     # One folder per tab, contains image files directly
+└── uploads/               # Temporary staging for file uploads
+```
+
 ## Data locations
 
 - All galleries are stored under the folder configured by `dataPath` (default `./data`).
-- Each tab corresponds to a subdirectory, and `metadata.json` inside that folder tracks batch descriptions and image references.
+- `metadata.json` in the data root tracks all tabs, batches (with stable IDs), descriptions, and image references.
+- Each tab corresponds to a subdirectory containing its image files (no batch subfolders).
 - Uploaded files are first staged in the `uploads/` directory before being moved to their target tab.
 
 ## API overview
@@ -51,18 +72,24 @@ node server.js --port 8080 --data "D:/AI Gallery" --auto-open false
 | --- | --- | --- |
 | `/api/tabs` | GET | List all tabs |
 | `/api/tabs` | POST | Create a tab |
+| `/api/tabs/reorder` | PUT | Reorder tabs |
 | `/api/tabs/:name` | PUT | Rename a tab |
 | `/api/tabs/:name` | DELETE | Delete a tab and its files |
 | `/api/tabs/:name/batches` | GET | Retrieve batches for a tab |
 | `/api/tabs/:name/batches` | POST | Create a batch |
-| `/api/tabs/:name/batches/:index` | PUT | Update batch description |
+| `/api/tabs/:name/batches/:index` | PUT | Update batch title/description |
 | `/api/tabs/:name/batches/:index` | DELETE | Delete a batch |
-| `/api/tabs/:name/batches/:batchIndex/images/:filename` | DELETE | Delete a single image |
+| `/api/tabs/:name/reorder-batches` | PUT | Reorder batches within a tab |
+| `/api/tabs/:name/reorder-images` | PUT | Move/reorder images within and between batches |
+| `/api/tabs/:name/batches/:index/move` | POST | Move a batch to another tab |
+| `/api/tabs/:name/batches/:index/images` | POST | Append images to a batch |
+| `/api/tabs/:name/batches/:index/images` | DELETE | Delete multiple images (bulk) |
+| `/api/tabs/:name/batches/:index/images/:filename` | DELETE | Delete a single image |
 | `/api/upload` | POST | Upload images (multipart/form-data) |
 | `/api/images/:tab/:filename` | GET | Stream an image |
 | `/api/metadata` | GET | Retrieve the entire metadata file |
 
-All endpoints return JSON responses with clear error messages and HTTP status codes.
+All endpoints return JSON responses with clear error messages and HTTP status codes. Batch mutations accept an optional `batchId` parameter for stable targeting (indices may shift after reorder).
 
 ## Graceful shutdown
 
